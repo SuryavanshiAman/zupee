@@ -1,0 +1,47 @@
+name: zupee
+description: "A new Flutter project."
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.4 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.6
+  shimmer: ^2.0.0
+  get:
+  sliding_switch: ^1.1.0
+  fluttertoast: ^8.2.4
+  another_flushbar: ^1.12.30
+  share_plus: ^7.2.1
+  image_picker: ^1.0.4
+  shared_preferences: ^2.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+  flutter_lints: ^3.0.0
+
+
+flutter:
+
+
+  uses-material-design: true
+
+
+  assets:
+    - assets/
+    - assets/images/
+    - assets/icon/
+    - assets/gif/
+    - assets/ludo/
+

@@ -1,7 +1,7 @@
 class AppConstants {
   // app name
-  static const String appName = 'Zupee';
-  static const String appNameTwo = 'ZUPEE';
+  static const String appName = 'Ludo Zupee';
+  static const String appNameTwo = 'LUDO ZUPEE';
 
   // app version
   static const String appVersion = '1.0.0';

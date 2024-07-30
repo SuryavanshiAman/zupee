@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
-        leadingWidth: 200,
+        leadingWidth: 250,
         leading: const Row(
           children: [
             CustomBackButton(),
@@ -52,11 +52,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ],
         ),
-        // title: const Text(
-        //   "     ${AppConstants.appNameTwo}",
-        //   style: TextStyle(
-        //       color: tertiary, fontSize: 26, fontWeight: FontWeight.w900),
-        // ),
         actions: [
           const Text(
             "NEW USER ?",
@@ -71,7 +66,6 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               height: height * 0.04,
@@ -86,34 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: height * 0.05,
             ),
-            // Container(
-            //   alignment: Alignment.center,
-            //   width: width * 0.8,
-            //   height: height * 0.08,
-            //   decoration: const BoxDecoration(
-            //     color: lightGray,
-            //     border: Border(bottom: BorderSide(color: tertiary, width: 3)),
-            //     borderRadius: BorderRadius.only(
-            //         topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-            //   ),
-            //   child: Padding(
-            //     padding: const EdgeInsets.only(top: 24.0, left: 15),
-            //     child: Row(
-            //       children: [
-            //         const Text(
-            //           "+91",
-            //           style: TextStyle(fontSize: 18, color: black),
-            //         ),
-            //         CustomTextField(
-            //           width: width * 0.65,
-            //           label: "Enter your phone number",
-            //           hintColor: labelColor,
-            //           hintSize: 18,
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
             CustomTextField(
               controller: _controller,
               keyboardType: TextInputType.number,
@@ -124,7 +90,6 @@ class _LoginScreenState extends State<LoginScreen> {
               width: width*0.8,
               maxLength: 10,
               contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-              // borderRadius: ,
               filled: true,
               borderSide: const BorderSide(color: tertiary,width: 2),
               borderSideFocus: const BorderSide(color: blue),
@@ -197,7 +162,6 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: height * 0.04,
             ),
-            //
             Padding(
               padding: const EdgeInsets.all(6.0),
               child: Container(
@@ -209,7 +173,6 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: height * 0.01,
             ),
-            // Divider(color: labelColor,),
             Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8),
               child: RichText(
@@ -219,8 +182,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                      TextSpan(
                       text:"RegisterNote".tr,
-                        // text:
-                        //     'By continuing, I hereby confirm that I am 18 years of age or above and I am not playing from Assam, Telangana, Nagaland, Andhra Pradesh, Meghalaya, Sikkim, Arunachal Pradesh and outside India and I agree to the ',
                         style: const TextStyle(color: labelColor)),
                     TextSpan(
                       text: 'Terms and Conditions'.tr,
@@ -231,7 +192,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          // Handle Terms and Conditions tap
                         },
                     ),
                     const TextSpan(text: ' and '),
@@ -251,33 +211,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            // const Spacer(),
-            // Container(
-            //   alignment: Alignment.center,
-            //   height: height*0.1,
-            //   width: width,
-            //
-            //   decoration: BoxDecoration(
-            //     color: appBarColor,
-            //     boxShadow: [
-            //       BoxShadow(
-            //         color: Colors.black.withOpacity(0.2),
-            //         spreadRadius: 1,
-            //         blurRadius: 2,
-            //         offset: const Offset(0, -1), // changes position of shadow to the top
-            //       ),
-            //     ],
-            //   ),
-            //
-            //   child: CustomContainer(
-            //     alignment: Alignment.center,
-            //     height: height*0.07,
-            //     widths: width*0.8,
-            //     color: lightGray,
-            //     borderRadius: const BorderRadius.all(Radius.circular(35)),
-            //     child: const Text("Accept & Continue",style: TextStyle(color: labelColor,fontWeight: FontWeight.w500),),
-            //   ),
-            // )
           ],
         ),
       ),

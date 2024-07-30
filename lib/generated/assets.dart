@@ -43,7 +43,16 @@ class Assets {
   static const String imagesWhatsapp = 'assets/images/whatsapp.png';
   static const String imagesZupee = 'assets/images/zupee.png';
   static const String ludoBoardTwo = 'assets/ludo/board_two.webp';
+  static const String ludoDice = 'assets/ludo/dice.webp';
+  static const String ludoDiceSectionOne = 'assets/ludo/dice_section_one.webp';
+  static const String ludoDiceSectionTwo = 'assets/ludo/dice_section_two.webp';
+  static const String ludoInfo = 'assets/ludo/info.png';
+  static const String ludoLabelSection = 'assets/ludo/label_section.webp';
+  static const String ludoLabelSectionTwo = 'assets/ludo/label_section_two.webp';
   static const String ludoLudoBoard = 'assets/ludo/ludo_board.webp';
   static const String ludoPrizePool = 'assets/ludo/prize_pool.webp';
+  static const String ludoProfileSection = 'assets/ludo/profile_section.png';
+  static const String ludoSetting = 'assets/ludo/setting.png';
+  static const String ludoUser = 'assets/ludo/user.png';
 
 }

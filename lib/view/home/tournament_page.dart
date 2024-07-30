@@ -43,7 +43,7 @@ class _LudoSupremeState extends State<LudoSupreme>
   @override
   void initState() {
     super.initState();
-    StartTimer();
+    // StartTimer();
     _scrollController.addListener(_handleScroll);
   }
 
@@ -61,27 +61,46 @@ class _LudoSupremeState extends State<LudoSupreme>
       }
     });
   }
+  int _start = 60;
+  Timer ?_timer;
 
-  void StartTimer() {
-    countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
-  }
-  bool timer=false;
-  void setCountDown() {
-    final reduceSecondsBy = 1;
-    setState(() {
-      final seconds = myDuration.inSeconds - reduceSecondsBy;
-      if (seconds < 0) {
-
-        countdownTimer!.cancel();
+  void startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_start == 0) {
+        setState(() {
+          timer.cancel();
+          Navigator.pushNamed(context, RoutesName.timerScreen);
+          time=false;
+        });
       } else {
-        myDuration = Duration(seconds: seconds);
-      }
-      if(seconds>0){
-        timer=false;
-        Navigator.pushNamed(context, RoutesName.ludoHomeScreen);
+        setState(() {
+          _start--;
+        });
       }
     });
   }
+  @override
+  void dispose() {
+    _timer!.cancel();
+    super.dispose();
+  }
+  // void StartTimer() {
+  //   countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
+  // }
+  bool time=false;
+  // void setCountDown() {
+  //   final reduceSecondsBy = 1;
+  //   setState(() {
+  //     final seconds = myDuration.inSeconds - reduceSecondsBy;
+  //     if (seconds < 0) {
+  //       countdownTimer!.cancel();
+  //       Navigator.pushNamed(context,RoutesName.timerScreen);
+  //     } else {
+  //       myDuration = Duration(seconds: seconds);
+  //     }
+  //
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -256,7 +275,7 @@ class _LudoSupremeState extends State<LudoSupreme>
                     fontWeight: FontWeight.w500),
               ),
                   SizedBox(height:height*0.03),
-                timer?  Container(
+                time?  Container(
                     height: height*0.25,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -281,7 +300,7 @@ class _LudoSupremeState extends State<LudoSupreme>
                             color: green,
                             borderRadius: BorderRadius.all(Radius.circular(35)),
                           ),
-                          child: Text("00m:${seconds}s",
+                          child: Text("00m:${_start}s",
                             style: const TextStyle(color: white, fontSize: 20,fontWeight: FontWeight.w600),
                           ),
                         ),
@@ -308,19 +327,6 @@ class _LudoSupremeState extends State<LudoSupreme>
                         child: InkWell(
                           onTap: () {
                             ConfirmPaymentBottomSheet(context);
-                            // showModalBottomSheet(
-                            //   isScrollControlled: true,
-                            //   context: context,
-                            //   shape: const RoundedRectangleBorder(
-                            //     borderRadius: BorderRadius.vertical(
-                            //       top: Radius.circular(25.0),
-                            //     ),
-                            //   ),
-                            //   builder: (BuildContext context) {
-                            //     return ConfirmPaymentBottomSheet(
-                            //         seconds: seconds);
-                            //   },
-                            // );
                           },
                           child: Container(
                             height: height * 0.18,
@@ -436,15 +442,11 @@ class _LudoSupremeState extends State<LudoSupreme>
                                                   style: const TextStyle(
                                                     fontSize: 12,
                                                     color: red,
-                                                    // fontWeight:
-                                                    // FontWeight.bold
                                                   )),
                                               Text('${seconds}s',
                                                   style: const TextStyle(
                                                     fontSize: 12,
                                                     color: red,
-                                                    // fontWeight:
-                                                    // FontWeight.bold
                                                   )),
                                             ],
                                           ),
@@ -614,17 +616,6 @@ class _LudoSupremeState extends State<LudoSupreme>
                                                   fontWeight: FontWeight.bold)),
                                         ),
                                       ),
-                                      // ElevatedButton(
-                                      //     style: ElevatedButton.styleFrom(
-                                      //       minimumSize: const Size(55, 20),
-                                      //       backgroundColor:lightBlue,
-                                      //       shape: RoundedRectangleBorder(
-                                      //           borderRadius:
-                                      //           BorderRadius.circular(20)),
-                                      //     ),
-                                      //     // style: ElevatedButton.styleFrom(minimumSize: Size(30, 30),backgroundColor: Colors.deepPurple.shade100,),
-                                      //     onPressed: () {},
-                                      //     child:
                                       InkWell(
                                         onTap: () {},
                                         child: Container(
@@ -647,15 +638,11 @@ class _LudoSupremeState extends State<LudoSupreme>
                                                   style: const TextStyle(
                                                     fontSize: 12,
                                                     color: red,
-                                                    // fontWeight:
-                                                    // FontWeight.bold
                                                   )),
                                               Text('${seconds}s',
                                                   style: const TextStyle(
                                                     fontSize: 12,
                                                     color: red,
-                                                    // fontWeight:
-                                                    // FontWeight.bold
                                                   )),
                                             ],
                                           ),
@@ -724,7 +711,6 @@ class _LudoSupremeState extends State<LudoSupreme>
                     child: Center(
                         child: Image(image: AssetImage(Assets.imagesRupeesBlue)))),
               ),
-              // Icon(Icons.money, size: 50, color: Colors.purple), // Replace with your image asset
               const SizedBox(height: 8),
               const Center(
                 child: Text(
@@ -773,7 +759,7 @@ class _LudoSupremeState extends State<LudoSupreme>
                             const Divider(),
                             Row(
                               children: [
-                                Container(
+                                SizedBox(
                                   width: width * 0.5,
                                   child: const Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -799,7 +785,7 @@ class _LudoSupremeState extends State<LudoSupreme>
                                     ],
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   width: width * 0.2,
                                   child: const Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -828,7 +814,7 @@ class _LudoSupremeState extends State<LudoSupreme>
                             const Divider(),
                             Row(
                               children: [
-                                Container(
+                                SizedBox(
                                   width: width * 0.5,
                                   child: const Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -853,7 +839,7 @@ class _LudoSupremeState extends State<LudoSupreme>
                                     ],
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   width: width * 0.2,
                                   child: const Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -886,7 +872,8 @@ class _LudoSupremeState extends State<LudoSupreme>
                 child: CustomContainer(
                   onTap: () {
                     setState(() {
-                      timer=true;
+                      time=true;
+                      startTimer();
                     });
                     Navigator.pop(context);
                     showExitConfirmation(context);
@@ -922,7 +909,7 @@ class _LudoSupremeState extends State<LudoSupreme>
               topLeft: Radius.circular(35), topRight: Radius.circular(35))),
       context: context,
       builder: (context) {
-        return Container(
+        return SizedBox(
           height: height * 0.4,
           width: width,
           child: Column(
@@ -956,8 +943,8 @@ class _LudoSupremeState extends State<LudoSupreme>
                   decoration: const BoxDecoration(
                       color: green,
                       borderRadius: BorderRadius.all(Radius.circular(25))),
-                  child: const Text(
-                    "00.05",
+                  child:  Text(
+                    "00:00",
                     style: TextStyle(
                         fontSize: 24,
                         color: white,
@@ -974,283 +961,4 @@ class _LudoSupremeState extends State<LudoSupreme>
   }
 }
 
-// class ConfirmPaymentBottomSheet extends StatefulWidget {
-//   final String seconds;
-//   const ConfirmPaymentBottomSheet({super.key, required this.seconds});
-//
-//   @override
-//   State<ConfirmPaymentBottomSheet> createState() =>
-//       _ConfirmPaymentBottomSheetState();
-// }
-//
-// class _ConfirmPaymentBottomSheetState extends State<ConfirmPaymentBottomSheet> {
-//   bool _isExpanded = false;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: const EdgeInsets.all(16.0),
-//       // height: height*0.47,
-//       child: Column(
-//         mainAxisSize: MainAxisSize.min,
-//         crossAxisAlignment: CrossAxisAlignment.end,
-//         children: [
-//           InkWell(
-//               onTap: () {
-//                 Navigator.pop(context);
-//               },
-//               child: const Icon(Icons.cancel_outlined, size: 30, color: black)),
-//           const Center(
-//             child: CircleAvatar(
-//                 radius: 50,
-//                 backgroundColor: appBarColor,
-//                 child: Center(
-//                     child: Image(image: AssetImage(Assets.imagesRupeesBlue)))),
-//           ),
-//           // Icon(Icons.money, size: 50, color: Colors.purple), // Replace with your image asset
-//           const SizedBox(height: 8),
-//           const Center(
-//             child: Text(
-//               'Confirm Payment',
-//               style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-//             ),
-//           ),
-//           const SizedBox(height: 16),
-//           Container(
-//             padding:
-//                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 18.0),
-//             decoration: BoxDecoration(
-//               border: Border.all(color: Colors.grey),
-//               borderRadius: BorderRadius.circular(8.0),
-//             ),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     const Text('Entry Fee',
-//                         style: TextStyle(
-//                             fontSize: 17, fontWeight: FontWeight.w600)),
-//                     const Spacer(),
-//                     const Text('₹1',
-//                         style: TextStyle(
-//                             fontSize: 17, fontWeight: FontWeight.w600)),
-//                     SizedBox(
-//                       width: width * 0.02,
-//                     ),
-//                     InkWell(
-//                         onTap: () {
-//                           setState(() {
-//                             _isExpanded = !_isExpanded;
-//                           });
-//                         },
-//                         child: const Icon(Icons.keyboard_arrow_down))
-//                   ],
-//                 ),
-//                 if (_isExpanded)
-//                   Padding(
-//                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-//                     child: Column(
-//                       children: [
-//                         const Divider(),
-//                         Row(
-//                           children: [
-//                             Container(
-//                               width: width * 0.5,
-//                               child: const Column(
-//                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                 children: [
-//                                   Text('From Bonus',
-//                                       style: TextStyle(
-//                                           fontSize: 16,
-//                                           fontWeight: FontWeight.w600,
-//                                           color: labelColor)),
-//                                   Text(
-//                                     'From Cashback',
-//                                     style: TextStyle(
-//                                         fontSize: 16,
-//                                         color: labelColor,
-//                                         fontWeight: FontWeight.w600),
-//                                   ),
-//                                   SizedBox(height: 8),
-//                                   Text('From Winning & Deposits',
-//                                       style: TextStyle(
-//                                           fontSize: 16,
-//                                           fontWeight: FontWeight.w600,
-//                                           color: labelColor)),
-//                                 ],
-//                               ),
-//                             ),
-//                             Container(
-//                               width: width * 0.2,
-//                               child: const Column(
-//                                 crossAxisAlignment: CrossAxisAlignment.end,
-//                                 children: [
-//                                   Text('₹0',
-//                                       style: TextStyle(
-//                                           fontSize: 16,
-//                                           fontWeight: FontWeight.w600,
-//                                           color: labelColor)),
-//                                   SizedBox(height: 8),
-//                                   Text(' ₹1',
-//                                       style: TextStyle(
-//                                           fontSize: 16,
-//                                           fontWeight: FontWeight.w600,
-//                                           color: labelColor)),
-//                                   Text('₹0',
-//                                       style: TextStyle(
-//                                           fontSize: 16,
-//                                           fontWeight: FontWeight.w600,
-//                                           color: labelColor)),
-//                                 ],
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                         const Divider(),
-//                         Row(
-//                           children: [
-//                             Container(
-//                               width: width * 0.5,
-//                               child: const Column(
-//                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                 children: [
-//                                   Text('Entry Fee Breakdown',
-//                                       style: TextStyle(
-//                                           fontSize: 16,
-//                                           fontWeight: FontWeight.w600)),
-//                                   Text(
-//                                     'To Prize Pool',
-//                                     style: TextStyle(
-//                                         fontSize: 16,
-//                                         fontWeight: FontWeight.w600,
-//                                         color: labelColor),
-//                                   ),
-//                                   SizedBox(height: 8),
-//                                   Text('To Platform Fee',
-//                                       style: TextStyle(
-//                                           fontSize: 16,
-//                                           fontWeight: FontWeight.w600,
-//                                           color: labelColor)),
-//                                 ],
-//                               ),
-//                             ),
-//                             Container(
-//                               width: width * 0.2,
-//                               child: const Column(
-//                                 crossAxisAlignment: CrossAxisAlignment.end,
-//                                 children: [
-//                                   Text('', style: TextStyle(fontSize: 16)),
-//                                   SizedBox(height: 8),
-//                                   Text(' ₹0.8',
-//                                       style: TextStyle(
-//                                           fontSize: 16,
-//                                           fontWeight: FontWeight.w600,
-//                                           color: labelColor)),
-//                                   Text('₹0.2',
-//                                       style: TextStyle(
-//                                           fontSize: 16,
-//                                           fontWeight: FontWeight.w600,
-//                                           color: labelColor)),
-//                                 ],
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//               ],
-//             ),
-//           ),
-//           SizedBox(height: height * 0.03),
-//           Center(
-//             child: CustomContainer(
-//               onTap: () {
-//                 setState(() {
-//                   timer=true;
-//                 });
-//                 Navigator.pop(context);
-//                 showExitConfirmation(context);
-//               },
-//               alignment: Alignment.center,
-//               height: height * 0.07,
-//               widths: width * 0.8,
-//               color: secondary,
-//               borderRadius: const BorderRadius.all(Radius.circular(35)),
-//               child: Text(
-//                 "Join Now".tr,
-//                 style: const TextStyle(
-//                     fontSize: 16, color: tertiary, fontWeight: FontWeight.w600),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   static showExitConfirmation(BuildContext context) async {
-//     final height = MediaQuery.of(context).size.height;
-//     final width = MediaQuery.of(context).size.width;
-//     return await showModalBottomSheet(
-//           elevation: 5,
-//           backgroundColor: primary,
-//           shape: const RoundedRectangleBorder(
-//               side: BorderSide(width: 2, color: Colors.white),
-//               borderRadius: BorderRadius.only(
-//                   topLeft: Radius.circular(35), topRight: Radius.circular(35))),
-//           context: context,
-//           builder: (context) {
-//             return Container(
-//               height: height * 0.4,
-//               width: width,
-//               child: Column(
-//                 // mainAxisSize: MainAxisSize.min,
-//                 crossAxisAlignment: CrossAxisAlignment.end,
-//                 children: [
-//                   Padding(
-//                     padding: const EdgeInsets.only(right: 28.0, top: 28),
-//                     child: InkWell(
-//                         onTap: () {
-//                           Navigator.pop(context);
-//                         },
-//                         child: const Icon(Icons.close)),
-//                   ),
-//                   SizedBox(height: height / 30),
-//                   Center(child: Image.asset(Assets.gifIcons8Hourglass,)),
-//                   SizedBox(height: height * 0.03),
-//                   Center(
-//                       child: Text(
-//                     "Game Start in.....".tr,
-//                     style: const TextStyle(
-//                         fontSize: 24,
-//                         color: green,
-//                         fontWeight: FontWeight.w600),
-//                   )),
-//                   SizedBox(height: height * 0.03),
-//                   Center(
-//                     child: Container(
-//                       padding: const EdgeInsets.only(
-//                           left: 16, right: 16, top: 8, bottom: 8),
-//                       decoration: const BoxDecoration(
-//                           color: green,
-//                           borderRadius: BorderRadius.all(Radius.circular(25))),
-//                       child: const Text(
-//                         "00.05",
-//                         style: TextStyle(
-//                             fontSize: 24,
-//                             color: white,
-//                             fontWeight: FontWeight.w600),
-//                       ),
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             );
-//           },
-//         ) ??
-//         false;
-//   }
-// }
+

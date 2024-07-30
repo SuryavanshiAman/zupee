@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/utils/routes_name.dart';
 
 class TimerScreen extends StatefulWidget {
   const TimerScreen({super.key});
@@ -23,12 +24,14 @@ class _TimerScreenState extends State<TimerScreen> {
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        if (_seconds > 0) {
-          _seconds--;
-        } else {
+        if (_seconds == 0) {
           _timer?.cancel();
+          Navigator.pushNamed(context, RoutesName.ludoHomeScreen);
+        } else {
+          _seconds--;
+
         }
       });
     });
@@ -51,15 +54,14 @@ class _TimerScreenState extends State<TimerScreen> {
                     image: AssetImage(Assets.imagesTimerPage),
                     fit: BoxFit.cover)),
             child:  Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SizedBox(height: height*0.1,),
                 Text(
                   _seconds.toString(),
-                  style: TextStyle(color: white,fontSize: 60,fontWeight: FontWeight.w900),
+                  style: const TextStyle(color: white,fontSize: 60,fontWeight: FontWeight.w900),
                 ),
                 SizedBox(height: height*0.15,),
-                Text("Start Game...",
+                const Text("Start Game...",
                   style: TextStyle(color: white,fontSize: 24,fontWeight: FontWeight.w500),),
               ],
             ),

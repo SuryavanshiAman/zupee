@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
@@ -53,6 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
   }
+  final List<String> avatars = [
+    'assets/images/dice.png',
+    'assets/images/instagram.png',
+    'assets/images/zupee.png',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -140,18 +146,90 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             alignment: Alignment.center,
                             height: height * 0.037,
-                            width: width * 0.5,
+                            width: width * 0.55,
                             decoration:  BoxDecoration(
                                 color: black.withOpacity(0.3),
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(25))),
-                            child: const Text(
-                              "20,615 playing",
-                              style: TextStyle(
-                                  color: white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16),
+                                    const BorderRadius.all(Radius.circular(25))),
+                            child:    Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Stack(
+                                  children: avatars.asMap().entries.map((entry) {
+                                    int idx = entry.key;
+                                    String avatar = entry.value;
+                                    return Transform.translate(
+                                      offset: Offset(idx * -12.0, 0),
+                                      child:  Container(
+                                        width: width*0.06,
+                                        height: height*0.05,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: AssetImage(avatar)
+                                          ),
+                                          border: Border.all(color: white,width: 1),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                                // Stack(
+                                //   children: [
+                                //     Padding(
+                                //       padding: EdgeInsets.only(left: 28.0),
+                                //       child: Container(
+                                //         width: width*0.06,
+                                //         height: height*0.05,
+                                //         decoration: BoxDecoration(
+                                //           shape: BoxShape.circle,
+                                //           border: Border.all(color: white,width: 1),
+                                //         ),
+                                //       )
+                                //       // CircleAvatar(
+                                //       //   radius: 14,
+                                //       //   backgroundImage: AssetImage('assets/avatar3.jpg'),
+                                //       // ),
+                                //     ),
+                                //     Padding(
+                                //       padding: EdgeInsets.only(left: 14.0),
+                                //       child: Container(
+                                //         width: width*0.06,
+                                //         height: height*0.05,
+                                //         decoration: BoxDecoration(
+                                //           shape: BoxShape.circle,
+                                //           border: Border.all(color: white,width: 1),
+                                //         ),
+                                //       )
+                                //     ),
+                                //     Container(
+                                //       width: width*0.06,
+                                //       height: height*0.05,
+                                //       decoration: BoxDecoration(
+                                //         shape: BoxShape.circle,
+                                //         border: Border.all(color: white,width: 1),
+                                //       ),
+                                //     )
+                                //   ],
+                                // ),
+                                SizedBox(width: 10),
+                                Text(
+                                  '2,17,460 playing',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
                             ),
+                            // const Text(
+                            //   "20,615 playing",
+                            //   style: TextStyle(
+                            //       color: white,
+                            //       fontWeight: FontWeight.w600,
+                            //       fontSize: 16),
+                            // ),
                           ),
                           SizedBox(
                             height: height * 0.01,

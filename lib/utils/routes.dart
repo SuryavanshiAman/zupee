@@ -26,6 +26,8 @@ import '../view/account/about/about_page.dart';
 import '../view/account/help_suppoort/help_page.dart';
 import '../view/account/kyc/aadhar_card_details_page.dart';
 import '../view/account/responsible_gaming/loss_mamangement_page.dart';
+import '../view/adda/leaderboard_page.dart';
+import '../view/adda/players_profile_page.dart';
 import '../view/profile/my_game_history.dart';
 import '../view/profile/profile_page.dart';
 
@@ -85,6 +87,10 @@ class Routers {
         return (context) =>   const TimerScreen();
       case RoutesName.ludoHomeScreen:
         return (context) =>   const LudoHomeScreen();
+      case RoutesName.leaderboardScreen:
+        return (context) =>   const LeaderboardScreen();
+      case RoutesName.userProfileScreen:
+        return (context) =>   const UserProfileScreen();
       default:
         return (context) => Scaffold(
               body: Center(

@@ -28,8 +28,10 @@ class Assets {
   static const String imagesInstagram = 'assets/images/instagram.png';
   static const String imagesLudoHomeBg = 'assets/images/ludo_home_bg.png';
   static const String imagesLudoSupreem = 'assets/images/ludo_supreem.png';
+  static const String imagesMaukebaaz = 'assets/images/maukebaaz.png';
   static const String imagesMoneyApps = 'assets/images/money-apps.webp';
   static const String imagesPlayToEarn = 'assets/images/play_to_earn.png';
+  static const String imagesProfile = 'assets/images/profile.jpeg';
   static const String imagesResponsible = 'assets/images/responsible.png';
   static const String imagesRisk = 'assets/images/risk.png';
   static const String imagesRupeesBlue = 'assets/images/rupees_blue.png';
@@ -41,6 +43,7 @@ class Assets {
   static const String imagesUmB = 'assets/images/umB.webp';
   static const String imagesVideo = 'assets/images/video.png';
   static const String imagesWhatsapp = 'assets/images/whatsapp.png';
+  static const String imagesWinner = 'assets/images/winner.png';
   static const String imagesZupee = 'assets/images/zupee.png';
   static const String ludoBoardTwo = 'assets/ludo/board_two.webp';
   static const String ludoDice = 'assets/ludo/dice.webp';

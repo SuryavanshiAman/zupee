@@ -26,4 +26,6 @@ class RoutesName{
   static const String lossManagementScreen = '/lossManagementScreen';
   static const String timerScreen = '/timerScreen';
   static const String ludoHomeScreen = '/ludoHomeScreen';
+  static const String leaderboardScreen = '/leaderboardScreen';
+  static const String userProfileScreen = '/userProfileScreen';
 }

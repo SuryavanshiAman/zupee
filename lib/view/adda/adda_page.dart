@@ -3,6 +3,7 @@ import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 
 import '../../res/custom_back_button.dart';
+import '../../utils/routes_name.dart';
 
 class AddaScreen extends StatefulWidget {
   const AddaScreen({super.key});
@@ -66,7 +67,7 @@ class _AddaScreenState extends State<AddaScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(15))),
               child: ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   itemCount: 3,
                   itemBuilder: (context, index) {
@@ -74,23 +75,28 @@ class _AddaScreenState extends State<AddaScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: height*0.02),
-                        const Row(
+                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CircleAvatar(
+                            const CircleAvatar(
                               backgroundColor: Colors.yellow,
                               child: Text("😎"),
                             ),
                             // Icon(Icons.ac_unit),
-                            Spacer(),
-                            Text(
-                              'VIEW ALL',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: tertiary),
+                            const Spacer(),
+                            InkWell(
+                              onTap:(){
+                                Navigator.pushNamed(context, RoutesName.leaderboardScreen);
+                              },
+                              child: const Text(
+                                'VIEW ALL',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: tertiary),
+                              ),
                             ),
-                            Icon(
+                            const Icon(
                               Icons.arrow_forward_ios_sharp,
                               size: 20,
                             ),
@@ -120,32 +126,12 @@ class _AddaScreenState extends State<AddaScreen> {
                           ]),
                         ),
                         SizedBox(height: height*0.03,),
-                        const Divider()
-                        // Section(
-                        //   title: 'Ludo Supreme League Maukebaaz',
-                        //   players: [
-                        //     Player(rank: 'RANK #1', name: 'Cash', image: 'assets/images/zupee.png'),
-                        //     Player(rank: 'RANK #2', name: 'Kailash gurjar', image: 'assets/images/zupee.png'),
-                        //     Player(rank: 'RANK #3', name: 'har har mahadev', image: 'assets/images/zupee.png'),
-                        //     Player(rank: 'RANK #4', name: 'amrendra kumar', image: 'assets/images/zupee.png'),
-                        //   ],
-                        // ),
-                        // SizedBox(height: 16),
-                        // Section(
-                        //   title: 'Mahasangram Winners',
-                        //   players: [
-                        //     Player(rank: 'RANK #1', name: 'Yogesh lodhi', image: 'assets/images/zupee.png'),
-                        //     Player(rank: 'RANK #2', name: 'Campaion', image: 'assets/images/zupee.png'),
-                        //     Player(rank: 'RANK #3', name: 'ROHITSTAR', image: 'assets/images/zupee.png'),
-                        //     Player(rank: 'RANK #4', name: 'Sam', image: 'assets/images/zupee.png'),
-                        //   ],
-                        // ),
-                      ],
+                        const Divider()                      ],
                     );
                   }),
             ),
             SizedBox(height: height*0.03,),
-            Text("Top players for you to follow",style: TextStyle(
+            const Text("Top players for you to follow",style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: black),),
@@ -177,15 +163,20 @@ class _AddaScreenState extends State<AddaScreen> {
         scrollDirection: Axis.horizontal,
         itemCount: 6,
         itemBuilder: (context, index) {
-          return SizedBox(
+          return  SizedBox(
             width: 100,
 
             // margin: EdgeInsets.only(right: 16.0),
-            child: const Column(
+            child: Column(
               children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('assets/images/zupee.png'),
+                InkWell(
+                  onTap:(){
+                    Navigator.pushNamed(context, RoutesName.userProfileScreen);
+                  },
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage('assets/images/zupee.png'),
+                  ),
                 ),
                 SizedBox(height: 8),
                 Text(
@@ -261,29 +252,6 @@ class _AddaScreenState extends State<AddaScreen> {
                 ),
               ),
             )
-            // ElevatedButton(
-            //   onPressed: () {
-            //     // Handle follow button press
-            //   },
-            //   style: ElevatedButton.styleFrom(
-            //     primary: Colors.white,
-            //     onPrimary: Colors.purple,
-            //     side: BorderSide(color: Colors.purple),
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(8),
-            //     ),
-            //   ),
-            //   child: Padding(
-            //     padding: const EdgeInsets.symmetric(horizontal: 12),
-            //     child: Text(
-            //       'Follow',
-            //       style: TextStyle(
-            //         fontSize: 14,
-            //         fontWeight: FontWeight.bold,
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -291,71 +259,3 @@ class _AddaScreenState extends State<AddaScreen> {
   }
 
 }
-
-// class Section extends StatelessWidget {
-//   final String title;
-//   final List<Player> players;
-//
-//   Section({super.key, required this.title, required this.players});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.all(8.0),
-//           child: Text(
-//             title,
-//             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//           ),
-//         ),
-//         SizedBox(height: 8),
-//         SingleChildScrollView(
-//           scrollDirection: Axis.horizontal,
-//           child: Row(
-//             children: players.map((player) {
-//               return PlayerCard(player: player);
-//             }).toList(),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-//
-// class PlayerCard extends StatelessWidget {
-//   final Player player;
-//
-//   PlayerCard({super.key, required this.player});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: 100,
-//       margin: EdgeInsets.only(right: 16.0),
-//       child: Column(
-//         children: [
-//           CircleAvatar(
-//             radius: 30,
-//             backgroundImage: AssetImage(player.image),
-//           ),
-//           SizedBox(height: 8),
-//           Text(
-//             player.rank,
-//             style: TextStyle(fontWeight: FontWeight.bold),
-//           ),
-//           Text(player.name, overflow: TextOverflow.ellipsis),
-//         ],
-//       ),
-//     );
-//   }
-// }
-//
-// class Player {
-//   final String rank;
-//   final String name;
-//   final String image;
-//
-//   Player({required this.rank, required this.name, required this.image});
-// }

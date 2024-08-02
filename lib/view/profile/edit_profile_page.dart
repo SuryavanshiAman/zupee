@@ -1,348 +1,20 @@
-// import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:zupee/main.dart';
-// import 'package:zupee/res/app_colors.dart';
-// import 'package:zupee/res/custom_text_field.dart';
-//
-// class EditProfileScreen extends StatefulWidget {
-//   const EditProfileScreen({super.key});
-//
-//   @override
-//   _EditProfileScreenState createState() => _EditProfileScreenState();
-// }
-//
-// class _EditProfileScreenState extends State<EditProfileScreen> {
-//   final TextEditingController _nameController = TextEditingController();
-//   String _phoneNumber = "+9163xxxx0498";
-//   String _selectedPrivacyOption = "Everyone";
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _nameController.text = _phoneNumber;
-//   }
-//
-//   Future<void> _openCamera() async {
-//     final pickedFile =
-//         await ImagePicker().pickImage(source: ImageSource.camera);
-//     if (pickedFile != null) {
-//       setState(() {
-//         // Handle the image picked from the camera
-//       });
-//     }
-//   }
-//
-//   Future<void> _selectFromGallery() async {
-//     final pickedFile =
-//         await ImagePicker().pickImage(source: ImageSource.gallery);
-//     if (pickedFile != null) {
-//       setState(() {
-//         // Handle the image picked from the gallery
-//       });
-//     }
-//   }
-//
-//   void _selectAvatar() {
-//     setState(() {
-//       // Handle avatar selection
-//     });
-//   }
-//
-//   void _saveChanges() {
-//     // Handle save changes
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: appBarColor,
-//       appBar: AppBar(
-//         title: const Text('Edit Profile'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           children: [
-//             Container(
-//               padding: const EdgeInsets.all(18),
-//               decoration: const BoxDecoration(
-//                   color: white,
-//                   borderRadius: BorderRadius.all(Radius.circular(20))),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   const Text(
-//                     "Set Profile Picture",
-//                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-//                   ),
-//                   SizedBox(
-//                     height: height * 0.03,
-//                   ),
-//                   const Center(
-//                     child: CircleAvatar(
-//                       radius: 50,
-//                       backgroundColor: Colors.yellow,
-//                       child: Icon(Icons.person, size: 40),
-//                     ),
-//                   ),
-//                   SizedBox(
-//                     height: height * 0.03,
-//                   ),
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: [
-//                       Column(
-//                         children: [
-//                           CircleAvatar(
-//                             radius: 26,
-//                             child: IconButton(
-//                               icon: const Icon(
-//                                 Icons.camera_alt_outlined,
-//                                 color: tertiary,
-//                               ),
-//                               onPressed: _openCamera,
-//                             ),
-//                           ),
-//                           const Text(
-//                             'Open \nCamera',
-//                             textAlign: TextAlign.center,
-//                           ),
-//                         ],
-//                       ),
-//                       Column(
-//                         children: [
-//                           CircleAvatar(
-//                             radius: 26,
-//                             child: IconButton(
-//                               icon: const Icon(Icons.photo_camera_back_outlined,
-//                                   color: tertiary),
-//                               onPressed: _selectFromGallery,
-//                             ),
-//                           ),
-//                           const Text(
-//                             'Select from \nGallery',
-//                             textAlign: TextAlign.center,
-//                           ),
-//                         ],
-//                       ),
-//                       Column(
-//                         children: [
-//                           CircleAvatar(
-//                             radius: 26,
-//                             child: IconButton(
-//                               icon: const Icon(Icons.person_outline,
-//                                   color: tertiary),
-//                               onPressed: _selectAvatar,
-//                             ),
-//                           ),
-//                           const Text(
-//                             'Select \nAvatar',
-//                             textAlign: TextAlign.center,
-//                           ),
-//                         ],
-//                       ),
-//                     ],
-//                   ),
-//                 ],
-//               ),
-//             ),
-//             SizedBox(
-//               height: height * 0.02,
-//             ),
-//             Container(
-//               padding: const EdgeInsets.all(18),
-//               decoration: const BoxDecoration(
-//                   color: white,
-//                   borderRadius: BorderRadius.all(Radius.circular(20))),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   const Text(
-//                     "Set Display Name",
-//                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-//                   ),
-//                   const Text(
-//                     "Numbers, special characters are not allowed",
-//                     style: TextStyle(fontSize: 14, color: labelColor),
-//                   ),
-//                   SizedBox(
-//                     height: height * 0.02,
-//                   ),
-//                   CustomTextField(
-//                     height: height * 0.08,
-//                     filled: true,
-//                     fillColor: lightBlue,
-//                     fieldRadius: const BorderRadius.all(Radius.circular(25)),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//             const SizedBox(height: 16.0),
-//             Container(
-//                 padding: const EdgeInsets.all(18),
-//                 decoration: const BoxDecoration(
-//                     color: white,
-//                     borderRadius: BorderRadius.all(Radius.circular(20))),
-//                 child:Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     const Text(
-//                       "Privacy Management",
-//                       style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-//                     ),
-//                     const Text(
-//                       "Control who can see your game history",
-//                       style: TextStyle(fontSize: 14, color: labelColor),
-//                     ),
-//                     // SizedBox(
-//                     //   height: height * 0.02,
-//                     // ),
-//                     // CustomTextField(
-//                     //   height: height * 0.08,
-//                     //   filled: true,
-//                     //   fillColor: lightBlue,
-//                     //   fieldRadius: BorderRadius.all(Radius.circular(25)),
-//                     // ),
-//                     Row(
-//                       children: [
-//                         const Text(
-//                           "My Game History",
-//                           style: TextStyle(fontSize: 14, color: labelColor),
-//                         ),
-//                         InkWell(
-//                           onTap: (){
-//                             _showBottomSheet( context);
-//                           },
-//                           child: Container(
-//                             height: height*0.03,
-//                             width: width*0.3,
-//                             decoration: const BoxDecoration(
-//                               color: lightBlue,
-//                               borderRadius: BorderRadius.all(Radius.circular(25))
-//                             ),
-//                             child: Text(_selectedOption),
-//                           ),
-//                         )
-//                       ],
-//                     )
-//                   ],
-//                 )
-//             ),
-//
-//             const Spacer(),
-//             ElevatedButton(
-//               onPressed: _saveChanges,
-//               child: const Text('Save Changes'),
-//               style: ElevatedButton.styleFrom(
-//                 minimumSize: const Size(double.infinity, 45),
-//                 backgroundColor: Colors.grey, // Button color
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//   void _showBottomSheet(BuildContext context) {
-//     showModalBottomSheet(
-//       context: context,
-//       builder: (context) {
-//         return PrivacyOptionsBottomSheet();
-//       },
-//     );
-//   }
-// }
-//
-// class PrivacyOptionsBottomSheet extends StatefulWidget {
-//   @override
-//   _PrivacyOptionsBottomSheetState createState() => _PrivacyOptionsBottomSheetState();
-// }
-//
-// class _PrivacyOptionsBottomSheetState extends State<PrivacyOptionsBottomSheet> {
-//   String _selectedOption = 'Only me';
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(16.0),
-//       child: Column(
-//         mainAxisSize: MainAxisSize.min,
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           const Padding(
-//             padding: EdgeInsets.only(left: 350.0),
-//             child: Icon( Icons.close),
-//           ),
-//           const Text(
-//             'Privacy Options: My Game \nHistory',
-//             style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
-//           ),
-//           const SizedBox(height: 20),
-//           ListTile(
-//             leading: const Icon( Icons.visibility),
-//             title: const Text('Everyone'),
-//             subtitle: const Text('Anyone on the Zupee platform will be able to see',style: TextStyle(fontSize: 10,color: labelColor)),
-//             trailing: Radio<String>(
-//               value: 'Everyone',
-//               groupValue: _selectedOption,
-//               onChanged: (value) {
-//                 setState(() {
-//                   _selectedOption = value!;
-//                 });
-//               },
-//             ),
-//           ),
-//           ListTile(
-//             leading: const Icon( Icons.lock),
-//             title: const Text('Only me'),
-//             subtitle: const Text('Nobody can see',style: TextStyle(fontSize: 10,color: labelColor)),
-//             trailing: Radio<String>(
-//               value: 'Only me',
-//               groupValue: _selectedOption,
-//               onChanged: (value) {
-//                 setState(() {
-//                   _selectedOption = value!;
-//                 });
-//               },
-//             ),
-//           ),
-//           ListTile(
-//             leading: const Icon( Icons.people),
-//             title: const Text('My Connections'),
-//             subtitle: const Text('Only your connections (followers and following) will be able to see',style: TextStyle(fontSize: 10,color: labelColor)),
-//             trailing: Radio<String>(
-//               value: 'My Connections',
-//               groupValue: _selectedOption,
-//               onChanged: (value) {
-//                 setState(() {
-//                   _selectedOption = value!;
-//                 });
-//               },
-//             ),
-//           ),
-//           const SizedBox(height: 20),
-//           Center(
-//             child: Container(
-//               alignment: Alignment.center,
-//               height: height*0.06,
-//               width: width*0.8,
-//               decoration: const BoxDecoration(
-//                   color: secondary,
-//                   borderRadius: BorderRadius.all(Radius.circular(20))),
-//               child: Text("Done",style: TextStyle(fontWeight: FontWeight.w600,color: tertiary),),
-//             ),
-//           ),
-//
-//         ],
-//       ),
-//     );
-//   }
-// }
+
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_text_field.dart';
+import 'package:zupee/utils/toast.dart';
+import 'package:zupee/view/bottomsheet/edit_profile_bottomsheet.dart';
+import 'package:zupee/view_model/profile_view_model.dart';
+
+import '../../view_model/profile_update_view_model.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -353,45 +25,34 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
-  String _phoneNumber = "+9163xxxx0498";
   String _selectedPrivacyOption = "Everyone";
   IconData _selectedPrivacyIcon = Icons.visibility;
 
   @override
   void initState() {
     super.initState();
-    _nameController.text = _phoneNumber;
+    viewProfile();
   }
+viewProfile(){
+  final profileViewModel = Provider.of<ProfileViewModel>(context,listen: false).profileResponse?.data;
+  _nameController.text =(profileViewModel?.username.toString() ?? profileViewModel?.mobileNumber.toString())!;
+}
 
-  Future<void> _openCamera() async {
-    final pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.camera);
+  File? _image;
+  final picker = ImagePicker();
+  String? base64Image;
+  Future<void> _getImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+
     if (pickedFile != null) {
       setState(() {
-        // Handle the image picked from the camera
+        _image = File(pickedFile.path);
       });
+      base64Image = base64Encode(_image!.readAsBytesSync());
     }
   }
 
-  Future<void> _selectFromGallery() async {
-    final pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        // Handle the image picked from the gallery
-      });
-    }
-  }
 
-  void _selectAvatar() {
-    setState(() {
-      // Handle avatar selection
-    });
-  }
-
-  void _saveChanges() {
-    // Handle save changes
-  }
 
   void _showBottomSheet(BuildContext context) async {
     final result = await showModalBottomSheet<Map<String, dynamic>>(
@@ -413,13 +74,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final profileUpdate = Provider.of<ProfileUpdateViewModel>(context);
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context).profileResponse?.data;
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title:  Text('Edit Profile'.tr),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
@@ -430,19 +93,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Set Profile Picture",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                   Text(
+                    "Set Profile Picture".tr,
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(
                     height: height * 0.03,
                   ),
-                  const Center(
-                    child: CircleAvatar(
+                   Center(
+                    child: profileViewModel!.profilePicture != null &&
+                        _image == null
+                        ? CircleAvatar(
                       radius: 50,
-                      backgroundColor: Colors.yellow,
-                      child: Icon(Icons.person, size: 40),
-                    ),
+                      backgroundImage: NetworkImage(
+                          profileViewModel.profilePicture
+                              .toString()),
+                    )
+                        : _image == null
+                        ? const CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage(
+                          Assets.iconAccount),
+                    )
+                        : CircleAvatar(
+                      radius: 50,
+                      backgroundImage:
+                      FileImage(_image!),
+                    )
                   ),
                   SizedBox(
                     height: height * 0.03,
@@ -455,15 +132,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           CircleAvatar(
                             radius: 26,
                             child: IconButton(
-                              icon: const Icon(
+                              icon:  const Icon(
                                 Icons.camera_alt_outlined,
                                 color: tertiary,
                               ),
-                              onPressed: _openCamera,
+                              onPressed:(){ _getImage(ImageSource.camera);},
                             ),
                           ),
-                          const Text(
-                            'Open \nCamera',
+                           Text(
+                            'Open \nCamera'.tr,
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -475,11 +152,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: IconButton(
                               icon: const Icon(Icons.photo_camera_back_outlined,
                                   color: tertiary),
-                              onPressed: _selectFromGallery,
+                              onPressed: (){ _getImage(ImageSource.gallery);},
                             ),
                           ),
-                          const Text(
-                            'Select from \nGallery',
+                           Text(
+                            'Select from \nGallery'.tr,
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -491,10 +168,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: IconButton(
                               icon: const Icon(Icons.person_outline,
                                   color: tertiary),
-                              onPressed: _selectAvatar,
+                              onPressed: (){},
                             ),
                           ),
-                          const Text(
+                           const Text(
                             'Select \nAvatar',
                             textAlign: TextAlign.center,
                           ),
@@ -516,19 +193,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Set Display Name",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                   Text(
+                    "Set Display Name".tr,
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                   ),
-                  const Text(
-                    "Numbers, special characters are not allowed",
-                    style: TextStyle(fontSize: 14, color: labelColor),
+                   Text(
+                    "Numbers, special characters are not allowed".tr,
+                    style: const TextStyle(fontSize: 14, color: labelColor),
                   ),
                   SizedBox(
                     height: height * 0.02,
                   ),
                   CustomTextField(
-                    contentPadding: EdgeInsets.all(15),
+                    contentPadding: const EdgeInsets.all(15),
                     controller:_nameController ,
                     height: height * 0.08,
                     filled: true,
@@ -547,28 +224,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Privacy Management",
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                     Text(
+                      "Privacy Management".tr,
+                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                     ),
-                    const Text(
-                      "Control who can see your game history",
-                      style: TextStyle(fontSize: 14, color: labelColor),
+                     Text(
+                      "Control who can see your game history".tr,
+                      style: const TextStyle(fontSize: 14, color: labelColor),
                     ),
                     SizedBox(height: height*0.03,),
                     Row(
                       children: [
-                        const Text(
-                          "My Game History",
-                          style: TextStyle(fontSize: 14, color: labelColor),
+                         Text(
+                          "My Game History".tr,
+                          style: const TextStyle(fontSize: 14, color: labelColor),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         InkWell(
                           onTap: () {
                             _showBottomSheet(context);
                           },
                           child: Container(
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             height: height * 0.035,
                             width: width * 0.4,
                             decoration: const BoxDecoration(
@@ -580,9 +257,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               children: [
                                 Icon(_selectedPrivacyIcon, size: 16, color: black),
                                 const SizedBox(width: 4),
-                                Text(_selectedPrivacyOption,style: TextStyle(fontSize: 13),),
-                                Spacer(),
-                                Icon(Icons.keyboard_arrow_down, size: 16, color: tertiary),
+                                Text(_selectedPrivacyOption,style: const TextStyle(fontSize: 13),),
+                                const Spacer(),
+                                const Icon(Icons.keyboard_arrow_down, size: 16, color: tertiary),
                               ],
                             ),
                           ),
@@ -592,18 +269,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     )
                   ],
                 )),
-            const Spacer(),
-            Center(
+            const SizedBox(height: 16.0),
+            InkWell(
+              onTap: (){
+                if (
+                _nameController.text.isNotEmpty) {
+                  profileUpdate.profileUpdateApi(
+                      _nameController.text, base64Image.toString(),
+                      context);
+                } else {
+                  Utils.showErrorToast(
+                      "Please Enter Valid Phone number".tr);
+                }
+              },
               child: Container(
                 alignment: Alignment.center,
                 height: height * 0.06,
                 width: width * 0.8,
                 decoration: const BoxDecoration(
-                    color: lightGray,
+                    color: secondary,
                     borderRadius: BorderRadius.all(Radius.circular(25))),
-                child: const Text(
-                  "Save Changes",
-                  style: TextStyle(fontWeight: FontWeight.w600, color: labelColor),
+                child:  Text(
+                  "Save Changes".tr,
+                  style: const TextStyle(fontWeight: FontWeight.w600, color: labelColor),
                 ),
               ),
             ),
@@ -614,126 +302,3 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 }
 
-class PrivacyOptionsBottomSheet extends StatefulWidget {
-  final String selectedOption;
-
-  const PrivacyOptionsBottomSheet({
-    Key? key,
-    required this.selectedOption,
-  }) : super(key: key);
-
-  @override
-  _PrivacyOptionsBottomSheetState createState() =>
-      _PrivacyOptionsBottomSheetState();
-}
-
-class _PrivacyOptionsBottomSheetState
-    extends State<PrivacyOptionsBottomSheet> {
-  late String _selectedOption;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedOption = widget.selectedOption;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 350.0),
-            child: Icon(Icons.close),
-          ),
-          const Text(
-            'Privacy Options: My Game \nHistory',
-            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          ListTile(
-            leading: const Icon(Icons.visibility),
-            title: const Text('Everyone'),
-            subtitle: const Text(
-              'Anyone on the Zupee platform will be able to see',
-              style: TextStyle(fontSize: 10, color: labelColor),
-            ),
-            trailing: Radio<String>(
-              value: 'Everyone',
-              groupValue: _selectedOption,
-              onChanged: (value) {
-                setState(() {
-                  _selectedOption = value!;
-                });
-                Navigator.pop(context, {
-                  'option': value,
-                  'icon': Icons.visibility,
-                });
-              },
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.lock),
-            title: const Text('Only me'),
-            subtitle: const Text(
-              'Nobody can see',
-              style: TextStyle(fontSize: 10, color: labelColor),
-            ),
-            trailing: Radio<String>(
-              value: 'Only me',
-              groupValue: _selectedOption,
-              onChanged: (value) {
-                setState(() {
-                  _selectedOption = value!;
-                });
-                Navigator.pop(context, {
-                  'option': value,
-                  'icon': Icons.lock,
-                });
-              },
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.people),
-            title: const Text('My Connections'),
-            subtitle: const Text(
-              'Only your connections (followers and following) will be able to see',
-              style: TextStyle(fontSize: 10, color: labelColor),
-            ),
-            trailing: Radio<String>(
-              value: 'My Connections',
-              groupValue: _selectedOption,
-              onChanged: (value) {
-                setState(() {
-                  _selectedOption = value!;
-                });
-                Navigator.pop(context, {
-                  'option': value,
-                  'icon': Icons.people,
-                });
-              },
-            ),
-          ),
-          const SizedBox(height: 20),
-          Center(
-            child: Container(
-              alignment: Alignment.center,
-              height: height * 0.06,
-              width: width * 0.8,
-              decoration: const BoxDecoration(
-                  color: secondary,
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              child: const Text(
-                "Done",
-                style: TextStyle(fontWeight: FontWeight.w600, color: tertiary),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

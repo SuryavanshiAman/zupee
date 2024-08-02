@@ -7,24 +7,25 @@ import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view/bottomsheet/tournament_bottomsheet.dart';
 
-//toplist
-class firstlist {
+
+class FirstList {
   String title;
-  firstlist(this.title);
+  FirstList(this.title);
 }
 
-// insidelist
-class secondlist {
+
+class SecondList {
   String title;
-  secondlist(this.title);
+  SecondList(this.title);
 }
 
-class Newone {
-  //Class for grid view
+class NewOne {
+
   String? title;
   String titleone;
-  Newone(this.title, this.titleone);
+  NewOne(this.title, this.titleone);
 }
 
 class LudoSupreme extends StatefulWidget {
@@ -43,7 +44,6 @@ class _LudoSupremeState extends State<LudoSupreme>
   @override
   void initState() {
     super.initState();
-    // StartTimer();
     _scrollController.addListener(_handleScroll);
   }
 
@@ -61,16 +61,17 @@ class _LudoSupremeState extends State<LudoSupreme>
       }
     });
   }
+
   int _start = 60;
-  Timer ?_timer;
+  Timer? _timer;
 
   void startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_start == 0) {
         setState(() {
           timer.cancel();
           Navigator.pushNamed(context, RoutesName.timerScreen);
-          time=false;
+          time = false;
         });
       } else {
         setState(() {
@@ -79,53 +80,40 @@ class _LudoSupremeState extends State<LudoSupreme>
       }
     });
   }
+
   @override
   void dispose() {
     _timer!.cancel();
     super.dispose();
   }
-  // void StartTimer() {
-  //   countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
-  // }
-  bool time=false;
-  // void setCountDown() {
-  //   final reduceSecondsBy = 1;
-  //   setState(() {
-  //     final seconds = myDuration.inSeconds - reduceSecondsBy;
-  //     if (seconds < 0) {
-  //       countdownTimer!.cancel();
-  //       Navigator.pushNamed(context,RoutesName.timerScreen);
-  //     } else {
-  //       myDuration = Duration(seconds: seconds);
-  //     }
-  //
-  //   });
-  // }
 
+  bool time = false;
+
+  Set<int> selectedIndices = {0};
   @override
   Widget build(BuildContext context) {
-    List<firstlist> list = [
-      firstlist("All"),
-      firstlist("QUICK"),
-      firstlist("4 Players - 1 Winner"),
-      firstlist("2 Players - 1 winner"),
-      firstlist("4 Players - 2 Winners"),
+    List<FirstList> list = [
+      FirstList("All"),
+      FirstList("QUICK"),
+      FirstList("4 Players - 1 Winner"),
+      FirstList("2 Players - 1 winner"),
+      FirstList("4 Players - 2 Winners"),
     ];
 
-    List<Newone> addAmount = [
-      Newone("₹150", "₹50"),
-      Newone("₹140", "₹40"),
-      Newone("₹100", "₹40"),
-      Newone("₹50", "₹20"),
-      Newone("₹40", "₹10"),
+    List<NewOne> addAmount = [
+      NewOne("₹150", "₹50"),
+      NewOne("₹140", "₹40"),
+      NewOne("₹100", "₹40"),
+      NewOne("₹50", "₹20"),
+      NewOne("₹40", "₹10"),
     ];
 
-    List<secondlist> listnew = [
-      secondlist("4 Players - 2 Winners"),
-      secondlist("2 Players - 1 Winners"),
-      secondlist("4 Players - 2 Winners"),
-      secondlist("2 Players - 1 Winners"),
-      secondlist("2 Players - 1 Winners"),
+    List<SecondList> listnew = [
+      SecondList("4 Players - 2 Winners"),
+      SecondList("2 Players - 1 Winners"),
+      SecondList("4 Players - 2 Winners"),
+      SecondList("2 Players - 1 Winners"),
+      SecondList("2 Players - 1 Winners"),
     ];
     String strDigits(int n) => n.toString().padLeft(2, '0');
     final seconds = strDigits(myDuration.inSeconds.remainder(60));
@@ -150,26 +138,46 @@ class _LudoSupremeState extends State<LudoSupreme>
                       scrollDirection: Axis.horizontal,
                       itemCount: list.length,
                       itemBuilder: (context, index) {
-                        return Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                  height: height * 0.045,
-                                  padding: const EdgeInsets.all(9),
-                                  decoration: BoxDecoration(
-                                      color: white,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Center(
-                                      child: Text(
-                                    list[index].title,
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: black),
-                                  ))),
-                            )
-                          ],
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (selectedIndices.contains(index)) {
+                                selectedIndices.remove(index);
+                              } else {
+                                if (index != 0) {
+                                  selectedIndices.add(index);
+                                  selectedIndices.remove(0);
+                                } else {
+                                  selectedIndices.clear();
+                                  selectedIndices.add(0);
+                                }
+                              }
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Container(
+                                    height: height * 0.045,
+                                    padding: const EdgeInsets.all(9),
+                                    decoration: BoxDecoration(
+                                        color: selectedIndices.contains(index)
+                                            ? secondary
+                                            : white,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Center(
+                                        child: Text(
+                                      list[index].title,
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: black),
+                                    ))),
+                              )
+                            ],
+                          ),
                         );
                       })),
             ),
@@ -274,45 +282,60 @@ class _LudoSupremeState extends State<LudoSupreme>
                     color: Colors.black,
                     fontWeight: FontWeight.w500),
               ),
-                  SizedBox(height:height*0.03),
-                time?  Container(
-                    height: height*0.25,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.green,width: 2),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: const EdgeInsets.all(5),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.hourglass_empty, color: Colors.green, size: 50),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Game starting in...',
-                          style: TextStyle(color: Colors.green, fontSize: 24,fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 10),
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-
-                          decoration: const BoxDecoration(
+              SizedBox(height: height * 0.03),
+              time
+                  ? Container(
+                      height: height * 0.25,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.green, width: 2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.all(5),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.hourglass_empty,
+                              color: Colors.green, size: 50),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Game starting in...',
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                            decoration: const BoxDecoration(
+                              color: green,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(35)),
+                            ),
+                            child: Text(
+                              "00m:${_start}s",
+                              style: const TextStyle(
+                                  color: white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Divider(
                             color: green,
-                            borderRadius: BorderRadius.all(Radius.circular(35)),
                           ),
-                          child: Text("00m:${_start}s",
-                            style: const TextStyle(color: white, fontSize: 20,fontWeight: FontWeight.w600),
+                          const Text(
+                            '4 PLAYERS • 2 WINNERS • ₹16 Prize',
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Divider(color: green,),
-                        const Text(
-                          '4 PLAYERS • 2 WINNERS • ₹16 Prize',
-                          style: TextStyle(color: Colors.green, fontSize: 16,fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ):Container(),
+                        ],
+                      ),
+                    )
+                  : Container(),
               ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -346,8 +369,7 @@ class _LudoSupremeState extends State<LudoSupreme>
                                           topRight: Radius.circular(10),
                                           topLeft: Radius.circular(10))),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       const Icon(
                                         Icons.people_outline,
@@ -374,8 +396,7 @@ class _LudoSupremeState extends State<LudoSupreme>
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      left: width * 0.04,
-                                      right: width * 0.07),
+                                      left: width * 0.04, right: width * 0.07),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -410,14 +431,11 @@ class _LudoSupremeState extends State<LudoSupreme>
                                                 BorderRadius.circular(20)),
                                         child: Center(
                                           child: Text(
-                                              addAmount[index]
-                                                  .title
-                                                  .toString(),
+                                              addAmount[index].title.toString(),
                                               style: TextStyle(
                                                   fontSize: width * 0.05,
                                                   color: Colors.black,
-                                                  fontWeight:
-                                                      FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                       ),
                                       InkWell(
@@ -464,9 +482,8 @@ class _LudoSupremeState extends State<LudoSupreme>
                                               decoration: const BoxDecoration(
                                                 color: Colors
                                                     .blue, // Replace with your secondary color
-                                                borderRadius:
-                                                    BorderRadius.all(
-                                                        Radius.circular(25)),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(25)),
                                               ),
                                             ),
                                           ),
@@ -679,286 +696,247 @@ class _LudoSupremeState extends State<LudoSupreme>
       ),
     );
   }
+
   bool _isExpanded = false;
   void ConfirmPaymentBottomSheet(BuildContext context) async {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25.0),
-        ),
-      ),
-      builder: (BuildContext context) {
-        return Container(
-          padding: const EdgeInsets.all(16.0),
-          // height: height*0.47,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(Icons.cancel_outlined, size: 30, color: black)),
-              const Center(
-                child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: appBarColor,
-                    child: Center(
-                        child: Image(image: AssetImage(Assets.imagesRupeesBlue)))),
-              ),
-              const SizedBox(height: 8),
-              const Center(
-                child: Text(
-                  'Confirm Payment',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 18.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Entry Fee',
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w600)),
-                        const Spacer(),
-                        const Text('₹1',
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w600)),
-                        SizedBox(
-                          width: width * 0.02,
-                        ),
-                        InkWell(
-                            onTap: () {
-                              setState(() {
-                                _isExpanded = !_isExpanded;
-                              });
-                            },
-                            child: const Icon(Icons.keyboard_arrow_down))
-                      ],
+          isScrollControlled: true,
+          context: context,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(25.0),
+            ),
+          ),
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              // height: height*0.47,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(Icons.cancel_outlined,
+                          size: 30, color: black)),
+                  const Center(
+                    child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor: appBarColor,
+                        child: Center(
+                            child: Image(
+                                image: AssetImage(Assets.imagesRupeesBlue)))),
+                  ),
+                  const SizedBox(height: 8),
+                  const Center(
+                    child: Text(
+                      'Confirm Payment',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
                     ),
-                    if (_isExpanded)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Column(
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 18.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Divider(),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: width * 0.5,
-                                  child: const Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('From Bonus',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                      Text(
-                                        'From Cashback',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: labelColor,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text('From Winning & Deposits',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: width * 0.2,
-                                  child: const Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text('₹0',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                      SizedBox(height: 8),
-                                      Text(' ₹1',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                      Text('₹0',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            const Text('Entry Fee',
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w600)),
+                            const Spacer(),
+                            const Text('₹1',
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w600)),
+                            SizedBox(
+                              width: width * 0.02,
                             ),
-                            const Divider(),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: width * 0.5,
-                                  child: const Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('Entry Fee Breakdown',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600)),
-                                      Text(
-                                        'To Prize Pool',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: labelColor),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text('To Platform Fee',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: width * 0.2,
-                                  child: const Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text('', style: TextStyle(fontSize: 16)),
-                                      SizedBox(height: 8),
-                                      Text(' ₹0.8',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                      Text('₹0.2',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                            InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _isExpanded = !_isExpanded;
+                                  });
+                                },
+                                child: const Icon(Icons.keyboard_arrow_down))
                           ],
                         ),
+                        if (_isExpanded)
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Column(
+                              children: [
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: width * 0.5,
+                                      child: const Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text('From Bonus',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: labelColor)),
+                                          Text(
+                                            'From Cashback',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: labelColor,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          SizedBox(height: 8),
+                                          Text('From Winning & Deposits',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: labelColor)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: width * 0.2,
+                                      child: const Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text('₹0',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: labelColor)),
+                                          SizedBox(height: 8),
+                                          Text(' ₹1',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: labelColor)),
+                                          Text('₹0',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: labelColor)),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: width * 0.5,
+                                      child: const Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Entry Fee Breakdown',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600)),
+                                          Text(
+                                            'To Prize Pool',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: labelColor),
+                                          ),
+                                          SizedBox(height: 8),
+                                          Text('To Platform Fee',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: labelColor)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: width * 0.2,
+                                      child: const Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text('',
+                                              style: TextStyle(fontSize: 16)),
+                                          SizedBox(height: 8),
+                                          Text(' ₹0.8',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: labelColor)),
+                                          Text('₹0.2',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: labelColor)),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: height * 0.03),
+                  Center(
+                    child: CustomContainer(
+                      onTap: () {
+                        setState(() {
+                          time = true;
+                          startTimer();
+                        });
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          elevation: 5,
+                          backgroundColor: primary,
+                          shape: const RoundedRectangleBorder(
+                              side: BorderSide(width: 2, color: Colors.white),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(35), topRight: Radius.circular(35))),
+                          context: context,
+                          builder: (context) {
+                            return const TournamentBottomsheet();
+                          },
+                        ) ;
+                      },
+                      alignment: Alignment.center,
+                      height: height * 0.07,
+                      widths: width * 0.8,
+                      color: secondary,
+                      borderRadius: const BorderRadius.all(Radius.circular(35)),
+                      child: Text(
+                        "Join Now".tr,
+                        style: const TextStyle(
+                            fontSize: 16,
+                            color: tertiary,
+                            fontWeight: FontWeight.w600),
                       ),
-                  ],
-                ),
-              ),
-              SizedBox(height: height * 0.03),
-              Center(
-                child: CustomContainer(
-                  onTap: () {
-                    setState(() {
-                      time=true;
-                      startTimer();
-                    });
-                    Navigator.pop(context);
-                    showExitConfirmation(context);
-                  },
-                  alignment: Alignment.center,
-                  height: height * 0.07,
-                  widths: width * 0.8,
-                  color: secondary,
-                  borderRadius: const BorderRadius.all(Radius.circular(35)),
-                  child: Text(
-                    "Join Now".tr,
-                    style: const TextStyle(
-                        fontSize: 16, color: tertiary, fontWeight: FontWeight.w600),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        );
-      },
-    ) ??
+            );
+          },
+        ) ??
         false;
   }
-  static showExitConfirmation(BuildContext context) async {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    return await showModalBottomSheet(
-      elevation: 5,
-      backgroundColor: primary,
-      shape: const RoundedRectangleBorder(
-          side: BorderSide(width: 2, color: Colors.white),
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(35), topRight: Radius.circular(35))),
-      context: context,
-      builder: (context) {
-        return SizedBox(
-          height: height * 0.4,
-          width: width,
-          child: Column(
-            // mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 28.0, top: 28),
-                child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Icon(Icons.close)),
-              ),
-              SizedBox(height: height / 30),
-              Center(child: Image.asset(Assets.gifIcons8Hourglass,)),
-              SizedBox(height: height * 0.03),
-              Center(
-                  child: Text(
-                    "Game Start in.....".tr,
-                    style: const TextStyle(
-                        fontSize: 24,
-                        color: green,
-                        fontWeight: FontWeight.w600),
-                  )),
-              SizedBox(height: height * 0.03),
-              Center(
-                child: Container(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, top: 8, bottom: 8),
-                  decoration: const BoxDecoration(
-                      color: green,
-                      borderRadius: BorderRadius.all(Radius.circular(25))),
-                  child:  Text(
-                    "00:00",
-                    style: TextStyle(
-                        fontSize: 24,
-                        color: white,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-              )
-            ],
-          ),
-        );
-      },
-    ) ??
-        false;
-  }
+
+
 }
-
-

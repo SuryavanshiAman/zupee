@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
-import 'package:zupee/res/app_constant.dart';
+import 'package:zupee/view_model/services/splash_services.dart';
 
-import '../../utils/routes_name.dart';
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,28 +14,15 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // SplashServices splashServices = SplashServices();
+  SplashServices splashServices = SplashServices();
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2),(){
-      Navigator.pushReplacementNamed(context, RoutesName.registerScreen);
-    });
-
-    // Login();
-    // splashServices.checkAuthentication(context);
-    // final profileViewModel=Provider.of<ProfileViewModel>(context,listen: false);
-    // profileViewModel.getProfileApi(context);
-
+    splashServices.checkAuthentication(context);
     super.initState();
   }
 
-// Login(){
-//     print("hii");
-//     Future.delayed(Duration(seconds: 3),(){
-//       Navigator.pushReplacementNamed(context,RoutesName.loginScreen );
-//     });
-// }
-  bool _visible = true;
+
+  final bool _visible = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: height * 0.15,
               ),
               const Text(
-                "ZUPEE",
+                "LUDO ZUPEE",
                 style: TextStyle(fontSize: 46, fontWeight: FontWeight.w700,color: tertiary),
               )
             ],

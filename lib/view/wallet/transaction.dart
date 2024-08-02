@@ -37,6 +37,21 @@ class _TransactionScreenState extends State<TransactionScreen> {
   }
   void _onItemTapped(int index) {
     setState(() {
+
+
+          if (selectedIndices.contains(index)) {
+            selectedIndices.remove(index);
+          } else {
+            if (index != 0) {
+              selectedIndices.add(index);
+              selectedIndices.remove(0);
+            } else {
+              selectedIndices.clear();
+              selectedIndices.add(0);
+            }
+          }
+
+
       if (index == 0) {
         // Reset the list to its original state
         list = List.from(originalList);
@@ -48,6 +63,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
       }
     });
   }
+  Set<int> selectedIndices = {0};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +106,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   // margin: EdgeInsets.all(3),
                                   padding: const EdgeInsets.all(9),
                                   decoration: BoxDecoration(
-                                      color: white,
+                                      color: selectedIndices.contains(index) ? secondary : white,
                                       borderRadius:
                                       BorderRadius.circular(10)),
                                   child: Center(

@@ -1,11 +1,15 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_back_button.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/custom_rich_text.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view_model/profile_view_model.dart';
 
 class WalletScreen extends StatefulWidget {
   const WalletScreen({super.key});
@@ -17,6 +21,7 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen> {
   @override
   Widget build(BuildContext context) {
+    final profileViewModel = Provider.of<ProfileViewModel>(context).profileResponse?.data;
     return Scaffold(
       backgroundColor: primary,
       appBar: AppBar(
@@ -45,15 +50,28 @@ class _WalletScreenState extends State<WalletScreen> {
               child: Column(
                 children: [
                   SizedBox(height: height*0.01,),
-                  CustomRichText(textSpans: [
-                    CustomTextSpan(text: "Total Balance".tr,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500),
-                    CustomTextSpan(text: "    ⓘ",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900),
-                  ]),
-                  const Text("₹10",style: TextStyle(
+                  RichText(
+                    // textAlign: TextAlign.center,
+                    text: TextSpan( text: "Total Balance".tr,
+                      style: const TextStyle(fontSize: 16, color: black),
+                      children: [
+                        TextSpan(
+                          text: "    ⓘ",
+                          style: const TextStyle(
+                            color: black,
+                            fontWeight: FontWeight.w900,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              _showBottomSheet(context);
+                            },
+                        ),
+
+                      ],
+                    ),
+                  ),
+
+                   Text(profileViewModel?.wallet.toString()??"",style: const TextStyle(
                     fontSize: 36,fontWeight: FontWeight.w700
                   ),),
                   const Divider(),
@@ -67,7 +85,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               fontSize: 16,fontWeight: FontWeight.w400,
                             color: labelColor
                           ),),
-                          const Text("₹0",style: TextStyle(
+                           Text("₹${profileViewModel?.depositWallet.toString()??""}",style: const TextStyle(
                               fontSize: 30,fontWeight: FontWeight.w500
                           ),),
                         ],
@@ -109,14 +127,13 @@ class _WalletScreenState extends State<WalletScreen> {
                               fontSize: 16,fontWeight: FontWeight.w400,
                               color: labelColor
                           ),),
-                          const Text("₹0",style: TextStyle(
+                           Text("₹${profileViewModel?.winningAmountWallet.toString()??""}",style: const TextStyle(
                               fontSize: 30,fontWeight: FontWeight.w500
                           ),),
                         ],
                       ),
                       CustomContainer(
                         onTap: (){
-                          // showDialog(context: context, builder: builder)
                           Navigator.pushNamed(context, RoutesName.withdrawScreen);
                         },
                           height: height*0.06,
@@ -237,6 +254,62 @@ class _WalletScreenState extends State<WalletScreen> {
             ),
           )
         ],
+      ),
+    );
+  }
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              InkWell(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.cancel_outlined)),
+              _buildListItem(
+                image: Assets.imagesDeposit,
+                title: 'Deposits',
+                description: 'This money can be used to play tournaments.',
+              ),
+              _buildListItem(
+                image: Assets.imagesRupeesWhite,
+                title: 'Winnings',
+                description: 'The money you have won by playing tournaments. You can withdraw this money.',
+              ),
+              _buildListItem(
+                image: Assets.imagesCashback,
+                title: 'Cashback',
+                description: 'Earn Cashback by performing certain actions such as adding money to your wallet, completing KYC etc.',
+              ),
+              _buildListItem(
+                image: Assets.imagesBonus,
+                title: 'Bonus',
+                description: 'Bonus can be used to unlock rewards or new features.',
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildListItem({required String image, required String title, required String description}) {
+    return Center(
+      child: ListTile(
+        leading:CircleAvatar(
+          radius: 30,
+          backgroundColor: lightBlue,
+          child:Image.asset(image)
+        ),
+        // Icon(icon, color: Colors.purple),
+        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16)),
+        subtitle: Text(description, style: TextStyle(fontWeight: FontWeight.w500,color: labelColor)),
       ),
     );
   }

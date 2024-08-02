@@ -17,8 +17,11 @@ class Assets {
   static const String iconSecure = 'assets/icon/secure.png';
   static const String iconSupport = 'assets/icon/support.png';
   static const String iconWallet = 'assets/icon/wallet.png';
+  static const String imagesBonus = 'assets/images/bonus.png';
   static const String imagesBorrowed = 'assets/images/borrowed.png';
+  static const String imagesCashback = 'assets/images/cashback.png';
   static const String imagesCelebration = 'assets/images/celebration.png';
+  static const String imagesDeposit = 'assets/images/deposit.png';
   static const String imagesDice = 'assets/images/dice.png';
   static const String imagesDownword = 'assets/images/downword.png';
   static const String imagesFacebook = 'assets/images/facebook.png';

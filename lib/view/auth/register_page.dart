@@ -2,6 +2,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/app_constant.dart';
@@ -10,6 +11,7 @@ import 'package:zupee/res/custom_rich_text.dart';
 import 'package:zupee/res/custom_text_field.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/utils/toast.dart';
+import 'package:zupee/view_model/auth_view_model.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -38,19 +40,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    final authApi=Provider.of<AuthViewModel>(context);
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
-        leadingWidth: 200,
+        leadingWidth: 250,
         leading: const Text(
-          "     ${AppConstants.appNameTwo}",
+          " ${AppConstants.appNameTwo}",
           style: TextStyle(
               color: tertiary, fontSize: 26, fontWeight: FontWeight.w900),
         ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        // mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
             height: height * 0.04,
@@ -111,37 +113,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Text("+91",style: TextStyle(color: black, fontSize: 18),),
             ),
           ),
-          // Container(
-          //   alignment: Alignment.center,
-          //   width: width * 0.8,
-          //   height: height * 0.08,
-          //   decoration: const BoxDecoration(
-          //     color: lightGray,
-          //     border: Border(bottom: BorderSide(color: tertiary, width: 3)),
-          //     borderRadius: BorderRadius.only(
-          //         topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-          //   ),
-          //   child: Padding(
-          //     padding: const EdgeInsets.only(top: 24.0, left: 15),
-          //     child: Row(
-          //       children: [
-          //         const Text(
-          //           "+91",
-          //           style: TextStyle(fontSize: 18, color: black),
-          //         ),
-          //         CustomTextField(
-          //           controller: _controller,
-          //           maxLength: 10,
-          //           width: width * 0.65,
-          //           label: "Enter your phone number",
-          //           keyboardType: TextInputType.number,
-          //           hintColor: labelColor,
-          //           hintSize: 18,
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           SizedBox(
             height: height * 0.03,
           ),
@@ -167,7 +138,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           SizedBox(
             height: height * 0.03,
           ),
-          //
           Padding(
             padding: const EdgeInsets.only(left: 8.0,right: 8),
             child: RichText(
@@ -230,7 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 if(_controller.text.isEmpty){
                   Utils.flushBarErrorMessage("Please Enter Contact No.", context, white);
                 }else{
-                  Navigator.pushNamed(context, RoutesName.verifyPage);
+                  authApi.authApi(_controller.text.toString(), context);
                 }
 
               },

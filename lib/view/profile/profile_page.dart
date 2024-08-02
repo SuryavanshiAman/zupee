@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_back_button.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view_model/profile_view_model.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -27,16 +31,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ];
   @override
   Widget build(BuildContext context) {
+    final profileViewModel = Provider.of<ProfileViewModel>(context).profileResponse?.data;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primary,
         leadingWidth: 220,
-        leading: const Row(
+        leading:  Row(
           children: [
-            CustomBackButton(),
+            const CustomBackButton(),
             Text(
-              "My Profile",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              "My Profile".tr,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -64,38 +69,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      const CircleAvatar(
+                      profileViewModel!.profilePicture != null
+                          ? CircleAvatar(
                         radius: 50,
-                        backgroundColor: Colors.yellow,
-                        child: Icon(
-                          Icons.person,
-                          size: 50,
-                          color: Colors.purple,
-                        ),
+                        backgroundImage: NetworkImage(
+                            profileViewModel.profilePicture
+                                .toString()),
+                      )
+                          :  const CircleAvatar(
+                        radius: 50,
+                        backgroundImage: AssetImage(
+                            Assets.iconAccount),
                       ),
+
                       const SizedBox(height: 16),
-                      const Text(
-                        '+9174xxxx6942',
-                        style: TextStyle(
+                       Text(
+                        profileViewModel?.username.toString()??profileViewModel?.mobileNumber.toString()??"",
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Row(
+                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Column(
+                          Column(
                             children: [
                               Text(
-                                'Followers',
-                                style: TextStyle(
+                                'Followers'.tr,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,
                                 ),
                               ),
-                              Text(
+                              const Text(
                                 '0',
                                 style: TextStyle(
                                   fontSize: 14,
@@ -104,23 +113,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ],
                           ),
-                          Container(
+                          const SizedBox(
                             height: 20,
-                            child: const VerticalDivider(
+                            child: VerticalDivider(
                               color: Colors.grey,
                               thickness: 1,
                             ),
                           ),
-                          const Column(
+                           Column(
                             children: [
                               Text(
-                                'Following',
-                                style: TextStyle(
+                                'Following'.tr,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,
                                 ),
                               ),
-                              Text(
+                              const Text(
                                 '0',
                                 style: TextStyle(
                                   fontSize: 14,
@@ -144,9 +153,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: secondary,
                             borderRadius: BorderRadius.all(Radius.circular(25))
                           ),
-                          child:  const Text(
-                            'Edit Profile',
-                            style: TextStyle(
+                          child:   Text(
+                            'Edit Profile'.tr,
+                            style: const TextStyle(
                               fontSize: 16,
                               color: tertiary,
                               fontWeight: FontWeight.bold,
@@ -154,28 +163,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       )
-                      // ElevatedButton(
-                      //   onPressed: () {
-                      //     // Handle edit profile button press
-                      //   },
-                      //   style: ElevatedButton.styleFrom(
-                      //     foregroundColor: Colors.purple, backgroundColor: Colors.yellow,
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(8),
-                      //     ),
-                      //   ),
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.symmetric(
-                      //         horizontal: 24, vertical: 12),
-                      //     child: Text(
-                      //       'Edit Profile',
-                      //       style: TextStyle(
-                      //         fontSize: 16,
-                      //         fontWeight: FontWeight.bold,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -198,9 +185,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     ListTile(
-                      title: const Text(
-                        'My Game History',
-                        style: TextStyle(
+                      title:  Text(
+                        'My Game History'.tr,
+                        style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -235,27 +222,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ],
                               ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(16.0),
+                              child:  Padding(
+                                padding: const EdgeInsets.all(16.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.videogame_asset,
                                       size: 40,
                                       color: Colors.black,
                                     ),
-                                    SizedBox(height: 8),
+                                    const SizedBox(height: 8),
                                     Text(
-                                      'Total Games\n Played till today',
+                                      'Total Games\n Played till today'.tr,
                                       // textAlign: TextAlign.center,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.black,
                                       ),
                                     ),
-                                    SizedBox(height: 8),
-                                    Text(
+                                    const SizedBox(height: 8),
+                                    const Text(
                                       '4',
                                       style: TextStyle(
                                         fontSize: 18,
@@ -283,27 +270,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ],
                               ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(16.0),
+                              child:  Padding(
+                                padding: const EdgeInsets.all(16.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.emoji_events,
                                       size: 40,
                                       color: Colors.black,
                                     ),
-                                    SizedBox(height: 8),
+                                    const SizedBox(height: 8),
                                     Text(
-                                      'Total Games\n Won till today',
+                                      'Total Games\n Won till today'.tr,
                                       // textAlign: TextAlign.center,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.black,
                                       ),
                                     ),
-                                    SizedBox(height: 8),
-                                    Text(
+                                    const SizedBox(height: 8),
+                                    const Text(
                                       '0',
                                       style: TextStyle(
                                         fontSize: 18,
@@ -322,21 +309,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
-              // Container(
-              //   height: height*0.3,
-              //   child: ListView.builder(
-              //     scrollDirection: Axis.horizontal,
-              //     itemCount: topScorers.length,
-              //     itemBuilder: (context, index) {
-              //       final scorer = topScorers[index];
-              //       return buildTopScorerCard(
-              //         scorer['name']!,
-              //         scorer['subtitle']!,
-              //         scorer['imageUrl']!,
-              //       );
-              //     },
-              //   ),
-              // ),
               SizedBox(height:  height*0.03,),
               Container(
                 padding: const EdgeInsets.all(18),
@@ -355,9 +327,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     ListTile(
-                      title: const Text(
-                        'Top scorer this week',
-                        style: TextStyle(
+                      title:  Text(
+                        'Top scorer this week'.tr,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -369,7 +341,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     ),
                     const SizedBox(height: 8),
-                    Container(
+                    SizedBox(
                       height: height*0.25,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -449,38 +421,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   border: Border.all(color: tertiary),
                   borderRadius: const BorderRadius.all(Radius.circular(25))
               ),
-              child:  const Text(
-                'Follow',
-                style: TextStyle(
+              child:   Text(
+                'Follow'.tr,
+                style: const TextStyle(
                   fontSize: 16,
                   color: tertiary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            )
-            // ElevatedButton(
-            //   onPressed: () {
-            //     // Handle follow button press
-            //   },
-            //   style: ElevatedButton.styleFrom(
-            //     primary: Colors.white,
-            //     onPrimary: Colors.purple,
-            //     side: BorderSide(color: Colors.purple),
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(8),
-            //     ),
-            //   ),
-            //   child: Padding(
-            //     padding: const EdgeInsets.symmetric(horizontal: 12),
-            //     child: Text(
-            //       'Follow',
-            //       style: TextStyle(
-            //         fontSize: 14,
-            //         fontWeight: FontWeight.bold,
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            ),
           ],
         ),
       ),

@@ -20,7 +20,7 @@ class BottomNevBar extends StatefulWidget {
 
 class _BottomNevBarState extends State<BottomNevBar> {
   final pages = [
-     HomeScreen(),
+     const HomeScreen(),
     const ReferAndEarnScreen(),
     const AddaScreen(),
     const AccountScreen(),

@@ -1,16 +1,16 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/app_constant.dart';
-import 'package:zupee/res/custom_back_button.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/custom_text_field.dart';
-import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/utils/toast.dart';
+import 'package:zupee/view_model/auth_view_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,14 +38,24 @@ class _LoginScreenState extends State<LoginScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    final authApi=Provider.of<AuthViewModel>(context);
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
         leadingWidth: 250,
-        leading: const Row(
+        leading:  Row(
           children: [
-            CustomBackButton(),
-            Text(
+            GestureDetector(
+              onTap: () {
+                // Navigator.pushNamed(context, RoutesName.bottomNevBar,
+                //     arguments: {"index": 0});
+                Navigator.of(context).pop();
+              },
+              child: const Icon(
+                Icons.keyboard_arrow_left_rounded,color: black,size: 30,
+              ),
+            ),
+            const Text(
               "     ${AppConstants.appNameTwo}",
               style: TextStyle(
                   color: tertiary, fontSize: 26, fontWeight: FontWeight.w900),
@@ -53,10 +63,15 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
         actions: [
-          const Text(
-            "NEW USER ?",
-            style: TextStyle(
-                color: tertiary, fontWeight: FontWeight.w600, fontSize: 16),
+          InkWell(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child: const Text(
+              "NEW USER ?",
+              style: TextStyle(
+                  color: tertiary, fontWeight: FontWeight.w600, fontSize: 16),
+            ),
           ),
           SizedBox(
             width: width * 0.08,
@@ -107,7 +122,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             CustomContainer(
               onTap: () {
-                Navigator.pushReplacementNamed(context, RoutesName.bottomNevBar);
+                if(_controller.text.isEmpty){
+                  Utils.flushBarErrorMessage("Please Enter Contact No.", context, white);
+                }else{
+                  authApi.authApi(_controller.text.toString(), context);
+                }
               },
               alignment: Alignment.center,
               height: height * 0.07,

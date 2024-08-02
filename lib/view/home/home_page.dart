@@ -1,13 +1,14 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:zupee/generated/assets.dart';
-import 'package:zupee/language/translator.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view_model/profile_view_model.dart';
 class TrapeziumClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -26,6 +27,8 @@ class TrapeziumClipper extends CustomClipper<Path> {
   }
 }
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -40,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    final profileViewModel= Provider.of<ProfileViewModel>(context,listen: false);
+    profileViewModel.getProfileApi(context);
     _scrollController.addListener(_handleScroll);
   }
 
@@ -62,25 +67,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final profileViewModel = Provider.of<ProfileViewModel>(context).profileResponse?.data;
     return Scaffold(
-        body: CustomScrollView(
+        body:CustomScrollView(
             controller: _scrollController,
-            // headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             slivers: <Widget>[
           SliverAppBar(
             expandedHeight: 40.0,
             floating: false,
             pinned: true,
-            // snap: false,
-            // collapsedHeight: 50,
             backgroundColor: _showTitle ? blue : Colors.white,
             shadowColor: Colors.white,
             foregroundColor: Colors.red,
-            leadingWidth: 120,
+            leadingWidth: 250,
             leading:  const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                "  ZUPEE",
+                "LUDO ZUPEE",
                 style: TextStyle(
                     color: Colors.deepPurpleAccent, fontSize: 26, fontWeight: FontWeight.w900),
               ),
@@ -94,8 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               InkWell(
                 onTap: (){
-                  // showDialog(context: context, builder: (context)=>ChooseLang());
-                  // ChooseLang();
+
                   Navigator.pushNamed(context, RoutesName.walletScreen);
                 },
                 child: Container(
@@ -106,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: _showTitle ? Colors.white : tertiary,
                       borderRadius: const BorderRadius.all(Radius.circular(25))),
                   child: Text(
-                    "₹6",
+                    profileViewModel?.wallet??" ",
                     style: TextStyle(color: _showTitle ? tertiary : Colors.white,fontWeight: FontWeight.w700,fontSize: 16),
                   ),
                 ),
@@ -174,46 +176,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     );
                                   }).toList(),
                                 ),
-                                // Stack(
-                                //   children: [
-                                //     Padding(
-                                //       padding: EdgeInsets.only(left: 28.0),
-                                //       child: Container(
-                                //         width: width*0.06,
-                                //         height: height*0.05,
-                                //         decoration: BoxDecoration(
-                                //           shape: BoxShape.circle,
-                                //           border: Border.all(color: white,width: 1),
-                                //         ),
-                                //       )
-                                //       // CircleAvatar(
-                                //       //   radius: 14,
-                                //       //   backgroundImage: AssetImage('assets/avatar3.jpg'),
-                                //       // ),
-                                //     ),
-                                //     Padding(
-                                //       padding: EdgeInsets.only(left: 14.0),
-                                //       child: Container(
-                                //         width: width*0.06,
-                                //         height: height*0.05,
-                                //         decoration: BoxDecoration(
-                                //           shape: BoxShape.circle,
-                                //           border: Border.all(color: white,width: 1),
-                                //         ),
-                                //       )
-                                //     ),
-                                //     Container(
-                                //       width: width*0.06,
-                                //       height: height*0.05,
-                                //       decoration: BoxDecoration(
-                                //         shape: BoxShape.circle,
-                                //         border: Border.all(color: white,width: 1),
-                                //       ),
-                                //     )
-                                //   ],
-                                // ),
-                                SizedBox(width: 10),
-                                Text(
+                                const SizedBox(width: 10),
+                                const Text(
                                   '2,17,460 playing',
                                   style: TextStyle(
                                     color: Colors.white,
@@ -223,13 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ],
                             ),
-                            // const Text(
-                            //   "20,615 playing",
-                            //   style: TextStyle(
-                            //       color: white,
-                            //       fontWeight: FontWeight.w600,
-                            //       fontSize: 16),
-                            // ),
+
                           ),
                           SizedBox(
                             height: height * 0.01,
@@ -418,55 +376,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          // SizedBox(
-                          //   height: height * 0.015,
-                          // ),
-                          // Image(
-                          //   image: const AssetImage(Assets.imagesZupee),
-                          //   height: height * 0.2,
-                          // ),
-                          // SizedBox(
-                          //   height: height * 0.02,
-                          // ),
-                          // Container(
-                          //   height: height * 0.04,
-                          //   width: width * 0.6,
-                          //   decoration: const BoxDecoration(
-                          //       color: tertiary,
-                          //       borderRadius:
-                          //           BorderRadius.all(Radius.circular(25))),
-                          // ),
-                          // const Text(
-                          //   "Ludo Supreme",
-                          //   style: TextStyle(
-                          //       color: Colors.white,
-                          //       fontWeight: FontWeight.w900,
-                          //       fontSize: 28),
-                          // ),
-                          // const Text(
-                          //   "Ludo in under 10 minute",
-                          //   style: TextStyle(
-                          //       color: labelColor,
-                          //       fontWeight: FontWeight.w500,
-                          //       fontSize: 18),
-                          // ),
-                          // Container(
-                          //   alignment: Alignment.center,
-                          //   height: height * 0.05,
-                          //   width: width * 0.6,
-                          //   decoration: const BoxDecoration(
-                          //       color: secondary,
-                          //       borderRadius:
-                          //           BorderRadius.all(Radius.circular(25))),
-                          //   child: const Text("Play Now",
-                          //       style: TextStyle(
-                          //           color: tertiary,
-                          //           fontWeight: FontWeight.w500,
-                          //           fontSize: 18)),
-                          // ),
-                          // SizedBox(
-                          //   height: height * 0.03,
-                          // )
                         ],
                       ),
                     )
@@ -476,6 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
               childCount: 1,
             ),
           ),
-        ]));
+        ])
+    );
   }
 }

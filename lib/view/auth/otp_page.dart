@@ -4,15 +4,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/custom_pin_field.dart';
 import 'package:zupee/res/custom_rich_text.dart';
-import 'package:zupee/utils/routes_name.dart';
-
 import '../../res/app_constant.dart';
 import '../../utils/toast.dart';
+import '../../view_model/auth_view_model.dart';
 
 class VerifyPage extends StatefulWidget {
   const VerifyPage({
@@ -24,7 +24,6 @@ class VerifyPage extends StatefulWidget {
 }
 
 class _VerifyPageState extends State<VerifyPage> {
-  // ApiController apiController = ApiController();
   List<TextEditingController> otpCon = List.generate(
     6,
         (index) => TextEditingController(),
@@ -55,7 +54,6 @@ class _VerifyPageState extends State<VerifyPage> {
     countdownTimer.cancel();
     super.dispose();
   }
-  final TextEditingController _controller = TextEditingController();
   Color _containerColor = lightGray;
   void _updateContainerColor() {
     setState(() {
@@ -73,26 +71,15 @@ class _VerifyPageState extends State<VerifyPage> {
     for (var controller in otpCon) {
       controller.addListener(_updateContainerColor);
     }
-    // otpCon.addListener(_updateContainerColor);
-    // Future.delayed(Duration.zero, () {
-    //   Map<String, dynamic> args =
-    //   ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    //   // apiController.sendOtpOnPhone(args['phone'].toString());
-    //
-    // });
+
   }
 
   @override
   Widget build(BuildContext context) {
-    // final authProvider = Provider.of<AuthProvider>(context);
-    // Map<String, dynamic> arguments =
-    // ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    // String status = arguments["status"].toString();
-    // String phone = arguments["phone"].toString();
-    // String otp = arguments["otp"].toString();
-    // String userId=arguments['userid'].toString();
-    final heights = MediaQuery.of(context).size.height;
-    final widths = MediaQuery.of(context).size.width;
+    final verifyOtpApi=Provider.of<AuthViewModel>(context);
+    Map<String, dynamic> arguments =
+    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    String phone = arguments["phone"].toString();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -110,7 +97,7 @@ class _VerifyPageState extends State<VerifyPage> {
         child: Column(
           children: [
             SizedBox(height: height*0.02,),
-            Text(
+            const Text(
               'Enter OTP',
               style: TextStyle(
                   fontSize:26,
@@ -121,29 +108,12 @@ class _VerifyPageState extends State<VerifyPage> {
               height: height*0.01,
             ),
             Text(
-              'Enter OTP sent to 7458946942',
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              'Enter OTP sent to $phone',
+              style: const TextStyle(fontSize: 16, color: Colors.black),
             ),
-            // SizedBox(
-            //   height: heights / 35,
-            // ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     Text(
-            //       "7458946942",
-            //       style: TextStyle(
-            //           fontSize: heights / 35,
-            //           fontWeight: FontWeight.bold,
-            //           color: Colors.black),
-            //     ),
-            //     IconButton(onPressed: (){
-            //       Navigator.pop(context);
-            //     }, icon: Icon(Icons.edit))
-            //   ],
-            // ),
+
             SizedBox(
-              height: heights / 30,
+              height: height / 30,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 18, right: 18),
@@ -161,43 +131,32 @@ class _VerifyPageState extends State<VerifyPage> {
               fontSize: 18,
                 fontWeight: FontWeight.w400
               ),
-              CustomTextSpan(text: "   ${countdown} sec",
+              CustomTextSpan(text: "   $countdown sec",
                 fontSize: 18,
               )
             ]):
          InkWell(
            onTap: (){
+
              startCountdown();
+             verifyOtpApi.sedOtpApi(phone, context);
            },
            child: Container(
               alignment: Alignment.center,
               height: height*0.05,
               width: width*0.3,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(25)),
+              borderRadius: const BorderRadius.all(Radius.circular(25)),
               border: Border.all(color: tertiary),
             ),
-              child: Text("Resend OTP",style: TextStyle(color:tertiary, fontWeight: FontWeight.w700, ),),
+              child: const Text("Resend OTP",style: TextStyle(color:tertiary, fontWeight: FontWeight.w700, ),),
 
 
 
             ),
          ),
-            // CustomButton(
-            //     width: widths*0.4,
-            //     onTap: () {
-            //       apiController.verifyOtp(context,phone.toString(), otpCon.map((e) => e.text).join().toString(),userId.toString(),status.toString());
-            //       print("👳‍♂️👳‍♂️👳‍♂️");
-            //       print(phone.toString());
-            //       print(otpCon.map((e) => e.text).join());
-            //     },
-            //     gradient: const LinearGradient(
-            //         colors: [Color(0xff196b19),Color(0xff47992a),],
-            //         begin: Alignment.bottomCenter,
-            //         end: Alignment.topCenter
-            //     ),
-            //     text: 'Submit'),
-            Spacer(),
+
+            const Spacer(),
             Container(
               alignment: Alignment.center,
               height: height*0.1,
@@ -219,7 +178,7 @@ class _VerifyPageState extends State<VerifyPage> {
                 onTap: (){
                   otpCon.map((e) => e.text).join().isEmpty?
                       Utils.flushBarErrorMessage("Please Enter OTP", context, white):
-                  Navigator.pushReplacementNamed(context, RoutesName.bottomNevBar);
+                  verifyOtpApi.verifyOtpApi(phone.toString(),  otpCon.map((e) => e.text).join().toString(), context);
                 },
                 alignment: Alignment.center,
                 height: height*0.07,

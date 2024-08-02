@@ -83,6 +83,22 @@ class LocaleStringEn extends Translations {
       "Help":"Help",
       "About":"About",
       "Logout":"Logout",
+      "My Profile":"My Profile",
+      'Followers':'Followers',
+      'Following':'Following',
+      'Edit Profile':'Edit Profile',
+      'My Game History':'My Game History',
+      'Total Games\n Played till today':'Total Games\n Played till today',
+      "Set Profile Picture":"Set Profile Picture",
+      'Open \nCamera':'Open \nCamera',
+      'Select from \nGallery':'Select from \nGallery',
+      'Select \nAvatar':'Select \nAvatar',
+      "Set Display Name": "Set Display Name",
+      "Numbers, special characters are not allowed":"Numbers, special characters are not allowed",
+      "Privacy Management": "Privacy Management",
+      "Control who can see your game history": "Control who can see your game history",
+      "Please Enter Valid Phone number": "Please Enter Valid Phone number",
+      "Save Changes":"Save Changes",
 
     }
   };

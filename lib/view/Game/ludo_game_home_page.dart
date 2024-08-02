@@ -60,7 +60,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                   SizedBox(
                     width: width * 0.14,
                   ),
-                  Container(
+                  SizedBox(
                       height: height * 0.04,
                       child:
                           const Image(image: AssetImage(Assets.ludoSetting))),
@@ -88,15 +88,14 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
                               fontSize: 12))),
-                  Container(
-                      child: Image(
+                  Image(
                     image: const AssetImage(
                       Assets.ludoInfo,
                     ),
                     height: height * 0.03,
                     width: width * 0.08,
                     fit: BoxFit.fill,
-                  )),
+                  ),
                   const Spacer(),
                   Container(
                       child: Image(
@@ -141,7 +140,6 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                           width: width * 0.23,
                           fit: BoxFit.fill,
                         )),
-
                     Container(
                         alignment: Alignment.center,
                         height: height * 0.08,
@@ -169,7 +167,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                             image: DecorationImage(
                                 image: AssetImage(Assets.ludoDiceSectionTwo),
                                 fit: BoxFit.fill)),
-                        child:Padding(
+                        child: Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: Image(
                             image: const AssetImage(
@@ -260,7 +258,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                             image: DecorationImage(
                                 image: AssetImage(Assets.ludoDiceSectionTwo),
                                 fit: BoxFit.fill)),
-                        child:Padding(
+                        child: Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: Image(
                             image: const AssetImage(
@@ -304,22 +302,22 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                               fontWeight: FontWeight.w600,
                               fontSize: 12))),
                   Image(
-                                      image: const AssetImage(
-                  Assets.ludoInfo,
-                                      ),
-                                      height: height * 0.03,
-                                      width: width * 0.08,
-                                      fit: BoxFit.fill,
-                                    ),
+                    image: const AssetImage(
+                      Assets.ludoInfo,
+                    ),
+                    height: height * 0.03,
+                    width: width * 0.08,
+                    fit: BoxFit.fill,
+                  ),
                   const Spacer(),
                   Image(
-                                      image: const AssetImage(
-                  Assets.ludoInfo,
-                                      ),
-                                      height: height * 0.03,
-                                      width: width * 0.08,
-                                      fit: BoxFit.fill,
-                                    ),
+                    image: const AssetImage(
+                      Assets.ludoInfo,
+                    ),
+                    height: height * 0.03,
+                    width: width * 0.08,
+                    fit: BoxFit.fill,
+                  ),
                   Container(
                       alignment: Alignment.center,
                       height: height * 0.03,

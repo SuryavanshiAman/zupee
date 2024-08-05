@@ -33,10 +33,19 @@ class _AddaScreenState extends State<AddaScreen> {
       appBar:AppBar(
         backgroundColor: appBarColor,
         leadingWidth: 220,
-        leading: const Row(
+        leading:  Row(
           children: [
-            CustomBackButton(),
-            Text(
+            // CustomBackButton(),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, RoutesName.bottomNevBar,
+                    arguments: {"index": 0});
+              },
+              child: const Icon(
+                Icons.keyboard_arrow_left_rounded,color: black,size: 30,
+              ),
+            ),
+            const Text(
               "Adda",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
@@ -173,17 +182,17 @@ class _AddaScreenState extends State<AddaScreen> {
                   onTap:(){
                     Navigator.pushNamed(context, RoutesName.userProfileScreen);
                   },
-                  child: CircleAvatar(
+                  child: const CircleAvatar(
                     radius: 30,
                     backgroundImage: AssetImage('assets/images/zupee.png'),
                   ),
                 ),
-                SizedBox(height: 8),
-                Text(
+                const SizedBox(height: 8),
+                const Text(
                   'RANK #1',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text('Cash', overflow: TextOverflow.ellipsis),
+                const Text('Cash', overflow: TextOverflow.ellipsis),
               ],
             ),
           );

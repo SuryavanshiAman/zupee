@@ -36,7 +36,6 @@ class _SplashScreenState extends State<SplashScreen> {
           opacity: _visible ? 1.0 : 0.0,
           duration: const Duration(milliseconds: 500),
           child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image(

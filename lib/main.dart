@@ -6,9 +6,12 @@ import 'package:zupee/language/hindi.dart';
 import 'package:zupee/test.dart';
 import 'package:zupee/utils/routes.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view_model/about_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 
 import 'language/english.dart';
+import 'view/Game/ludo_provider.dart';
+import 'view_model/add_bank_details_view_model.dart';
 import 'view_model/auth_view_model.dart';
 import 'view_model/help_view_model.dart';
 import 'view_model/profile_update_view_model.dart';
@@ -35,12 +38,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => HelpViewModel()),
         ChangeNotifierProvider(create: (_) => DiceModel()),
         ChangeNotifierProvider(create: (_) => GameState()),
+        ChangeNotifierProvider(create: (_) => LudoProvider()),
+        ChangeNotifierProvider(create: (_) => AboutViewModel()),
+        ChangeNotifierProvider(create: (_) => AddBankDetailsViewModel()),
       ],
       child: GetMaterialApp(
         title: 'Flutter Demo',
         translations: LocaleTranslations(),
-        locale: Locale('en', 'US'), // Set the default locale
-        fallbackLocale: Locale('en''US'),
+        locale: const Locale('en', 'US'), // Set the default locale
+        fallbackLocale: const Locale('en''US'),
         debugShowCheckedModeBanner: false,
         initialRoute: RoutesName.splashScreen,
         onGenerateRoute: (settings) {

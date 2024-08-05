@@ -2,6 +2,17 @@
 class Assets {
   Assets._();
 
+  static const String dice1 = 'assets/dice/1.webp';
+  static const String dice2 = 'assets/dice/2.webp';
+  static const String dice3 = 'assets/dice/3.webp';
+  static const String dice4 = 'assets/dice/4.webp';
+  static const String dice5 = 'assets/dice/5.webp';
+  static const String dice6 = 'assets/dice/6.webp';
+  static const String diceBluepawn = 'assets/dice/bluepawn.png';
+  static const String diceDice = 'assets/dice/dice.gif';
+  static const String diceGreenpawn = 'assets/dice/greenpawn.png';
+  static const String diceRedpawn = 'assets/dice/redpawn.png';
+  static const String diceYellowpawn = 'assets/dice/yellowpawn.png';
   static const String gifIcons8Hourglass = 'assets/gif/icons8-hourglass.gif';
   static const String iconAccount = 'assets/icon/account.png';
   static const String iconAccountTwo = 'assets/icon/account_two.png';

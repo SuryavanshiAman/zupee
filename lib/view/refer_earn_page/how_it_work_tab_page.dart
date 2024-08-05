@@ -33,7 +33,7 @@ class _HowItWorkTabScreenState extends State<HowItWorkTabScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  SizedBox(
                     width: width*0.4,
                     // color: Colors.red,
                     child: Text(

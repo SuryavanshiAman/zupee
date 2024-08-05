@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_back_button.dart';
+import 'package:zupee/utils/routes_name.dart';
 
 import 'how_it_work_tab_page.dart';
 import 'my_referrals_tab_page.dart';
@@ -25,7 +26,15 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> with TickerProv
         leadingWidth: 220,
         leading:  Row(
           children: [
-            const CustomBackButton(),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, RoutesName.bottomNevBar,
+                    arguments: {"index": 0});
+              },
+              child: const Icon(
+                Icons.keyboard_arrow_left_rounded,color: black,size: 30,
+              ),
+            ),
             Text(
               "Refer & Earn".tr,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),

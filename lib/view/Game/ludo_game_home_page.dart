@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
+import 'package:zupee/view/Game/dice_widgit.dart';
+import 'package:zupee/view/Game/ludo_constant.dart';
+
+import 'board_widgit.dart';
+import 'ludo_provider.dart';
 
 class LudoHomeScreen extends StatefulWidget {
   const LudoHomeScreen({super.key});
@@ -97,15 +103,14 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                     fit: BoxFit.fill,
                   ),
                   const Spacer(),
-                  Container(
-                      child: Image(
+                  Image(
                     image: const AssetImage(
                       Assets.ludoInfo,
                     ),
                     height: height * 0.03,
                     width: width * 0.08,
                     fit: BoxFit.fill,
-                  )),
+                  ),
                   Container(
                       alignment: Alignment.center,
                       height: height * 0.03,
@@ -122,96 +127,99 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding:  EdgeInsets.all(6.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                        height: height * 0.07,
-                        width: width * 0.15,
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(Assets.ludoProfileSection))),
-                        child: Image(
-                          image: const AssetImage(
-                            Assets.ludoUser,
-                          ),
-                          height: height * 0.03,
-                          width: width * 0.23,
-                          fit: BoxFit.fill,
-                        )),
-                    Container(
-                        alignment: Alignment.center,
-                        height: height * 0.08,
-                        width: width * 0.19,
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(Assets.ludoDiceSectionOne),
-                                fit: BoxFit.fill)),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Image(
-                            image: const AssetImage(
-                              Assets.ludoDice,
-                            ),
-                            height: height * 0.06,
-                            width: width * 0.17,
-                          ),
-                        )),
+                    userDiceDesign(),
+                    // Container(
+                    //     height: height * 0.07,
+                    //     width: width * 0.15,
+                    //     decoration: const BoxDecoration(
+                    //         image: DecorationImage(
+                    //             image: AssetImage(Assets.ludoProfileSection))),
+                    //     child: Image(
+                    //       image: const AssetImage(
+                    //         Assets.ludoUser,
+                    //       ),
+                    //       height: height * 0.03,
+                    //       width: width * 0.23,
+                    //       fit: BoxFit.fill,
+                    //     )),
+                    // Container(
+                    //     alignment: Alignment.center,
+                    //     height: height * 0.08,
+                    //     width: width * 0.19,
+                    //     decoration: const BoxDecoration(
+                    //         image: DecorationImage(
+                    //             image: AssetImage(Assets.ludoDiceSectionOne),
+                    //             fit: BoxFit.fill)),
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.only(left: 8.0),
+                    //       child: Image(
+                    //         image: const AssetImage(
+                    //           Assets.ludoDice,
+                    //         ),
+                    //         height: height * 0.06,
+                    //         width: width * 0.17,
+                    //       ),
+                    //     )),
                     const Spacer(),
-                    Container(
-                        alignment: Alignment.center,
-                        height: height * 0.08,
-                        width: width * 0.19,
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(Assets.ludoDiceSectionTwo),
-                                fit: BoxFit.fill)),
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Image(
-                            image: const AssetImage(
-                              Assets.ludoDice,
-                            ),
-                            height: height * 0.06,
-                            width: width * 0.17,
-                          ),
-                        )),
-                    Container(
-                        height: height * 0.07,
-                        width: width * 0.15,
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(Assets.ludoProfileSection))),
-                        child: Image(
-                          image: const AssetImage(
-                            Assets.ludoUser,
-                          ),
-                          height: height * 0.03,
-                          width: width * 0.23,
-                          fit: BoxFit.fill,
-                        )),
+                    opponentsTurn(),
+                    // Container(
+                    //     alignment: Alignment.center,
+                    //     height: height * 0.08,
+                    //     width: width * 0.19,
+                    //     decoration: const BoxDecoration(
+                    //         image: DecorationImage(
+                    //             image: AssetImage(Assets.ludoDiceSectionTwo),
+                    //             fit: BoxFit.fill)),
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.only(right: 8.0),
+                    //       child: Image(
+                    //         image: const AssetImage(
+                    //           Assets.ludoDice,
+                    //         ),
+                    //         height: height * 0.06,
+                    //         width: width * 0.17,
+                    //       ),
+                    //     )),
+                    // Container(
+                    //     height: height * 0.07,
+                    //     width: width * 0.15,
+                    //     decoration: const BoxDecoration(
+                    //         image: DecorationImage(
+                    //             image: AssetImage(Assets.ludoProfileSection))),
+                    //     child: Image(
+                    //       image: const AssetImage(
+                    //         Assets.ludoUser,
+                    //       ),
+                    //       height: height * 0.03,
+                    //       width: width * 0.23,
+                    //       fit: BoxFit.fill,
+                    //     )),
                   ],
                 ),
               ),
-              Center(
-                child: Container(
-                  width: width,
-                  height: height * 0.5,
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(Assets.ludoLudoBoard),
-                          fit: BoxFit.cover)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(Assets.ludoBoardTwo))),
-                    ),
-                  ),
-                ),
-              ),
+              BoardWidget(),
+              // Center(
+              //   child: Container(
+              //     width: width,
+              //     height: height * 0.5,
+              //     decoration: const BoxDecoration(
+              //         image: DecorationImage(
+              //             image: AssetImage(Assets.ludoLudoBoard),
+              //             fit: BoxFit.cover)),
+              //     child: Padding(
+              //       padding: const EdgeInsets.all(8.0),
+              //       child: Container(
+              //         decoration: const BoxDecoration(
+              //             image: DecorationImage(
+              //                 image: AssetImage(Assets.ludoBoardTwo))),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
@@ -337,6 +345,97 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
           ),
         ),
       ),
+    );
+  }
+  Widget userDiceDesign() {
+    return Consumer<LudoProvider>(
+      builder: (context, value, child) => Padding(
+        padding: EdgeInsets.only(bottom:0, left:  0),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+            Container(
+            height: height * 0.07,
+            width: width * 0.15,
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(Assets.ludoProfileSection))),
+            child: Image(
+              image: const AssetImage(
+                Assets.ludoUser,
+              ),
+              height: height * 0.03,
+              width: width * 0.23,
+              fit: BoxFit.fill,
+            )),
+          value.currentPlayer.type !=LudoPlayerType.yellow?DiceWidget():
+          Container(
+              alignment: Alignment.center,
+              height: height * 0.08,
+              width: width * 0.19,
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(Assets.ludoDiceSectionOne),
+                      fit: BoxFit.fill)),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Image(
+                  image: const AssetImage(
+                    Assets.ludoDice,
+                  ),
+                  height: height * 0.06,
+                  width: width * 0.17,
+                ),
+              ))
+              ,
+            ]),
+      ),
+    );
+  }
+
+  bool isUserTurn = true;
+  Widget opponentsTurn() {
+    return Consumer<LudoProvider>(
+      builder: (context, value, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            value.currentPlayer.type ==LudoPlayerType.yellow?DiceWidget():
+            Container(
+                alignment: Alignment.center,
+                height: height * 0.08,
+                width: width * 0.19,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(Assets.ludoDiceSectionOne),
+                        fit: BoxFit.fill)),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Image(
+                    image: const AssetImage(
+                      Assets.ludoDice,
+                    ),
+                    height: height * 0.06,
+                    width: width * 0.17,
+                  ),
+                )),
+            Container(
+                height: height * 0.07,
+                width: width * 0.15,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(Assets.ludoProfileSection))),
+                child: Image(
+                  image: const AssetImage(
+                    Assets.ludoUser,
+                  ),
+                  height: height * 0.03,
+                  width: width * 0.23,
+                  fit: BoxFit.fill,
+                )),
+          ],
+        );
+      },
     );
   }
 }

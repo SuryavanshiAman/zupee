@@ -28,4 +28,6 @@ class RoutesName{
   static const String ludoHomeScreen = '/ludoHomeScreen';
   static const String leaderboardScreen = '/leaderboardScreen';
   static const String userProfileScreen = '/userProfileScreen';
+  static const String htmlViewerScreen = '/htmlViewerScreen';
+  static const String bankDetailsScreen = '/bankDetailsScreen';
 }

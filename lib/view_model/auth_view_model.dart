@@ -30,10 +30,8 @@ class AuthViewModel with ChangeNotifier {
     _authRepo.authApi(data).then((value) {
       if (value['status'] == "201") {
         setLoading(false);
-        print("userID:${value['data']['id']}");
         userPref.saveUser(value['data']['id'].toString());
         sedOtpApi(phone, context);
-        print(value['data']['id'].toString());
         Navigator.pushNamed(context, RoutesName.verifyPage,arguments: {
           "phone": phone,
         });
@@ -41,7 +39,6 @@ class AuthViewModel with ChangeNotifier {
       } else if(value['status'] == "200") {
         setLoading(false);
         userPref.saveUser(value['data']['id'].toString());
-        print(value['data']['id'].toString());
         sedOtpApi(phone, context);
         Navigator.pushNamed(context, RoutesName.verifyPage,arguments: {
           "phone": phone,
@@ -55,7 +52,7 @@ class AuthViewModel with ChangeNotifier {
     }).onError((error, stackTrace) {
       setLoading(false);
       if (kDebugMode) {
-        print('registererror: $error');
+        print('registerError: $error');
       }
     });
   }

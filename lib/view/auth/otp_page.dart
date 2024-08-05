@@ -1,6 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -26,7 +25,7 @@ class VerifyPage extends StatefulWidget {
 class _VerifyPageState extends State<VerifyPage> {
   List<TextEditingController> otpCon = List.generate(
     6,
-        (index) => TextEditingController(),
+    (index) => TextEditingController(),
   );
   int countdown = 30;
   late Timer countdownTimer;
@@ -39,8 +38,7 @@ class _VerifyPageState extends State<VerifyPage> {
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (countdown == 0) {
         timer.cancel();
-        setState(() {
-        });
+        setState(() {});
       } else {
         setState(() {
           countdown--;
@@ -54,6 +52,7 @@ class _VerifyPageState extends State<VerifyPage> {
     countdownTimer.cancel();
     super.dispose();
   }
+
   Color _containerColor = lightGray;
   void _updateContainerColor() {
     setState(() {
@@ -64,6 +63,7 @@ class _VerifyPageState extends State<VerifyPage> {
       }
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -71,14 +71,13 @@ class _VerifyPageState extends State<VerifyPage> {
     for (var controller in otpCon) {
       controller.addListener(_updateContainerColor);
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
-    final verifyOtpApi=Provider.of<AuthViewModel>(context);
+    final verifyOtpApi = Provider.of<AuthViewModel>(context);
     Map<String, dynamic> arguments =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     String phone = arguments["phone"].toString();
 
     return Scaffold(
@@ -96,22 +95,23 @@ class _VerifyPageState extends State<VerifyPage> {
         // height: heights / 2,
         child: Column(
           children: [
-            SizedBox(height: height*0.02,),
+            SizedBox(
+              height: height * 0.02,
+            ),
             const Text(
               'Enter OTP',
               style: TextStyle(
-                  fontSize:26,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
                   color: Colors.black),
             ),
             SizedBox(
-              height: height*0.01,
+              height: height * 0.01,
             ),
             Text(
               'Enter OTP sent to $phone',
               style: const TextStyle(fontSize: 16, color: Colors.black),
             ),
-
             SizedBox(
               height: height / 30,
             ),
@@ -119,49 +119,52 @@ class _VerifyPageState extends State<VerifyPage> {
               padding: const EdgeInsets.only(left: 18, right: 18),
               child: Center(
                   child: OtpFieldWidget(
-                    pinLength: 6,
-                    controllers: otpCon,
-                  )),
+                pinLength: 6,
+                controllers: otpCon,
+              )),
             ),
             const SizedBox(
               height: 20,
             ),
-          countdown!=0? CustomRichText(textSpans: [
-              CustomTextSpan(text: "Retry in",
-              fontSize: 18,
-                fontWeight: FontWeight.w400
-              ),
-              CustomTextSpan(text: "   $countdown sec",
-                fontSize: 18,
-              )
-            ]):
-         InkWell(
-           onTap: (){
-
-             startCountdown();
-             verifyOtpApi.sedOtpApi(phone, context);
-           },
-           child: Container(
-              alignment: Alignment.center,
-              height: height*0.05,
-              width: width*0.3,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(25)),
-              border: Border.all(color: tertiary),
-            ),
-              child: const Text("Resend OTP",style: TextStyle(color:tertiary, fontWeight: FontWeight.w700, ),),
-
-
-
-            ),
-         ),
-
+            countdown != 0
+                ? CustomRichText(textSpans: [
+                    CustomTextSpan(
+                        text: "Retry in",
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400),
+                    CustomTextSpan(
+                      text: "   $countdown sec",
+                      fontSize: 18,
+                    )
+                  ])
+                : InkWell(
+                    onTap: () {
+                      startCountdown();
+                      verifyOtpApi.sedOtpApi(phone, context);
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: height * 0.05,
+                      width: width * 0.3,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(25)),
+                        border: Border.all(color: tertiary),
+                      ),
+                      child: const Text(
+                        "Resend OTP",
+                        style: TextStyle(
+                          color: tertiary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
             const Spacer(),
             Container(
               alignment: Alignment.center,
-              height: height*0.1,
+              height: height * 0.1,
               width: width,
-
               decoration: BoxDecoration(
                 color: white,
                 boxShadow: [
@@ -169,23 +172,29 @@ class _VerifyPageState extends State<VerifyPage> {
                     color: Colors.black.withOpacity(0.2),
                     spreadRadius: 1,
                     blurRadius: 2,
-                    offset: const Offset(0, -1), // changes position of shadow to the top
+                    offset: const Offset(
+                        0, -1), // changes position of shadow to the top
                   ),
                 ],
               ),
-
               child: CustomContainer(
-                onTap: (){
-                  otpCon.map((e) => e.text).join().isEmpty?
-                      Utils.flushBarErrorMessage("Please Enter OTP", context, white):
-                  verifyOtpApi.verifyOtpApi(phone.toString(),  otpCon.map((e) => e.text).join().toString(), context);
+                onTap: () {
+                  otpCon.map((e) => e.text).join().isEmpty
+                      ? Utils.flushBarErrorMessage(
+                          "Please Enter OTP", context, white)
+                      : verifyOtpApi.verifyOtpApi(phone.toString(),
+                          otpCon.map((e) => e.text).join().toString(), context);
                 },
                 alignment: Alignment.center,
-                height: height*0.07,
-                widths: width*0.8,
+                height: height * 0.07,
+                widths: width * 0.8,
                 color: _containerColor,
                 borderRadius: const BorderRadius.all(Radius.circular(35)),
-                child: const Text("Continue",style: TextStyle(color: labelColor,fontWeight: FontWeight.w500),),
+                child: const Text(
+                  "Continue",
+                  style:
+                      TextStyle(color: labelColor, fontWeight: FontWeight.w500),
+                ),
               ),
             )
           ],

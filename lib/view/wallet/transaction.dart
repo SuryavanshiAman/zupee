@@ -4,10 +4,12 @@ import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_back_button.dart';
 
 import '../../main.dart';
+
 class FirstList {
   String title;
   FirstList(this.title);
 }
+
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
 
@@ -17,7 +19,6 @@ class TransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<TransactionScreen> {
   List<FirstList> list = [
-
     FirstList("All"),
     FirstList("Deposit"),
     FirstList("Withdrawals"),
@@ -35,22 +36,20 @@ class _TransactionScreenState extends State<TransactionScreen> {
     super.initState();
     originalList = List.from(list); // Save the original list for resetting
   }
+
   void _onItemTapped(int index) {
     setState(() {
-
-
-          if (selectedIndices.contains(index)) {
-            selectedIndices.remove(index);
-          } else {
-            if (index != 0) {
-              selectedIndices.add(index);
-              selectedIndices.remove(0);
-            } else {
-              selectedIndices.clear();
-              selectedIndices.add(0);
-            }
-          }
-
+      if (selectedIndices.contains(index)) {
+        selectedIndices.remove(index);
+      } else {
+        if (index != 0) {
+          selectedIndices.add(index);
+          selectedIndices.remove(0);
+        } else {
+          selectedIndices.clear();
+          selectedIndices.add(0);
+        }
+      }
 
       if (index == 0) {
         // Reset the list to its original state
@@ -63,6 +62,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
       }
     });
   }
+
   Set<int> selectedIndices = {0};
   @override
   Widget build(BuildContext context) {
@@ -102,20 +102,20 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Container(
-                                  height: height*0.04,
+                                  height: height * 0.04,
                                   // margin: EdgeInsets.all(3),
                                   padding: const EdgeInsets.all(9),
                                   decoration: BoxDecoration(
-                                      color: selectedIndices.contains(index) ? secondary : white,
-                                      borderRadius:
-                                      BorderRadius.circular(10)),
+                                      color: selectedIndices.contains(index)
+                                          ? secondary
+                                          : white,
+                                      borderRadius: BorderRadius.circular(10)),
                                   child: Center(
                                       child: Text(
-                                        list[index].title,
-                                        style: const TextStyle(
-                                            fontSize:14,
-                                            color: Colors.black),
-                                      ))),
+                                    list[index].title,
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.black),
+                                  ))),
                             )
                           ],
                         ),
@@ -135,7 +135,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         height: height * 0.14,
                         decoration: const BoxDecoration(
                             color: white,
-                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
                         child: Row(
                           // crossAxisAlignment: CrossAxisAlignment.start,
                           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -148,14 +149,17 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                 scale: 8,
                               ),
                             ),
-                            SizedBox(width: width*0.04,),
+                            SizedBox(
+                              width: width * 0.04,
+                            ),
                             const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text("Sign Up Bonus",
                                     style: TextStyle(
-                                        color: black, fontWeight: FontWeight.w600)),
+                                        color: black,
+                                        fontWeight: FontWeight.w600)),
                                 Text("WELCOME TO ZUPEE",
                                     style: TextStyle(
                                         // color: red,
@@ -181,14 +185,21 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               children: [
                                 Text("+₹10",
                                     style: TextStyle(
-                                        color: black, fontWeight: FontWeight.w600)),
+                                        color: black,
+                                        fontWeight: FontWeight.w600)),
                                 Text("16 JUL,17:53",
                                     style: TextStyle(
-                                        color: labelColor, fontWeight: FontWeight.w500)),
+                                        color: labelColor,
+                                        fontWeight: FontWeight.w500)),
                               ],
                             ),
-                            SizedBox(width: width*0.03,),
-                            const Icon((Icons.arrow_forward_ios_sharp),size: 15,)
+                            SizedBox(
+                              width: width * 0.03,
+                            ),
+                            const Icon(
+                              (Icons.arrow_forward_ios_sharp),
+                              size: 15,
+                            )
                           ],
                         ),
                       ),

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -20,10 +19,10 @@ class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  EditProfileScreenState createState() => EditProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
   String _selectedPrivacyOption = "Everyone";
   IconData _selectedPrivacyIcon = Icons.visibility;
@@ -33,10 +32,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
     viewProfile();
   }
-viewProfile(){
-  final profileViewModel = Provider.of<ProfileViewModel>(context,listen: false).profileResponse?.data;
-  _nameController.text =(profileViewModel?.username.toString() ?? profileViewModel?.mobileNumber.toString())!;
-}
+
+  viewProfile() {
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false)
+            .profileResponse
+            ?.data;
+    _nameController.text = (profileViewModel?.username.toString() ??
+        profileViewModel?.mobileNumber.toString())!;
+  }
 
   File? _image;
   final picker = ImagePicker();
@@ -51,8 +55,6 @@ viewProfile(){
       base64Image = base64Encode(_image!.readAsBytesSync());
     }
   }
-
-
 
   void _showBottomSheet(BuildContext context) async {
     final result = await showModalBottomSheet<Map<String, dynamic>>(
@@ -80,7 +82,7 @@ viewProfile(){
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
-        title:  Text('Edit Profile'.tr),
+        title: Text('Edit Profile'.tr),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -93,34 +95,32 @@ viewProfile(){
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Text(
+                  Text(
                     "Set Profile Picture".tr,
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(
                     height: height * 0.03,
                   ),
-                   Center(
-                    child: profileViewModel!.profilePicture != null &&
-                        _image == null
-                        ? CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(
-                          profileViewModel.profilePicture
-                              .toString()),
-                    )
-                        : _image == null
-                        ? const CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage(
-                          Assets.iconAccount),
-                    )
-                        : CircleAvatar(
-                      radius: 50,
-                      backgroundImage:
-                      FileImage(_image!),
-                    )
-                  ),
+                  Center(
+                      child: profileViewModel!.profilePicture != null &&
+                              _image == null
+                          ? CircleAvatar(
+                              radius: 50,
+                              backgroundImage: NetworkImage(
+                                  profileViewModel.profilePicture.toString()),
+                            )
+                          : _image == null
+                              ? const CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage:
+                                      AssetImage(Assets.iconAccount),
+                                )
+                              : CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: FileImage(_image!),
+                                )),
                   SizedBox(
                     height: height * 0.03,
                   ),
@@ -132,14 +132,16 @@ viewProfile(){
                           CircleAvatar(
                             radius: 26,
                             child: IconButton(
-                              icon:  const Icon(
+                              icon: const Icon(
                                 Icons.camera_alt_outlined,
                                 color: tertiary,
                               ),
-                              onPressed:(){ _getImage(ImageSource.camera);},
+                              onPressed: () {
+                                _getImage(ImageSource.camera);
+                              },
                             ),
                           ),
-                           Text(
+                          Text(
                             'Open \nCamera'.tr,
                             textAlign: TextAlign.center,
                           ),
@@ -152,10 +154,12 @@ viewProfile(){
                             child: IconButton(
                               icon: const Icon(Icons.photo_camera_back_outlined,
                                   color: tertiary),
-                              onPressed: (){ _getImage(ImageSource.gallery);},
+                              onPressed: () {
+                                _getImage(ImageSource.gallery);
+                              },
                             ),
                           ),
-                           Text(
+                          Text(
                             'Select from \nGallery'.tr,
                             textAlign: TextAlign.center,
                           ),
@@ -168,10 +172,10 @@ viewProfile(){
                             child: IconButton(
                               icon: const Icon(Icons.person_outline,
                                   color: tertiary),
-                              onPressed: (){},
+                              onPressed: () {},
                             ),
                           ),
-                           const Text(
+                          const Text(
                             'Select \nAvatar',
                             textAlign: TextAlign.center,
                           ),
@@ -193,11 +197,12 @@ viewProfile(){
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Text(
+                  Text(
                     "Set Display Name".tr,
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.w600),
                   ),
-                   Text(
+                  Text(
                     "Numbers, special characters are not allowed".tr,
                     style: const TextStyle(fontSize: 14, color: labelColor),
                   ),
@@ -206,7 +211,7 @@ viewProfile(){
                   ),
                   CustomTextField(
                     contentPadding: const EdgeInsets.all(15),
-                    controller:_nameController ,
+                    controller: _nameController,
                     height: height * 0.08,
                     filled: true,
                     fillColor: lightBlue,
@@ -224,20 +229,24 @@ viewProfile(){
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     Text(
+                    Text(
                       "Privacy Management".tr,
-                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                          fontSize: 22, fontWeight: FontWeight.w600),
                     ),
-                     Text(
+                    Text(
                       "Control who can see your game history".tr,
                       style: const TextStyle(fontSize: 14, color: labelColor),
                     ),
-                    SizedBox(height: height*0.03,),
+                    SizedBox(
+                      height: height * 0.03,
+                    ),
                     Row(
                       children: [
-                         Text(
+                        Text(
                           "My Game History".tr,
-                          style: const TextStyle(fontSize: 14, color: labelColor),
+                          style:
+                              const TextStyle(fontSize: 14, color: labelColor),
                         ),
                         const Spacer(),
                         InkWell(
@@ -250,36 +259,38 @@ viewProfile(){
                             width: width * 0.4,
                             decoration: const BoxDecoration(
                               color: lightBlue,
-                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(25)),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(_selectedPrivacyIcon, size: 16, color: black),
+                                Icon(_selectedPrivacyIcon,
+                                    size: 16, color: black),
                                 const SizedBox(width: 4),
-                                Text(_selectedPrivacyOption,style: const TextStyle(fontSize: 13),),
+                                Text(
+                                  _selectedPrivacyOption,
+                                  style: const TextStyle(fontSize: 13),
+                                ),
                                 const Spacer(),
-                                const Icon(Icons.keyboard_arrow_down, size: 16, color: tertiary),
+                                const Icon(Icons.keyboard_arrow_down,
+                                    size: 16, color: tertiary),
                               ],
                             ),
                           ),
                         ),
-
                       ],
                     )
                   ],
                 )),
             const SizedBox(height: 16.0),
             InkWell(
-              onTap: (){
-                if (
-                _nameController.text.isNotEmpty) {
+              onTap: () {
+                if (_nameController.text.isNotEmpty) {
                   profileUpdate.profileUpdateApi(
-                      _nameController.text, base64Image.toString(),
-                      context);
+                      _nameController.text, base64Image.toString(), context);
                 } else {
-                  Utils.showErrorToast(
-                      "Please Enter Valid Phone number".tr);
+                  Utils.showErrorToast("Please Enter Valid Phone number".tr);
                 }
               },
               child: Container(
@@ -289,9 +300,10 @@ viewProfile(){
                 decoration: const BoxDecoration(
                     color: secondary,
                     borderRadius: BorderRadius.all(Radius.circular(25))),
-                child:  Text(
+                child: Text(
                   "Save Changes".tr,
-                  style: const TextStyle(fontWeight: FontWeight.w600, color: labelColor),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, color: labelColor),
                 ),
               ),
             ),
@@ -301,4 +313,3 @@ viewProfile(){
     );
   }
 }
-

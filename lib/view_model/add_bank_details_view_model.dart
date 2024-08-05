@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:zupee/repo/profile_update_repo.dart';
+import 'package:zupee/repo/add_bank_details_repo.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/utils/toast.dart';
-import 'package:zupee/view_model/profile_view_model.dart';
 import 'package:zupee/view_model/user_view_model.dart';
 
-class ProfileUpdateViewModel with ChangeNotifier {
-  final _profileUpdateRepo = ProfileUpdateRepository();
+
+class AddBankDetailsViewModel with ChangeNotifier {
+  final _addBankDetailsRepo = AddBankDetailsRepository();
 
   bool _loading = false;
 
@@ -18,24 +17,25 @@ class ProfileUpdateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  ProfileViewModel profileViewModel = ProfileViewModel();
-
-  Future<void> profileUpdateApi( dynamic name,dynamic image, context) async {
+  Future<void> addBankDetailsApi(
+      dynamic name, dynamic accountNo, dynamic bankName,dynamic branchName,dynamic ifsc ,context) async {
     setLoading(true);
     UserViewModel userViewModel = UserViewModel();
     String? userId = await userViewModel.getUser();
     Map data = {
-      "userid":userId,
-      "username":name,
-      "image": image,
+      "userid": userId,
+      "name": name,
+      "account_number": accountNo,
+      "bank_name": bankName,
+      "branch_name": branchName,
+      "ifsc_code": ifsc
     };
-    _profileUpdateRepo.profileUpdateApi(data).then((value) {
+    _addBankDetailsRepo.addBankDetailsApi(data).then((value) {
       if (value['status'] == "200") {
-        setLoading(false);
-        Utils.flushBarSuccessMessage(value['message'], context, white);
-        profileViewModel.getProfileApi(context);
+        Utils.flushBarSuccessMessage(value['message'],context,red);
       } else {
         setLoading(false);
+        print("kkkk");
         Utils.showErrorToast(value['message']);
       }
     }).onError((error, stackTrace) {

@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     _controller.addListener(_updateContainerColor);
   }
+
   void _updateContainerColor() {
     setState(() {
       if (_controller.text.length == 10) {
@@ -36,14 +36,15 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    final authApi=Provider.of<AuthViewModel>(context);
+    final authApi = Provider.of<AuthViewModel>(context);
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
         leadingWidth: 250,
-        leading:  Row(
+        leading: Row(
           children: [
             GestureDetector(
               onTap: () {
@@ -52,7 +53,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.of(context).pop();
               },
               child: const Icon(
-                Icons.keyboard_arrow_left_rounded,color: black,size: 30,
+                Icons.keyboard_arrow_left_rounded,
+                color: black,
+                size: 30,
               ),
             ),
             const Text(
@@ -64,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         actions: [
           InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.pop(context);
             },
             child: const Text(
@@ -85,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: height * 0.04,
             ),
-             Center(
+            Center(
               child: Text(
                 "Sign in".tr,
                 style: const TextStyle(
@@ -98,23 +101,26 @@ class _LoginScreenState extends State<LoginScreen> {
             CustomTextField(
               controller: _controller,
               keyboardType: TextInputType.number,
-              label:  "Enter your phone number".tr,
+              label: "Enter your phone number".tr,
               hintColor: labelColor,
               hintSize: 18,
               height: 70,
-              width: width*0.8,
+              width: width * 0.8,
               maxLength: 10,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
               filled: true,
-              borderSide: const BorderSide(color: tertiary,width: 2),
+              borderSide: const BorderSide(color: tertiary, width: 2),
               borderSideFocus: const BorderSide(color: blue),
               fillColor: tertiary.withOpacity(0.2),
               fieldRadius: const BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  topLeft: Radius.circular(10)),
+                  topRight: Radius.circular(10), topLeft: Radius.circular(10)),
               prefix: const Padding(
                 padding: EdgeInsets.all(18.0),
-                child: Text("+91",style: TextStyle(color: black, fontSize: 18),),
+                child: Text(
+                  "+91",
+                  style: TextStyle(color: black, fontSize: 18),
+                ),
               ),
             ),
             SizedBox(
@@ -122,9 +128,10 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             CustomContainer(
               onTap: () {
-                if(_controller.text.isEmpty){
-                  Utils.flushBarErrorMessage("Please Enter Contact No.", context, white);
-                }else{
+                if (_controller.text.isEmpty) {
+                  Utils.flushBarErrorMessage(
+                      "Please Enter Contact No.", context, white);
+                } else {
                   authApi.authApi(_controller.text.toString(), context);
                 }
               },
@@ -133,9 +140,10 @@ class _LoginScreenState extends State<LoginScreen> {
               widths: width * 0.8,
               color: _containerColor,
               borderRadius: const BorderRadius.all(Radius.circular(35)),
-              child:  Text(
+              child: Text(
                 "Accept & Continue".tr,
-                style: const TextStyle(color: labelColor, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                    color: labelColor, fontWeight: FontWeight.w500),
               ),
             ),
             SizedBox(
@@ -167,10 +175,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       scale: 6,
                     ),
                   ),
-                   Text(
+                  Text(
                     "Continue with Google".tr,
-                    style:
-                        const TextStyle(color: tertiary, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                        color: tertiary, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(
                     width: width * 0.05,
@@ -199,8 +207,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: TextSpan(
                   style: const TextStyle(fontSize: 12, color: Colors.black),
                   children: [
-                     TextSpan(
-                      text:"RegisterNote".tr,
+                    TextSpan(
+                        text: "RegisterNote".tr,
                         style: const TextStyle(color: labelColor)),
                     TextSpan(
                       text: 'Terms and Conditions'.tr,
@@ -209,9 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.w600,
                         decoration: TextDecoration.underline,
                       ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                        },
+                      recognizer: TapGestureRecognizer()..onTap = () {},
                     ),
                     const TextSpan(text: ' and '),
                     TextSpan(

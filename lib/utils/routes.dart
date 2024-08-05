@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:zupee/res/text_widget.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/Game/ludo_game_home_page.dart';
+import 'package:zupee/view/account/about/html_viewer_page.dart';
+import 'package:zupee/view/account/bank_Details_page.dart';
 import 'package:zupee/view/account/kyc/kyc.dart';
 import 'package:zupee/view/account/kyc/pan_card_page.dart';
 import 'package:zupee/view/account/responsible_gaming/responsible_gaming.dart';
@@ -44,7 +46,7 @@ class Routers {
       case RoutesName.bottomNevBar:
         return (context) => const BottomNevBar();
       case RoutesName.ludoSupreme:
-        return (context) =>  LudoSupreme();
+        return (context) =>  const LudoSupreme();
       case RoutesName.verifyPage:
         return (context) =>  const VerifyPage();
       case RoutesName.walletScreen:
@@ -91,6 +93,10 @@ class Routers {
         return (context) =>   const LeaderboardScreen();
       case RoutesName.userProfileScreen:
         return (context) =>   const UserProfileScreen();
+      case RoutesName.htmlViewerScreen:
+        return (context) =>   const HtmlViewerScreen();
+      case RoutesName.bankDetailsScreen:
+        return (context) =>   const BankDetailsScreen();
       default:
         return (context) => Scaffold(
               body: Center(

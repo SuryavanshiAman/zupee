@@ -36,7 +36,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
 
-  bool _showImage = true;
+  // bool _showImage = true;
 
   bool _showTitle = true;
 
@@ -51,10 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void _handleScroll() {
     setState(() {
       if (_scrollController.position.pixels > 10) {
-        _showImage = false;
+        // _showImage = false;
         _showTitle = false;
       } else {
-        _showImage = true;
+        // _showImage = true;
         _showTitle = true;
       }
     });
@@ -343,7 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    "Get upto ₹25",
+                                    "Get up to ₹25",
                                     style: TextStyle(
                                         fontSize: 22,
                                         fontWeight: FontWeight.w600,

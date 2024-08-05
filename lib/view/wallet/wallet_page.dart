@@ -7,7 +7,6 @@ import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_back_button.dart';
 import 'package:zupee/res/custom_container.dart';
-import 'package:zupee/res/custom_rich_text.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 
@@ -21,38 +20,45 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen> {
   @override
   Widget build(BuildContext context) {
-    final profileViewModel = Provider.of<ProfileViewModel>(context).profileResponse?.data;
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context).profileResponse?.data;
     return Scaffold(
       backgroundColor: primary,
       appBar: AppBar(
         backgroundColor: primary,
         leadingWidth: 200,
-        leading:  Row(
+        leading: Row(
           children: [
             const CustomBackButton(),
-            Text("Wallet".tr,style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+            Text(
+              "Wallet".tr,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
           ],
         ),
       ),
       body: Column(
         children: [
-          SizedBox(height: height*0.03,),
+          SizedBox(
+            height: height * 0.03,
+          ),
           Center(
             child: Container(
               padding: const EdgeInsets.all(18),
-              height: height*0.65,
-              width: width*0.9,
-
+              height: height * 0.65,
+              width: width * 0.9,
               decoration: const BoxDecoration(
                   color: white,
-                borderRadius: BorderRadius.all(Radius.circular(15))
-              ),
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
               child: Column(
                 children: [
-                  SizedBox(height: height*0.01,),
+                  SizedBox(
+                    height: height * 0.01,
+                  ),
                   RichText(
                     // textAlign: TextAlign.center,
-                    text: TextSpan( text: "Total Balance".tr,
+                    text: TextSpan(
+                      text: "Total Balance".tr,
                       style: const TextStyle(fontSize: 16, color: black),
                       children: [
                         TextSpan(
@@ -66,161 +72,208 @@ class _WalletScreenState extends State<WalletScreen> {
                               _showBottomSheet(context);
                             },
                         ),
-
                       ],
                     ),
                   ),
-
-                   Text(profileViewModel?.wallet.toString()??"",style: const TextStyle(
-                    fontSize: 36,fontWeight: FontWeight.w700
-                  ),),
+                  Text(
+                    profileViewModel?.wallet.toString() ?? "",
+                    style: const TextStyle(
+                        fontSize: 36, fontWeight: FontWeight.w700),
+                  ),
                   const Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                       Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Deposits".tr,style: const TextStyle(
-                              fontSize: 16,fontWeight: FontWeight.w400,
-                            color: labelColor
-                          ),),
-                           Text("₹${profileViewModel?.depositWallet.toString()??""}",style: const TextStyle(
-                              fontSize: 30,fontWeight: FontWeight.w500
-                          ),),
+                          Text(
+                            "Deposits".tr,
+                            style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: labelColor),
+                          ),
+                          Text(
+                            "₹${profileViewModel?.depositWallet.toString() ?? ""}",
+                            style: const TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.w500),
+                          ),
                         ],
                       ),
                       InkWell(
-                        onTap: (){
-                          Navigator.pushNamed(context, RoutesName.depositScreen);
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, RoutesName.depositScreen);
                         },
                         child: CustomContainer(
-                          height: height*0.06,
-                          widths: width*0.35,
-                          color: green,
-                          borderRadius:  const BorderRadius.all(Radius.circular(25),
-                        ),
-                          child:  Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.add,color: white,),
-                              Text("Add Cash".tr,style: const TextStyle(
-                                color: white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700
-                              ),)
-                            ],
-                          )),
+                            height: height * 0.06,
+                            widths: width * 0.35,
+                            color: green,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(25),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.add,
+                                  color: white,
+                                ),
+                                Text(
+                                  "Add Cash".tr,
+                                  style: const TextStyle(
+                                      color: white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700),
+                                )
+                              ],
+                            )),
                       )
                     ],
                   ),
-                   Divider(
-                    height: height*0.03,
+                  Divider(
+                    height: height * 0.03,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                       Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Winnings".tr,style: const TextStyle(
-                              fontSize: 16,fontWeight: FontWeight.w400,
-                              color: labelColor
-                          ),),
-                           Text("₹${profileViewModel?.winningAmountWallet.toString()??""}",style: const TextStyle(
-                              fontSize: 30,fontWeight: FontWeight.w500
-                          ),),
+                          Text(
+                            "Winnings".tr,
+                            style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: labelColor),
+                          ),
+                          Text(
+                            "₹${profileViewModel?.winningAmountWallet.toString() ?? ""}",
+                            style: const TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.w500),
+                          ),
                         ],
                       ),
                       CustomContainer(
-                        onTap: (){
-                          Navigator.pushNamed(context, RoutesName.withdrawScreen);
-                        },
-                          height: height*0.06,
-                          widths: width*0.35,
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, RoutesName.withdrawScreen);
+                          },
+                          height: height * 0.06,
+                          widths: width * 0.35,
                           color: secondary,
-                          borderRadius:  const BorderRadius.all(Radius.circular(25),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(25),
                           ),
-                          child:  Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.arrow_downward,color: tertiary,),
-                              Text("Withdraw".tr,style: const TextStyle(
-                                  color: tertiary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700
-                              ),)
+                              const Icon(
+                                Icons.arrow_downward,
+                                color: tertiary,
+                              ),
+                              Text(
+                                "Withdraw".tr,
+                                style: const TextStyle(
+                                    color: tertiary,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700),
+                              )
                             ],
                           ))
                     ],
                   ),
                   Divider(
-                    height: height*0.03,
+                    height: height * 0.03,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Text("Cashback Reward".tr,style: const TextStyle(
-                          fontSize: 16,fontWeight: FontWeight.w400,
-                          color: labelColor
-                      ),),
-                      const Text("₹0",style: TextStyle(
-                          fontSize: 30,fontWeight: FontWeight.w500
-                      ),),
+                      Text(
+                        "Cashback Reward".tr,
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: labelColor),
+                      ),
+                      const Text(
+                        "₹0",
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.w500),
+                      ),
                       Row(
                         // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           InkWell(
-                            onTap:(){
-                              Navigator.pushNamed(context, RoutesName.cashbackDetailsScreen);
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, RoutesName.cashbackDetailsScreen);
                             },
-                            child:  Text("CASHBACK DETAILS".tr,style: const TextStyle(
-                                // color: tertiary,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500
-                            ),),
+                            child: Text(
+                              "CASHBACK DETAILS".tr,
+                              style: const TextStyle(
+                                  // color: tertiary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
-                          SizedBox(width: width*0.01,),
-                          const Icon(Icons.arrow_forward_ios_rounded,size: 12,),
-
+                          SizedBox(
+                            width: width * 0.01,
+                          ),
+                          const Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 12,
+                          ),
                         ],
                       )
                     ],
                   ),
                   Divider(
-                    height: height*0.03,
+                    height: height * 0.03,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Text("Bonus Reward".tr,style: const TextStyle(
-                          fontSize: 16,fontWeight: FontWeight.w400,
-                          color: labelColor
-                      ),),
-                      const Text("₹0",style: TextStyle(
-                          fontSize: 30,fontWeight: FontWeight.w500
-                      ),),
+                      Text(
+                        "Bonus Reward".tr,
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: labelColor),
+                      ),
+                      const Text(
+                        "₹0",
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.w500),
+                      ),
                       Row(
                         // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           InkWell(
-                            onTap:(){
-                              Navigator.pushNamed(context, RoutesName.bonusDetailsScreen);
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, RoutesName.bonusDetailsScreen);
                             },
-                            child:  Text("BONUS DETAILS".tr,style: const TextStyle(
-                              // color: tertiary,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500
-                            ),),
+                            child: Text(
+                              "BONUS DETAILS".tr,
+                              style: const TextStyle(
+                                  // color: tertiary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
-                          SizedBox(width: width*0.01,),
-                          const Icon(Icons.arrow_forward_ios_rounded,size: 12,),
-
+                          SizedBox(
+                            width: width * 0.01,
+                          ),
+                          const Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 12,
+                          ),
                         ],
                       )
                     ],
                   ),
-
                 ],
               ),
             ),
@@ -228,50 +281,56 @@ class _WalletScreenState extends State<WalletScreen> {
           Padding(
             padding: const EdgeInsets.all(18.0),
             child: CustomContainer(
-              padding: const EdgeInsets.all(15),
-              height: height*0.1,
-              widths: width,
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
-              color: white,
-              child:  InkWell(
-                onTap: (){
-                  Navigator.pushNamed(context, RoutesName.transactionScreen);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                     Text("Transaction History".tr,style: const TextStyle(
-                      // color: tertiary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500
-                    ),),
-                    SizedBox(width: width*0.01,),
-                    const Icon(Icons.arrow_forward_ios_rounded,size: 22,),
-
-                  ],
-                ),
-              )
-            ),
+                padding: const EdgeInsets.all(15),
+                height: height * 0.1,
+                widths: width,
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                color: white,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, RoutesName.transactionScreen);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Transaction History".tr,
+                        style: const TextStyle(
+                            // color: tertiary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(
+                        width: width * 0.01,
+                      ),
+                      const Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 22,
+                      ),
+                    ],
+                  ),
+                )),
           )
         ],
       ),
     );
   }
+
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               InkWell(
-                  onTap: (){
+                  onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Icon(Icons.cancel_outlined)),
+                  child: const Icon(Icons.cancel_outlined)),
               _buildListItem(
                 image: Assets.imagesDeposit,
                 title: 'Deposits',
@@ -280,17 +339,20 @@ class _WalletScreenState extends State<WalletScreen> {
               _buildListItem(
                 image: Assets.imagesRupeesWhite,
                 title: 'Winnings',
-                description: 'The money you have won by playing tournaments. You can withdraw this money.',
+                description:
+                    'The money you have won by playing tournaments. You can withdraw this money.',
               ),
               _buildListItem(
                 image: Assets.imagesCashback,
                 title: 'Cashback',
-                description: 'Earn Cashback by performing certain actions such as adding money to your wallet, completing KYC etc.',
+                description:
+                    'Earn Cashback by performing certain actions such as adding money to your wallet, completing KYC etc.',
               ),
               _buildListItem(
                 image: Assets.imagesBonus,
                 title: 'Bonus',
-                description: 'Bonus can be used to unlock rewards or new features.',
+                description:
+                    'Bonus can be used to unlock rewards or new features.',
               ),
             ],
           ),
@@ -299,17 +361,20 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  Widget _buildListItem({required String image, required String title, required String description}) {
+  Widget _buildListItem(
+      {required String image,
+      required String title,
+      required String description}) {
     return Center(
       child: ListTile(
-        leading:CircleAvatar(
-          radius: 30,
-          backgroundColor: lightBlue,
-          child:Image.asset(image)
-        ),
+        leading: CircleAvatar(
+            radius: 30, backgroundColor: lightBlue, child: Image.asset(image)),
         // Icon(icon, color: Colors.purple),
-        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16)),
-        subtitle: Text(description, style: TextStyle(fontWeight: FontWeight.w500,color: labelColor)),
+        title: Text(title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        subtitle: Text(description,
+            style: const TextStyle(
+                fontWeight: FontWeight.w500, color: labelColor)),
       ),
     );
   }

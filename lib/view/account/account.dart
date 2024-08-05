@@ -222,6 +222,46 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
                 InkWell(
                   onTap: () {
+                    Navigator.pushNamed(context, RoutesName.bankDetailsScreen);
+                  },
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundColor: lightBlue,
+                        child: Image.asset(
+                          Assets.iconKyc,
+                          scale: 3,
+                        ),
+                      ),
+                      SizedBox(
+                        width: width * 0.03,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Bank Details".tr,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text("Add your bank details".tr,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: labelColor,
+                                  fontSize: 13)),
+                        ],
+                      ),
+                      const Spacer(),
+                      const Icon(Icons.arrow_forward_ios_rounded,
+                          color: tertiary, size: 16)
+                    ],
+                  ),
+                ),
+                Divider(
+                  height: height * 0.05,
+                ),
+                InkWell(
+                  onTap: () {
                     Navigator.pushNamed(context, RoutesName.kycCScreen);
                   },
                   child: Row(

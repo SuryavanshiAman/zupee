@@ -1,7 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class OtpFieldWidget extends StatefulWidget {
@@ -71,7 +69,7 @@ class _OtpFieldWidgetState extends State<OtpFieldWidget> {
             textAlign: TextAlign.center,
             textAlignVertical: TextAlignVertical.top,
             cursorColor: const Color(0xffEC6736),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               counterText: '',
               // enabledBorder: OutlineInputBorder(
               //   borderRadius: BorderRadius.circular(8),

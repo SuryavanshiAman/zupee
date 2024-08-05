@@ -8,11 +8,8 @@ import 'package:zupee/view/refer_earn_page/refer_earn_page.dart';
 import 'adda/adda_page.dart';
 import 'home/home_page.dart';
 
-
-
 class BottomNevBar extends StatefulWidget {
-
-  const BottomNevBar({Key? key}) : super(key: key);
+  const BottomNevBar({super.key});
 
   @override
   State<BottomNevBar> createState() => _BottomNevBarState();
@@ -20,11 +17,10 @@ class BottomNevBar extends StatefulWidget {
 
 class _BottomNevBarState extends State<BottomNevBar> {
   final pages = [
-     const HomeScreen(),
+    const HomeScreen(),
     const ReferAndEarnScreen(),
     const AddaScreen(),
     const AccountScreen(),
-
   ];
 
   int pageIndex = 0;
@@ -33,40 +29,45 @@ class _BottomNevBarState extends State<BottomNevBar> {
     super.initState();
 
     Future.delayed(Duration.zero, () {
-
       Map<String, dynamic> arguments =
-      ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       setState(() {
-        pageIndex=(arguments['index'] ?? pageIndex);
-       });
+        pageIndex = (arguments['index'] ?? pageIndex);
       });
-   }
+    });
+  }
+
   Future<bool> _onWillPop() async {
     if (pageIndex > 0) {
       setState(() {
-        pageIndex=0;
+        pageIndex = 0;
       });
       return false;
     } else {
-      return  await Utils.showExitConfirmation(context)?? false;
+      return await Utils.showExitConfirmation(context) ?? false;
     }
   }
-  @override
-  Widget build(BuildContext context) => WillPopScope(
-    onWillPop: _onWillPop,
-    child: Scaffold(
 
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      onPopInvoked:(v) {
+        _onWillPop();
+      },
+      child: Scaffold(
         body: pages[pageIndex],
         bottomNavigationBar: buildMyNavBar(context),
       ),
-  );
-int bottom = 0;
-  Container buildMyNavBar(BuildContext context) {
+    );
+  }
+  int bottom = 0;
+  Widget buildMyNavBar(BuildContext context) {
     return Container(
       height: 65,
       decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -76,37 +77,34 @@ int bottom = 0;
               IconButton(
                   enableFeedback: false,
                   onPressed: () {
-
                     setState(() {
-
                       pageIndex = 0;
                     });
                   },
                   icon: pageIndex == 0
                       ? Image.asset(
-                    Assets.iconHome,
-                    height: 32,
-                  )
-                      :Image.asset(
-                    Assets.iconHomeTwo,
-                    height: 30,
-                  )
-              ),
+                          Assets.iconHome,
+                          height: 32,
+                        )
+                      : Image.asset(
+                          Assets.iconHomeTwo,
+                          height: 30,
+                        )),
               pageIndex == 0
                   ? const Text(
-                'Home',
-                style: TextStyle(
-                    fontSize: 11,
-                    color:tertiary,
-                    fontWeight: FontWeight.bold),
-              )
+                      'Home',
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: tertiary,
+                          fontWeight: FontWeight.bold),
+                    )
                   : const Text(
-                'Home',
-                style: TextStyle(
-                    fontSize: 10,
-                    color:labelColor,
-                    fontWeight: FontWeight.bold),
-              ),
+                      'Home',
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: labelColor,
+                          fontWeight: FontWeight.bold),
+                    ),
             ],
           ),
           Column(
@@ -119,34 +117,29 @@ int bottom = 0;
                     });
                   },
                   icon: pageIndex == 1
-                      ?  Image.asset(
-                    Assets.iconRefer,
-                    height: 32,
-
-
-                  )
-                      :Image.asset(
-                    Assets.iconReferTwo,
-                    height: 30,
-
-
-                  )
-              ),
+                      ? Image.asset(
+                          Assets.iconRefer,
+                          height: 32,
+                        )
+                      : Image.asset(
+                          Assets.iconReferTwo,
+                          height: 30,
+                        )),
               pageIndex == 1
                   ? const Text(
-                'Refer',
-                style: TextStyle(
-                    fontSize: 11,
-                    color:tertiary,
-                    fontWeight: FontWeight.bold),
-              )
+                      'Refer',
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: tertiary,
+                          fontWeight: FontWeight.bold),
+                    )
                   : const Text(
-                'Refer',
-                style: TextStyle(
-                    fontSize: 10,
-                    color: labelColor,
-                    fontWeight: FontWeight.bold),
-              ),
+                      'Refer',
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: labelColor,
+                          fontWeight: FontWeight.bold),
+                    ),
             ],
           ),
           Column(
@@ -155,38 +148,34 @@ int bottom = 0;
                 enableFeedback: false,
                 onPressed: () {
                   setState(() {
-
                     pageIndex = 2;
-
                   });
                 },
                 icon: pageIndex == 2
                     ? Image.asset(
-                  Assets.iconAdda,
-                  height: 32,
-                )
-                    :Image.asset(
-                  Assets.iconAddaTwo,
-                  height: 30,
-
-
-                ),
+                        Assets.iconAdda,
+                        height: 32,
+                      )
+                    : Image.asset(
+                        Assets.iconAddaTwo,
+                        height: 30,
+                      ),
               ),
               pageIndex == 2
                   ? const Text(
-                'Adda',
-                style: TextStyle(
-                    fontSize: 11,
-                    color: tertiary,
-                    fontWeight: FontWeight.bold),
-              )
+                      'Adda',
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: tertiary,
+                          fontWeight: FontWeight.bold),
+                    )
                   : const Text(
-                'Adda',
-                style: TextStyle(
-                    fontSize: 10,
-                    color:  labelColor,
-                    fontWeight: FontWeight.bold),
-              ),
+                      'Adda',
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: labelColor,
+                          fontWeight: FontWeight.bold),
+                    ),
             ],
           ),
           Column(
@@ -200,31 +189,29 @@ int bottom = 0;
                 },
                 icon: pageIndex == 3
                     ? Image.asset(
-                  Assets.iconAccount,
-                  height: 32,
-                )
-                    :Image.asset(
-                  Assets.iconAccountTwo,
-                  height: 30,
-
-
-                ),
+                        Assets.iconAccount,
+                        height: 32,
+                      )
+                    : Image.asset(
+                        Assets.iconAccountTwo,
+                        height: 30,
+                      ),
               ),
               pageIndex == 3
                   ? const Text(
-                'Account',
-                style: TextStyle(
-                    fontSize: 11,
-                    color:tertiary,
-                    fontWeight: FontWeight.bold),
-              )
+                      'Account',
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: tertiary,
+                          fontWeight: FontWeight.bold),
+                    )
                   : const Text(
-                'Account',
-                style: TextStyle(
-                    fontSize: 10,
-                    color:labelColor,
-                    fontWeight: FontWeight.bold),
-              ),
+                      'Account',
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: labelColor,
+                          fontWeight: FontWeight.bold),
+                    ),
             ],
           ),
         ],
@@ -232,4 +219,3 @@ int bottom = 0;
     );
   }
 }
-

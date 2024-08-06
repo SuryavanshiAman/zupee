@@ -6,6 +6,7 @@ import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_text_field.dart';
 import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view_model/add_bank_details_view_model.dart';
+import 'package:zupee/view_model/view_bank_details_view_model.dart';
 
 class BankDetailsScreen extends StatefulWidget {
   const BankDetailsScreen({super.key});
@@ -21,14 +22,31 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   TextEditingController iFSC = TextEditingController();
   TextEditingController branch = TextEditingController();
   TextEditingController bankName = TextEditingController();
-  TextEditingController uPI = TextEditingController();
+  // TextEditingController uPI = TextEditingController();
   TextEditingController acHolder = TextEditingController();
 
   @override
   void initState() {
+    Provider.of<ViewBankDetailViewModel>(context, listen: false)
+        .viewBankDetailsApi(context);
+    acDetail();
     super.initState();
   }
-
+  acDetail() {
+    final bankDetail =
+        Provider.of<ViewBankDetailViewModel>(context, listen: false)
+            .bankDetailResponse;
+    accountNo.text =
+    bankDetail == null ? '' : bankDetail.data![0].accountNo.toString();
+    iFSC.text =
+    bankDetail == null ? '' : bankDetail.data![0].ifscCode.toString();
+    branch.text =
+    bankDetail == null ? '' : bankDetail.data![0].branchName.toString();
+    bankName.text =
+    bankDetail == null ? '' : bankDetail.data![0].bankName.toString();
+    acHolder.text =
+    bankDetail == null ? '' : bankDetail.data![0].name.toString();
+  }
   bool _isValidIFSC = false;
 
   void validateIFSC(String iFSC) {

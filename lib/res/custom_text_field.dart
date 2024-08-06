@@ -100,86 +100,84 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        margin: margin,
-        height: height ?? 55,
-        width: width ?? MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          border: border,
-          borderRadius: borderRadius,
-          boxShadow: boxShadow,
-        ),
-        child: TextFormField(
-          validator: validator,
-          onSaved: onSaved,
-          autofocus: autofocus ?? false,
-          textAlignVertical: TextAlignVertical.center,
-          enabled: enabled,
-          controller: controller,
-          cursorColor: cursorColor,
-          cursorHeight: cursorHeight,
-          onChanged: onChanged,
-          maxLines: maxLines,
-          maxLength: maxLength,
-          expands: expands,
-          readOnly: readOnly,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-          textInputAction: textInputAction,
-          style: style ?? TextStyle(
-                    fontSize: fontSize ?? 15,
-                    fontWeight: FontWeight.normal,
-                    fontStyle: FontStyle.normal,
-                    color: textColor ?? black),
-
-          decoration: InputDecoration(
-            errorText: errorText,
-            counterText: "",
-            prefixIcon: prefix,
-            suffixIcon: suffix,
-            filled: filled ?? true,
-            fillColor: fillColor ?? lightGray,
-            hintText: label,
-            hintStyle:TextStyle(
-                  fontSize: hintSize ?? 15,
+    return Container(
+      margin: margin,
+      height: height ?? 55,
+      width: width ?? MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        border: border,
+        borderRadius: borderRadius,
+        boxShadow: boxShadow,
+      ),
+      child: TextFormField(
+        onTap: onTap,
+        validator: validator,
+        onSaved: onSaved,
+        autofocus: autofocus ?? false,
+        textAlignVertical: TextAlignVertical.center,
+        enabled: enabled,
+        controller: controller,
+        cursorColor: cursorColor,
+        cursorHeight: cursorHeight,
+        onChanged: onChanged,
+        maxLines: maxLines,
+        maxLength: maxLength,
+        expands: expands,
+        readOnly: readOnly,
+        obscureText: obscureText,
+        keyboardType: keyboardType,
+        textInputAction: textInputAction,
+        style: style ?? TextStyle(
+                  fontSize: fontSize ?? 15,
                   fontWeight: FontWeight.normal,
                   fontStyle: FontStyle.normal,
-                  color: hintColor ?? lightGray),
+                  color: textColor ?? black),
 
-            contentPadding: contentPadding ??
-                const EdgeInsets.only(left: 15, right: 15, top: 0, bottom: 0),
-            disabledBorder:outLineBorderEnabled?OutlineInputBorder(
-                borderSide:borderSide??BorderSide.none,
-                borderRadius:fieldRadius== null? const BorderRadius.all(Radius.circular(4.0)):fieldRadius!
-            ) :UnderlineInputBorder(
-                borderSide: borderSide ?? BorderSide.none,
-                borderRadius: fieldRadius??const BorderRadius.all(Radius.circular(4.0))
-            ),
-            border:outLineBorderEnabled?OutlineInputBorder(
-                borderSide:borderSide??BorderSide.none,
-                borderRadius:fieldRadius== null? const BorderRadius.all(Radius.circular(4.0)):fieldRadius!
-            ) :UnderlineInputBorder(
-                borderSide: borderSide ?? BorderSide.none,
-                borderRadius: fieldRadius??const BorderRadius.all(Radius.circular(4.0))
-            ),
-            enabledBorder:outLineBorderEnabled? OutlineInputBorder(
-                borderSide:borderSide??BorderSide.none,
-                borderRadius:fieldRadius== null? const BorderRadius.all(Radius.circular(4.0)):fieldRadius!
-            ):UnderlineInputBorder(
-                borderSide: borderSide ?? BorderSide.none,
-                borderRadius: fieldRadius??const BorderRadius.all(Radius.circular(4.0))
+        decoration: InputDecoration(
+          errorText: errorText,
+          counterText: "",
+          prefixIcon: prefix,
+          suffixIcon: suffix,
+          filled: filled ?? true,
+          fillColor: fillColor ?? lightGray,
+          hintText: label,
+          hintStyle:TextStyle(
+                fontSize: hintSize ?? 15,
+                fontWeight: FontWeight.normal,
+                fontStyle: FontStyle.normal,
+                color: hintColor ?? lightGray),
 
-            ),
-            focusedBorder:outLineBorderEnabled? OutlineInputBorder(
-                borderSide:borderSide??BorderSide.none,
-                borderRadius:fieldRadius== null? const BorderRadius.all(Radius.circular(4.0)):fieldRadius!
-            ):UnderlineInputBorder(
-                borderSide: borderSideFocus ?? BorderSide.none,
-                borderRadius: fieldRadius??const BorderRadius.all(Radius.circular(4.0))
+          contentPadding: contentPadding ??
+              const EdgeInsets.only(left: 15, right: 15, top: 0, bottom: 0),
+          disabledBorder:outLineBorderEnabled?OutlineInputBorder(
+              borderSide:borderSide??BorderSide.none,
+              borderRadius:fieldRadius== null? const BorderRadius.all(Radius.circular(4.0)):fieldRadius!
+          ) :UnderlineInputBorder(
+              borderSide: borderSide ?? BorderSide.none,
+              borderRadius: fieldRadius??const BorderRadius.all(Radius.circular(4.0))
+          ),
+          border:outLineBorderEnabled?OutlineInputBorder(
+              borderSide:borderSide??BorderSide.none,
+              borderRadius:fieldRadius== null? const BorderRadius.all(Radius.circular(4.0)):fieldRadius!
+          ) :UnderlineInputBorder(
+              borderSide: borderSide ?? BorderSide.none,
+              borderRadius: fieldRadius??const BorderRadius.all(Radius.circular(4.0))
+          ),
+          enabledBorder:outLineBorderEnabled? OutlineInputBorder(
+              borderSide:borderSide??BorderSide.none,
+              borderRadius:fieldRadius== null? const BorderRadius.all(Radius.circular(4.0)):fieldRadius!
+          ):UnderlineInputBorder(
+              borderSide: borderSide ?? BorderSide.none,
+              borderRadius: fieldRadius??const BorderRadius.all(Radius.circular(4.0))
 
-            ),
+          ),
+          focusedBorder:outLineBorderEnabled? OutlineInputBorder(
+              borderSide:borderSide??BorderSide.none,
+              borderRadius:fieldRadius== null? const BorderRadius.all(Radius.circular(4.0)):fieldRadius!
+          ):UnderlineInputBorder(
+              borderSide: borderSideFocus ?? BorderSide.none,
+              borderRadius: fieldRadius??const BorderRadius.all(Radius.circular(4.0))
+
           ),
         ),
       ),

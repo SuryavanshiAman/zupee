@@ -31,16 +31,17 @@ class AddBankDetailsViewModel with ChangeNotifier {
       "ifsc_code": ifsc
     };
     _addBankDetailsRepo.addBankDetailsApi(data).then((value) {
+
       if (value['status'] == "200") {
         Utils.flushBarSuccessMessage(value['message'],context,red);
       } else {
         setLoading(false);
-        print("kkkk");
         Utils.showErrorToast(value['message']);
       }
     }).onError((error, stackTrace) {
       setLoading(false);
       if (kDebugMode) {
+        Utils.showErrorToast(error.toString());
         print('error: $error');
       }
     });

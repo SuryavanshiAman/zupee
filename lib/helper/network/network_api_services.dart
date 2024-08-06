@@ -23,6 +23,7 @@ class NetworkApiServices extends BaseApiServices {
         print('Api Url : $url');
       }
       responseJson = returnRequest(response);
+
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     }

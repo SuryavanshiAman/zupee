@@ -109,7 +109,7 @@ class LudoProvider extends ChangeNotifier {
     if (moveablePawn.length > 1) {
       var biggestStep = moveablePawn.map((e) => e.step).reduce(max);
       if (moveablePawn.every((element) => element.step == biggestStep)) {
-        var random = 1 + Random().nextInt(moveablePawn.length - 1);
+        var random = 2 + Random().nextInt(moveablePawn.length - 1);
         if (moveablePawn[random].step == -1) {
           var thePawn = moveablePawn[random];
           move(thePawn.type, thePawn.index, (thePawn.step + 1) + 1);
@@ -137,87 +137,87 @@ class LudoProvider extends ChangeNotifier {
     }
   }
 
-  void throwDicee() async {
-    if (_gameState != LudoGameState.throwDice || isPlayer1Turn) return;
-
-    _diceStarted = true;
-    notifyListeners();
-    // Audio.rollDice();
-
-    LudoPlayer currentPlayer = player(_currentTurn);
-
-    if (winners.contains(currentPlayer.type)) {
-      nextTurn();
-      return;
-    }
-
-    currentPlayer.highlightAllPawns(false);
-
-    // Simulate the dice rolling delay
-    Future.delayed(const Duration(seconds: 6), () {
-      _diceStarted = false;
-      _previousDiceResult = _diceResult;
-      var random = Random();
-      _diceResult = random.nextBool() ? 5 : random.nextInt(6) + 1; // Random between 1 - 6
-      notifyListeners();
-
-      // Move this line here to avoid adding _diceResult twice
-      _totalPoints += (_previousDiceResult ?? 0);
-
-      if (diceResult == 6) {
-        currentPlayer.highlightAllPawns();
-        _gameState = LudoGameState.pickPawn;
-        notifyListeners();
-        _totalPoints += _diceResult; // Add only when diceResult is 6
-      } else {
-        if (currentPlayer.pawnInsideCount == 4) {
-          return nextTurn();
-        } else {
-          currentPlayer.highlightOutside();
-          _gameState = LudoGameState.pickPawn;
-          notifyListeners();
-        }
-      }
-
-      for (var i = 0; i < currentPlayer.pawns.length; i++) {
-        var pawn = currentPlayer.pawns[i];
-        if ((pawn.step + diceResult) > currentPlayer.path.length - 1) {
-          currentPlayer.highlightPawn(i, false);
-        }
-      }
-
-      var moveablePawn = currentPlayer.pawns.where((e) => e.highlight).toList();
-      if (moveablePawn.length > 1) {
-        var biggestStep = moveablePawn.map((e) => e.step).reduce(max);
-        if (moveablePawn.every((element) => element.step == biggestStep)) {
-          var random = 1 + Random().nextInt(moveablePawn.length - 1);
-          if (moveablePawn[random].step == -1) {
-            var thePawn = moveablePawn[random];
-            move(thePawn.type, thePawn.index, (thePawn.step + 1) + 1);
-            return;
-          } else {
-            var thePawn = moveablePawn[random];
-            move(thePawn.type, thePawn.index, (thePawn.step + 1) + diceResult);
-            return;
-          }
-        }
-      }
-
-      if (currentPlayer.pawns.every((element) => !element.highlight)) {
-        if (diceResult == 6) {
-          _gameState = LudoGameState.throwDice;
-        } else {
-          nextTurn();
-          return;
-        }
-      }
-
-      if (currentPlayer.pawns.where((element) => element.highlight).length == 1) {
-        var index = currentPlayer.pawns.indexWhere((element) => element.highlight);
-        move(currentPlayer.type, index, (currentPlayer.pawns[index].step + 1) + diceResult);
-      }
-    });
-  }
+  // void throwDicee() async {
+  //   if (_gameState != LudoGameState.throwDice || isPlayer1Turn) return;
+  //
+  //   _diceStarted = true;
+  //   notifyListeners();
+  //   // Audio.rollDice();
+  //
+  //   LudoPlayer currentPlayer = player(_currentTurn);
+  //
+  //   if (winners.contains(currentPlayer.type)) {
+  //     nextTurn();
+  //     return;
+  //   }
+  //
+  //   currentPlayer.highlightAllPawns(false);
+  //
+  //   // Simulate the dice rolling delay
+  //   Future.delayed(const Duration(seconds: 6), () {
+  //     _diceStarted = false;
+  //     _previousDiceResult = _diceResult;
+  //     var random = Random();
+  //     _diceResult = random.nextBool() ? 5 : random.nextInt(6) + 1; // Random between 1 - 6
+  //     notifyListeners();
+  //
+  //     // Move this line here to avoid adding _diceResult twice
+  //     _totalPoints += (_previousDiceResult ?? 0);
+  //
+  //     if (diceResult == 6) {
+  //       currentPlayer.highlightAllPawns();
+  //       _gameState = LudoGameState.pickPawn;
+  //       notifyListeners();
+  //       _totalPoints += _diceResult; // Add only when diceResult is 6
+  //     } else {
+  //       if (currentPlayer.pawnInsideCount == 4) {
+  //         return nextTurn();
+  //       } else {
+  //         currentPlayer.highlightOutside();
+  //         _gameState = LudoGameState.pickPawn;
+  //         notifyListeners();
+  //       }
+  //     }
+  //
+  //     for (var i = 0; i < currentPlayer.pawns.length; i++) {
+  //       var pawn = currentPlayer.pawns[i];
+  //       if ((pawn.step + diceResult) > currentPlayer.path.length - 1) {
+  //         currentPlayer.highlightPawn(i, false);
+  //       }
+  //     }
+  //
+  //     var moveablePawn = currentPlayer.pawns.where((e) => e.highlight).toList();
+  //     if (moveablePawn.length > 1) {
+  //       var biggestStep = moveablePawn.map((e) => e.step).reduce(max);
+  //       if (moveablePawn.every((element) => element.step == biggestStep)) {
+  //         var random = 1 + Random().nextInt(moveablePawn.length - 1);
+  //         if (moveablePawn[random].step == -1) {
+  //           var thePawn = moveablePawn[random];
+  //           move(thePawn.type, thePawn.index, (thePawn.step + 1) + 1);
+  //           return;
+  //         } else {
+  //           var thePawn = moveablePawn[random];
+  //           move(thePawn.type, thePawn.index, (thePawn.step + 1) + diceResult);
+  //           return;
+  //         }
+  //       }
+  //     }
+  //
+  //     if (currentPlayer.pawns.every((element) => !element.highlight)) {
+  //       if (diceResult == 6) {
+  //         _gameState = LudoGameState.throwDice;
+  //       } else {
+  //         nextTurn();
+  //         return;
+  //       }
+  //     }
+  //
+  //     if (currentPlayer.pawns.where((element) => element.highlight).length == 1) {
+  //       var index = currentPlayer.pawns.indexWhere((element) => element.highlight);
+  //       move(currentPlayer.type, index, (currentPlayer.pawns[index].step + 1) + diceResult);
+  //     }
+  //   });
+  // }
 
 
 

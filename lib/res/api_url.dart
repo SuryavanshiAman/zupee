@@ -12,4 +12,5 @@ class ApiUrl{
   static const String getSupportDataApi = '${baseUrl}getSupportData';
   static const String getAboutDataApi = '${baseUrl}getAboutData';
   static const String addAccountApi = '${baseUrl}addAccount';
+  static const String accountViewApi = '${baseUrl}accountView';
 }

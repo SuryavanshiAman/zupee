@@ -605,7 +605,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         },
                         child: const Icon(Icons.close)),
                   ),
-                  SizedBox(height: height / 30),
+                  SizedBox(height: height*0.02),
                   Center(
                     child: CircleAvatar(
                       radius: 55,
@@ -620,8 +620,8 @@ class _AccountScreenState extends State<AccountScreen> {
                     child: Text("Logging out?",
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold)),
+                            fontSize: 22,
+                            fontWeight:  FontWeight.w600)),
                   ),
                   SizedBox(height: height * 0.02),
                   const Center(
@@ -631,6 +631,7 @@ class _AccountScreenState extends State<AccountScreen> {
                             style: TextStyle(
                               color: labelColor,
                               fontSize: 16,
+                              fontWeight: FontWeight.w600
                             )),
                   ),
                   SizedBox(height: height * 0.04),

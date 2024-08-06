@@ -31,24 +31,7 @@ class BoardWidget extends StatelessWidget {
   double boxStepSize(BuildContext context) {
     return ludoBoard(context) / 15;
   }
-  // Center(
-  // child: Container(
-  // width: width,
-  // height: height * 0.5,
-  // decoration: const BoxDecoration(
-  // image: DecorationImage(
-  // image: AssetImage(Assets.ludoLudoBoard),
-  // fit: BoxFit.cover)),
-  // child: Padding(
-  // padding: const EdgeInsets.all(8.0),
-  // child: Container(
-  // decoration: const BoxDecoration(
-  // image: DecorationImage(
-  // image: AssetImage(Assets.ludoBoardTwo))),
-  // ),
-  // ),
-  // ),
-  // ),
+
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -16,6 +16,7 @@ import 'view_model/auth_view_model.dart';
 import 'view_model/help_view_model.dart';
 import 'view_model/profile_update_view_model.dart';
 import 'view_model/user_view_model.dart';
+import 'view_model/view_bank_details_view_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,11 +37,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileUpdateViewModel()),
         ChangeNotifierProvider(create: (_) => HelpViewModel()),
-        ChangeNotifierProvider(create: (_) => DiceModel()),
-        ChangeNotifierProvider(create: (_) => GameState()),
         ChangeNotifierProvider(create: (_) => LudoProvider()),
         ChangeNotifierProvider(create: (_) => AboutViewModel()),
         ChangeNotifierProvider(create: (_) => AddBankDetailsViewModel()),
+        ChangeNotifierProvider(create: (_) => ViewBankDetailViewModel()),
       ],
       child: GetMaterialApp(
         title: 'Flutter Demo',

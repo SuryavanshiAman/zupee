@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import 'package:zupee/generated/assets.dart';
+import 'package:zupee/main.dart';
 
+import '../../res/app_colors.dart';
 import 'ludo_constant.dart';
 import 'ludo_provider.dart';
 
@@ -57,12 +59,12 @@ class PawnWidget extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           if (highlight)
-            RippleAnimation(
-              color: color,
+            const RippleAnimation(
+              color: white,
               minRadius: 20,
               repeat: true,
               ripplesCount: 3,
-              child: const SizedBox.shrink(),
+              child: SizedBox.shrink(),
             ),
           Consumer<LudoProvider>(
             builder: (context, provider, child) => GestureDetector(
@@ -76,10 +78,11 @@ class PawnWidget extends StatelessWidget {
               },
               child: Stack(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(shape: BoxShape.circle),
-                      child:  Transform.scale(
-                        scale: 1.9,
+                    SizedBox(height: height*0.01,),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: Transform.scale(
+                        scale: 2.5,
                         child: Image.asset(pown),
                       ),
                     ),

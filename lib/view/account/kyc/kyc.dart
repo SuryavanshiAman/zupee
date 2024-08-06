@@ -103,7 +103,7 @@ class KYCScreen extends StatelessWidget {
               },
               child: Container(
                 padding: const EdgeInsets.all(18),
-                height: height*0.12,
+                height: height*0.13,
                 width: width*0.9,
                 decoration: BoxDecoration(
                   color:white,

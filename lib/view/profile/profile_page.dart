@@ -311,7 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height:  height*0.03,),
               Container(
-                padding: const EdgeInsets.all(18),
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -337,10 +337,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       trailing: const Icon(Icons.arrow_forward_ios_sharp,size: 20,),
                       onTap: () {
-                        // Handle top scorer tap
+                        Navigator.pushNamed(context, RoutesName.bottomNevBar ,arguments: {"index": 2});
                       },
                     ),
-                    const SizedBox(height: 8),
+                     SizedBox(height: height*0.01),
                     SizedBox(
                       height: height*0.25,
                       child: ListView.builder(
@@ -369,7 +369,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
   Widget buildTopScorerCard(String name, String subtitle, String imageUrl) {
     return Container(
-      width: width*0.38,
+      width: width*0.4,
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -388,6 +388,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            SizedBox(height: height*0.01),
             CircleAvatar(
               radius: 30,
               backgroundImage: NetworkImage(imageUrl),
@@ -411,7 +412,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.black54,
               ),
             ),
-            const SizedBox(height: 8),
+             Spacer(),
             Container(
               alignment: Alignment.center,
               height: height*0.045,

@@ -85,7 +85,7 @@ class LudoSupremeState extends State<LudoSupreme>
   }
 
   bool time = false;
-
+  bool _isExpanded = false;
   Set<int> selectedIndices = {0};
   @override
   Widget build(BuildContext context) {
@@ -694,7 +694,7 @@ class LudoSupremeState extends State<LudoSupreme>
     );
   }
 
-  bool _isExpanded = false;
+
   void confirmPaymentBottomSheet(BuildContext context) async {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -763,7 +763,7 @@ class LudoSupremeState extends State<LudoSupreme>
                                 _isExpanded = !_isExpanded;
                               });
                             },
-                            child: const Icon(Icons.keyboard_arrow_down))
+                            child:  Icon(_isExpanded ? Icons.expand_less : Icons.expand_more))
                       ],
                     ),
                     if (_isExpanded)
@@ -903,7 +903,7 @@ class LudoSupremeState extends State<LudoSupreme>
                               topRight: Radius.circular(35))),
                       context: context,
                       builder: (context) {
-                        return const TournamentBottomsheet();
+                        return  TournamentBottomsheet(time:_start);
                       },
                     );
                   },

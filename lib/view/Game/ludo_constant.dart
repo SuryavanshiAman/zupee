@@ -28,7 +28,7 @@ class LudoPath {
 
   ///Safe path that is the path where the pawns can move without getting killed
   static const List<List<double>> safeArea = [
-    [6, 2],
+    [1, 2],
     [12, 6],
     [8, 12],
     [2, 8],
@@ -81,6 +81,10 @@ class LudoPath {
     [1.4, 11.4],
     [3.7, 11.4],
     [2.6, 12.6],
+    // [1.9,2],
+    // [3,4],
+    // [6,5],
+    // [7,8],
 
     // [1.5, 10.5],
     // [1.5, 12.5],

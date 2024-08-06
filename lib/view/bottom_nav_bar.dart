@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zupee/generated/assets.dart';
+import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view/account/account.dart';
@@ -64,155 +65,159 @@ class _BottomNevBarState extends State<BottomNevBar> {
   int bottom = 0;
   Widget buildMyNavBar(BuildContext context) {
     return Container(
-      height: 65,
+      height: height*0.085,
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        color: white,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Column(
-            children: [
-              IconButton(
-                  enableFeedback: false,
-                  onPressed: () {
-                    setState(() {
-                      pageIndex = 0;
-                    });
-                  },
-                  icon: pageIndex == 0
+          GestureDetector(
+            onTap: (){
+              setState(() {
+                pageIndex = 0;
+              });
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                    pageIndex == 0
+                        ? Image.asset(
+                            Assets.iconHome,
+                            height: 32,
+                          )
+                        : Image.asset(
+                            Assets.iconHomeTwo,
+                            height: 30,
+                ),
+                pageIndex == 0
+                    ? const Text(
+                        'Home',
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: tertiary,
+                            fontWeight: FontWeight.bold),
+                      )
+                    : const Text(
+                        'Home',
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: labelColor,
+                            fontWeight: FontWeight.bold),
+                      ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: (){
+              setState(() {
+                pageIndex = 1;
+              });
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                    pageIndex == 1
+                        ? Image.asset(
+                            Assets.iconRefer,
+                            height: 32,
+                          )
+                        : Image.asset(
+                            Assets.iconReferTwo,
+                            height: 30,
+                ),
+                pageIndex == 1
+                    ? const Text(
+                        'Refer',
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: tertiary,
+                            fontWeight: FontWeight.bold),
+                      )
+                    : const Text(
+                        'Refer',
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: labelColor,
+                            fontWeight: FontWeight.bold),
+                      ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: (){
+              setState(() {
+                pageIndex = 2;
+              });
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                pageIndex == 2
                       ? Image.asset(
-                          Assets.iconHome,
+                          Assets.iconAdda,
                           height: 32,
                         )
                       : Image.asset(
-                          Assets.iconHomeTwo,
+                          Assets.iconAddaTwo,
                           height: 30,
-                        )),
-              pageIndex == 0
-                  ? const Text(
-                      'Home',
-                      style: TextStyle(
-                          fontSize: 11,
-                          color: tertiary,
-                          fontWeight: FontWeight.bold),
-                    )
-                  : const Text(
-                      'Home',
-                      style: TextStyle(
-                          fontSize: 10,
-                          color: labelColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-            ],
+                        ),
+                pageIndex == 2
+                    ? const Text(
+                        'Adda',
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: tertiary,
+                            fontWeight: FontWeight.bold),
+                      )
+                    : const Text(
+                        'Adda',
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: labelColor,
+                            fontWeight: FontWeight.bold),
+                      ),
+              ],
+            ),
           ),
-          Column(
-            children: [
-              IconButton(
-                  enableFeedback: false,
-                  onPressed: () {
-                    setState(() {
-                      pageIndex = 1;
-                    });
-                  },
-                  icon: pageIndex == 1
+          GestureDetector(
+            onTap: (){
+              setState(() {
+                pageIndex = 3;
+              });
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                  pageIndex == 3
                       ? Image.asset(
-                          Assets.iconRefer,
+                          Assets.iconAccount,
                           height: 32,
                         )
                       : Image.asset(
-                          Assets.iconReferTwo,
+                          Assets.iconAccountTwo,
                           height: 30,
-                        )),
-              pageIndex == 1
-                  ? const Text(
-                      'Refer',
-                      style: TextStyle(
-                          fontSize: 11,
-                          color: tertiary,
-                          fontWeight: FontWeight.bold),
-                    )
-                  : const Text(
-                      'Refer',
-                      style: TextStyle(
-                          fontSize: 10,
-                          color: labelColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-            ],
-          ),
-          Column(
-            children: [
-              IconButton(
-                enableFeedback: false,
-                onPressed: () {
-                  setState(() {
-                    pageIndex = 2;
-                  });
-                },
-                icon: pageIndex == 2
-                    ? Image.asset(
-                        Assets.iconAdda,
-                        height: 32,
+                ),
+                pageIndex == 3
+                    ? const Text(
+                        'Account',
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: tertiary,
+                            fontWeight: FontWeight.bold),
                       )
-                    : Image.asset(
-                        Assets.iconAddaTwo,
-                        height: 30,
+                    : const Text(
+                        'Account',
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: labelColor,
+                            fontWeight: FontWeight.bold),
                       ),
-              ),
-              pageIndex == 2
-                  ? const Text(
-                      'Adda',
-                      style: TextStyle(
-                          fontSize: 11,
-                          color: tertiary,
-                          fontWeight: FontWeight.bold),
-                    )
-                  : const Text(
-                      'Adda',
-                      style: TextStyle(
-                          fontSize: 10,
-                          color: labelColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-            ],
-          ),
-          Column(
-            children: [
-              IconButton(
-                enableFeedback: false,
-                onPressed: () {
-                  setState(() {
-                    pageIndex = 3;
-                  });
-                },
-                icon: pageIndex == 3
-                    ? Image.asset(
-                        Assets.iconAccount,
-                        height: 32,
-                      )
-                    : Image.asset(
-                        Assets.iconAccountTwo,
-                        height: 30,
-                      ),
-              ),
-              pageIndex == 3
-                  ? const Text(
-                      'Account',
-                      style: TextStyle(
-                          fontSize: 11,
-                          color: tertiary,
-                          fontWeight: FontWeight.bold),
-                    )
-                  : const Text(
-                      'Account',
-                      style: TextStyle(
-                          fontSize: 10,
-                          color: labelColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

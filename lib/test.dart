@@ -198,4 +198,98 @@
 //     // Handle the error
 //   }
 // }
+
+
 /// form data api structure
+
+
+
+
+
+// class ModelDownloaderViewModel with ChangeNotifier {
+//   final DigitalInkRecognizerModelManager _modelManager = DigitalInkRecognizerModelManager();
+//   bool _isDownloading = false;
+//   String _statusMessage = 'Idle';
+//
+//   bool get isDownloading => _isDownloading;
+//   String get statusMessage => _statusMessage;
+//
+//   ModelDownloaderViewModel() {
+//     _checkAndDownloadModel();
+//   }
+//
+//   Future<void> _checkAndDownloadModel() async {
+//     _statusMessage = 'Checking model status...';
+//     notifyListeners();
+//
+//     try {
+//       bool isDownloaded = await _modelManager.isModelDownloaded('en');
+//       if (isDownloaded) {
+//         _statusMessage = 'Model is already downloaded.';
+//         notifyListeners();
+//         return;
+//       }
+//
+//       _statusMessage = 'Checking connectivity...';
+//       notifyListeners();
+//
+//       ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
+//       if (connectivityResult == ConnectivityResult.none) {
+//         _statusMessage = 'No internet connection. Download queued.';
+//         notifyListeners();
+//         return;
+//       }
+//
+//       _isDownloading = true;
+//       _statusMessage = 'Downloading model...';
+//       notifyListeners();
+//
+//       try {
+//         bool success = await _modelManager.downloadModel('en');
+//         _isDownloading = false;
+//         _statusMessage = success ? 'Model downloaded successfully.' : 'Failed to download model.';
+//         notifyListeners();
+//       } catch (e) {
+//         _isDownloading = false;
+//         _statusMessage = 'Error occurred during model download: $e';
+//         notifyListeners();
+//         if (kDebugMode) {
+//           print('Error occurred during model download: $e');
+//         }
+//       }
+//     } catch (e) {
+//       _statusMessage = 'Error checking model status: $e';
+//       notifyListeners();
+//       if (kDebugMode) {
+//         print('Error checking model status: $e');
+//       }
+//     }
+//   }
+// }
+// // Update with the correct path
+//
+// class ModelDownloaderScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Model Downloader'),
+//       ),
+//       body: Center(
+//         child: Consumer<ModelDownloaderViewModel>(
+//           builder: (context, model, child) {
+//             return Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 if (model.isDownloading)
+//                   CircularProgressIndicator(),
+//                 SizedBox(height: 20),
+//                 Text(model.statusMessage),
+//               ],
+//             );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }

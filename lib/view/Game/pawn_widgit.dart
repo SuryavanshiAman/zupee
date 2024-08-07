@@ -15,7 +15,7 @@ class PawnWidget extends StatelessWidget {
   final int step;
   final bool highlight;
 
-  const PawnWidget(this.index, this.type, {Key? key, this.highlight = false, this.step = -1}) : super(key: key);
+  const PawnWidget(this.index, this.type, {Key? key, this.highlight = false, this.step = -0}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

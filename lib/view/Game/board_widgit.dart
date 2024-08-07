@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
+import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/view/Game/ludo_provider.dart';
 
 import 'ludo_constant.dart';
@@ -34,20 +35,55 @@ class BoardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height * 0.5,
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(Assets.ludoLudoBoard),
-              fit: BoxFit.cover)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-
-        child: Container(
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: width,
+          height: height * 0.5,
           decoration: const BoxDecoration(
-          image: DecorationImage(
-          image: AssetImage(Assets.ludoBoardTwo))),
+              image: DecorationImage(
+                  image: AssetImage(Assets.ludoLudoBoard),
+                  fit: BoxFit.cover)),
+          child:   GridView.builder(
+            padding: const EdgeInsets.only(top: 50),
+            gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing:150.0, // Spacing between rows
+                crossAxisSpacing: 80.0,
+                childAspectRatio: 2
+            ),
+            shrinkWrap: true,
+            itemCount: 4,
+            itemBuilder: (context, itemIndex) {
+              return Container(
+                padding: const EdgeInsets.only(top: 10),
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: white),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Score",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: tertiary)),
+                    Text("0",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 18,color: tertiary),),
+                  ],
+                ),
+              );
+            },
+          ),
+
+
+
+        ),
+        // Image.asset(Assets.ludoBoardTwo)
+        Container(
+          width: width*0.964,
+          height: height * 0.474,
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(Assets.ludoBoardTwo))),
           child: Consumer<LudoProvider>(
             builder: (context, value, child) {
               //We use Stack to put all widgets on top of each other
@@ -172,7 +208,7 @@ class BoardWidget extends StatelessWidget {
             },
           ),
         ),
-      ),
+      ],
     );
   }
 

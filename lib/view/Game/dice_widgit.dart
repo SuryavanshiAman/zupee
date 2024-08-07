@@ -25,6 +25,7 @@ class DiceWidget extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 value.throwDice();
+                value.setLoading(true);
               },
               child: Container(
                   alignment: Alignment.center,

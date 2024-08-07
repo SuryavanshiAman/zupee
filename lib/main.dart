@@ -6,6 +6,7 @@ import 'package:zupee/language/hindi.dart';
 import 'package:zupee/test.dart';
 import 'package:zupee/utils/routes.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view/Game/ludo_game_home_page.dart';
 import 'package:zupee/view_model/about_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 
@@ -48,17 +49,17 @@ class MyApp extends StatelessWidget {
         locale: const Locale('en', 'US'), // Set the default locale
         fallbackLocale: const Locale('en''US'),
         debugShowCheckedModeBanner: false,
-        initialRoute: RoutesName.splashScreen,
-        onGenerateRoute: (settings) {
-          if (settings.name != null) {
-            return MaterialPageRoute(
-              builder: Routers.generateRoute(settings.name!),
-              settings: settings,
-            );
-          }
-          return null;
-        },
-        // home:  LudoGame(),
+        // initialRoute: RoutesName.splashScreen,
+        // onGenerateRoute: (settings) {
+        //   if (settings.name != null) {
+        //     return MaterialPageRoute(
+        //       builder: Routers.generateRoute(settings.name!),
+        //       settings: settings,
+        //     );
+        //   }
+        //   return null;
+        // },
+        home:  LudoHomeScreen(),
       ),
     );
   }

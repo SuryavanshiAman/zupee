@@ -10,7 +10,14 @@ class LudoProvider extends ChangeNotifier {
   bool _isPlayer1Turn = true;
 
   bool get isPlayer1Turn => _isPlayer1Turn;
+  bool _loading = false;
 
+  bool get loading => _loading;
+
+  setLoading(bool value) {
+    _loading = value;
+    notifyListeners();
+  }
 
   LudoGameState _gameState = LudoGameState.throwDice;
   LudoGameState get gameState => _gameState;
@@ -83,14 +90,16 @@ class LudoProvider extends ChangeNotifier {
     // Move this line here to avoid adding _diceResult twice
     _totalPoints += (_previousDiceResult ?? 0);
 
-    if (diceResult == 6) {
+    if (loading == true) {
       currentPlayer.highlightAllPawns();
       _gameState = LudoGameState.pickPawn;
       notifyListeners();
-      _totalPoints += _diceResult; // Add only when diceResult is 6
+      _totalPoints += _diceResult;// Add only when diceResult is 6
+      nextTurn();
     } else {
-      if (currentPlayer.pawnInsideCount == 4) {
-        return nextTurn();
+      if (loading == true) {
+      nextTurn();
+      _gameState = LudoGameState.pickPawn;
       } else {
         currentPlayer.highlightOutside();
         _gameState = LudoGameState.pickPawn;
@@ -324,7 +333,7 @@ class LudoProvider extends ChangeNotifier {
 
     validateWin(type);
 
-    if (diceResult == 6) {
+    if (loading == true) {
       _gameState = LudoGameState.throwDice;
       notifyListeners();
     } else {

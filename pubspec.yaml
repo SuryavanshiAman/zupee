@@ -27,6 +27,8 @@ dependencies:
   provider: ^6.1.2
   simple_ripple_animation: ^0.0.9
   flutter_widget_from_html: ^0.15.1
+  google_mlkit_digital_ink_recognition:
+  connectivity_plus: ^2.0.2
 
 dev_dependencies:
   flutter_test:

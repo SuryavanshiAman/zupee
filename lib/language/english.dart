@@ -4,6 +4,7 @@ class LocaleStringEn extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
     'en_US': {
+      'Hindi':'हिंदी',
       "signup": "Sign Up",
       "Signup to get ₹10 bonus":"Signup to get ₹10 bonus",
       "Enter your phone number": "Enter your phone number",
@@ -89,6 +90,8 @@ class LocaleStringEn extends Translations {
       'Edit Profile':'Edit Profile',
       'My Game History':'My Game History',
       'Total Games\n Played till today':'Total Games\n Played till today',
+      'Total Games\n Won till today':'Total Games\n Won till today',
+      'Top scorer this week':'Top scorer this week',
       "Set Profile Picture":"Set Profile Picture",
       'Open \nCamera':'Open \nCamera',
       'Select from \nGallery':'Select from \nGallery',
@@ -99,6 +102,19 @@ class LocaleStringEn extends Translations {
       "Control who can see your game history": "Control who can see your game history",
       "Please Enter Valid Phone number": "Please Enter Valid Phone number",
       "Save Changes":"Save Changes",
+      'Privacy Options: My Game \nHistory':'Privacy Options: My Game \nHistory',
+      'Everyone':'Everyone',
+      'Anyone on the Zupee platform will be able to see':'Anyone on the Zupee platform will be able to see',
+      'Only me':'Only me',
+      'Nobody can see':'Nobody can see',
+      'My Connections':'My Connections',
+      'Only your connections (followers and following) will be able to see':'Only your connections (followers and following) will be able to see',
+      "Done":"Done",
+      "Top Players(Past 7 days)":"Top Players(Past 7 days)",
+      "LAST UPDATE:":"LAST UPDATE:",
+      "TODAY,12:00 AM":"TODAY,12:00 AM",
+      'VIEW ALL':'VIEW ALL',
+      "Top players for you to follow":"Top players for you to follow",
 
     }
   };

@@ -9,7 +9,6 @@ import 'ludo_constant.dart';
 import 'ludo_player.dart';
 import 'pawn_widgit.dart';
 
-
 ///Widget for the board
 class BoardWidget extends StatelessWidget {
   const BoardWidget({super.key});
@@ -39,51 +38,55 @@ class BoardWidget extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Container(
-          width: width,
-          height: height * 0.5,
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(Assets.ludoLudoBoard),
-                  fit: BoxFit.cover)),
-          child:   GridView.builder(
-            padding: const EdgeInsets.only(top: 50),
-            gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing:150.0, // Spacing between rows
-                crossAxisSpacing: 80.0,
-                childAspectRatio: 2
-            ),
-            shrinkWrap: true,
-            itemCount: 4,
-            itemBuilder: (context, itemIndex) {
-              return Container(
-                padding: const EdgeInsets.only(top: 10),
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: white),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("Score",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: tertiary)),
-                    Text("0",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 18,color: tertiary),),
-                  ],
-                ),
+            width: width,
+            height: height * 0.5,
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(Assets.ludoLudoBoard),
+                    fit: BoxFit.cover)),
+            child: Consumer<LudoProvider>(builder: (context, value, child) {
+              return GridView.builder(
+                padding: const EdgeInsets.only(top: 50),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 150.0, // Spacing between rows
+                    crossAxisSpacing: 80.0,
+                    childAspectRatio: 2),
+                shrinkWrap: true,
+                itemCount: 4,
+                itemBuilder: (context, itemIndex) {
+                  return Container(
+                    padding: const EdgeInsets.only(top: 10),
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: white),
+                    child: const Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("Score",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: tertiary)),
+                        Text(
+                          "0",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: tertiary),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               );
-            },
-          ),
-
-
-
-        ),
+            })),
         // Image.asset(Assets.ludoBoardTwo)
         Container(
-          width: width*0.964,
+          width: width * 0.964,
           height: height * 0.474,
           decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(Assets.ludoBoardTwo))),
+              image: DecorationImage(image: AssetImage(Assets.ludoBoardTwo))),
           child: Consumer<LudoProvider>(
             builder: (context, value, child) {
               //We use Stack to put all widgets on top of each other
@@ -96,7 +99,8 @@ class BoardWidget extends StatelessWidget {
               List<Widget> playersPawn = [];
 
               //Sort players by current turn to make sure the player on top is the one who is playing
-              players.sort((a, b) => value.currentPlayer.type == a.type ? 1 : -1);
+              players
+                  .sort((a, b) => value.currentPlayer.type == a.type ? 1 : -1);
 
               ///Loop through all players and add their pawns to the map
               for (int i = 0; i < players.length; i++) {
@@ -161,7 +165,8 @@ class BoardWidget extends StatelessWidget {
                     playersPawn.add(AnimatedPositioned(
                       key: ValueKey("${e.type.name}_${e.index}"),
                       duration: const Duration(milliseconds: 200),
-                      left: LudoPath.stepBox(ludoBoard(context), coordinates[0]),
+                      left:
+                          LudoPath.stepBox(ludoBoard(context), coordinates[0]),
                       top: LudoPath.stepBox(ludoBoard(context), coordinates[1]),
                       width: boxStepSize(context),
                       height: boxStepSize(context),
@@ -172,13 +177,13 @@ class BoardWidget extends StatelessWidget {
                     playersPawn.addAll(
                       List.generate(
                         pawnsValue.length,
-                            (index) {
+                        (index) {
                           var e = pawnsValue[index];
                           return AnimatedPositioned(
                             key: ValueKey("${e.type.name}_${e.index}"),
                             duration: const Duration(milliseconds: 200),
                             left: LudoPath.stepBox(
-                                ludoBoard(context), coordinates[0]) +
+                                    ludoBoard(context), coordinates[0]) +
                                 (index * 3),
                             top: LudoPath.stepBox(
                                 ludoBoard(context), coordinates[1]),
@@ -221,18 +226,18 @@ class BoardWidget extends StatelessWidget {
     int y = 0;
 
     switch (turn) {
-    // case LudoPlayerType.green:
-    //   x = 0;
-    //   y = 0;
-    //   break;
+      // case LudoPlayerType.green:
+      //   x = 0;
+      //   y = 0;
+      //   break;
       case LudoPlayerType.yellow:
         x = 1;
         y = 0;
         break;
-    // case LudoPlayerType.blue:
-    //   x = 1;
-    //   y = 1;
-    //   break;
+      // case LudoPlayerType.blue:
+      //   x = 1;
+      //   y = 1;
+      //   break;
       case LudoPlayerType.red:
         x = 0;
         y = 1;
@@ -267,7 +272,7 @@ class BoardWidget extends StatelessWidget {
               alignment: Alignment.center,
               clipBehavior: Clip.antiAlias,
               decoration:
-              BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
@@ -286,7 +291,7 @@ class BoardWidget extends StatelessWidget {
   List<Widget> winners(BuildContext context, List<LudoPlayerType> winners) =>
       List.generate(
         winners.length,
-            (index) {
+        (index) {
           Widget crownImage = Image.asset("assets/games/ludo/crown/1st.png");
 
           //0 is left, 1 is right
@@ -308,18 +313,18 @@ class BoardWidget extends StatelessWidget {
           }
 
           switch (winners[index]) {
-          // case LudoPlayerType.green:
-          //   x = 0;
-          //   y = 0;
-          //   break;
+            // case LudoPlayerType.green:
+            //   x = 0;
+            //   y = 0;
+            //   break;
             case LudoPlayerType.yellow:
               x = 1;
               y = 0;
               break;
-          // case LudoPlayerType.blue:
-          //   x = 1;
-          //   y = 1;
-          //   break;
+            // case LudoPlayerType.blue:
+            //   x = 1;
+            //   y = 1;
+            //   break;
             case LudoPlayerType.red:
               x = 0;
               y = 1;
@@ -337,7 +342,7 @@ class BoardWidget extends StatelessWidget {
               child: Container(
                 clipBehavior: Clip.antiAlias,
                 decoration:
-                BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    BoxDecoration(borderRadius: BorderRadius.circular(15)),
                 child: crownImage,
               ),
             ),

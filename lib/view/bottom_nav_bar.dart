@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
@@ -92,15 +93,15 @@ class _BottomNevBarState extends State<BottomNevBar> {
                             height: 30,
                 ),
                 pageIndex == 0
-                    ? const Text(
-                        'Home',
+                    ?  Text(
+                        'Home'.tr,
                         style: TextStyle(
                             fontSize: 11,
                             color: tertiary,
                             fontWeight: FontWeight.bold),
                       )
-                    : const Text(
-                        'Home',
+                    :  Text(
+                        'Home'.tr,
                         style: TextStyle(
                             fontSize: 10,
                             color: labelColor,
@@ -129,15 +130,15 @@ class _BottomNevBarState extends State<BottomNevBar> {
                             height: 30,
                 ),
                 pageIndex == 1
-                    ? const Text(
-                        'Refer',
+                    ?  Text(
+                        'Refer'.tr,
                         style: TextStyle(
                             fontSize: 11,
                             color: tertiary,
                             fontWeight: FontWeight.bold),
                       )
-                    : const Text(
-                        'Refer',
+                    :  Text(
+                        'Refer'.tr,
                         style: TextStyle(
                             fontSize: 10,
                             color: labelColor,
@@ -165,15 +166,15 @@ class _BottomNevBarState extends State<BottomNevBar> {
                           height: 30,
                         ),
                 pageIndex == 2
-                    ? const Text(
-                        'Adda',
+                    ?  Text(
+                        'Adda'.tr,
                         style: TextStyle(
                             fontSize: 11,
                             color: tertiary,
                             fontWeight: FontWeight.bold),
                       )
-                    : const Text(
-                        'Adda',
+                    :  Text(
+                        'Adda'.tr,
                         style: TextStyle(
                             fontSize: 10,
                             color: labelColor,
@@ -202,15 +203,15 @@ class _BottomNevBarState extends State<BottomNevBar> {
                           height: 30,
                 ),
                 pageIndex == 3
-                    ? const Text(
-                        'Account',
+                    ?  Text(
+                        'Account'.tr,
                         style: TextStyle(
                             fontSize: 11,
                             color: tertiary,
                             fontWeight: FontWeight.bold),
                       )
-                    : const Text(
-                        'Account',
+                    :  Text(
+                        'Account'.tr,
                         style: TextStyle(
                             fontSize: 10,
                             color: labelColor,

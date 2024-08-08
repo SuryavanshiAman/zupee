@@ -49,17 +49,17 @@ class MyApp extends StatelessWidget {
         locale: const Locale('en', 'US'), // Set the default locale
         fallbackLocale: const Locale('en''US'),
         debugShowCheckedModeBanner: false,
-        // initialRoute: RoutesName.splashScreen,
-        // onGenerateRoute: (settings) {
-        //   if (settings.name != null) {
-        //     return MaterialPageRoute(
-        //       builder: Routers.generateRoute(settings.name!),
-        //       settings: settings,
-        //     );
-        //   }
-        //   return null;
-        // },
-        home:  LudoHomeScreen(),
+        initialRoute: RoutesName.splashScreen,
+        onGenerateRoute: (settings) {
+          if (settings.name != null) {
+            return MaterialPageRoute(
+              builder: Routers.generateRoute(settings.name!),
+              settings: settings,
+            );
+          }
+          return null;
+        },
+        // home:  LudoHomeScreen(),
       ),
     );
   }

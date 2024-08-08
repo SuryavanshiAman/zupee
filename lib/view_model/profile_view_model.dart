@@ -20,8 +20,7 @@ class ProfileViewModel with ChangeNotifier {
     _profileRepo.getProfileApi(userId).then((value) {
       if (value['status'] == "200") {
         ProfileModel profileModel = ProfileModel.fromJson(value);
-        Provider.of<ProfileViewModel>(context, listen: false)
-            .setProfileData(profileModel);
+        Provider.of<ProfileViewModel>(context, listen: false).setProfileData(profileModel);
       } else {
         if (kDebugMode) {
           print('value: ${value.message}');

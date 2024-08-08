@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/custom_back_button.dart';
 import 'package:zupee/res/custom_text_field.dart';
 import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view/bottomsheet/edit_profile_bottomsheet.dart';
@@ -82,7 +83,17 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
-        title: Text('Edit Profile'.tr),
+        backgroundColor: primary,
+        leadingWidth: 220,
+        leading:  Row(
+          children: [
+            const CustomBackButton(),
+            Text(
+              'Edit Profile'.tr,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

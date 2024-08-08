@@ -26,6 +26,7 @@ class _AccountScreenState extends State<AccountScreen> {
     Locale locale =
         isHindi ? const Locale('hi', 'IN') : const Locale('en', 'US');
     Get.updateLocale(locale);
+    _saveLanguagePreference(isHindi);
   }
 
   bool _isSecondPage = false;
@@ -40,17 +41,27 @@ class _AccountScreenState extends State<AccountScreen> {
       _isSecondPage = value;
     });
   }
-
+  void _saveLanguagePreference(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isHindi', value);
+  }
   void _loadSwitchState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isSecondPage = prefs.getBool('isSwitchOn') ?? false;
+      isHindi = prefs.getBool('isHindi') ?? false;
+      updateLanguage(isHindi);  // Update the language based on the saved state
     });
   }
-
+  // void _loadLanguagePreference() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     isHindi = prefs.getBool('isHindi') ?? false;
+  //     updateLanguage(isHindi);  // Update the language based on the saved state
+  //   });
+  // }
   void _saveSwitchState(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isSwitchOn', value);
+    prefs.setBool('isHindi', value);
   }
 
   bool viewItem = false;
@@ -152,31 +163,86 @@ class _AccountScreenState extends State<AccountScreen> {
                 SizedBox(
                   height: height * 0.02,
                 ),
-                SlidingSwitch(
-                  value: _isSecondPage,
-                  width: width * 0.4,
-                  // onChanged: _toggleSwitch,
-                  height: 45,
-                  animationDuration: const Duration(milliseconds: 400),
-                  onTap: () {},
-                  onDoubleTap: () {},
-                  onSwipe: () {},
-                  textOff: "English",
-                  textOn: "Hindi",
-                  colorOn: white,
-                  colorOff: white,
-                  background: lightBlue,
-                  buttonColor: tertiary,
-                  inactiveColor: black,
-                  // value:false,
-                  onChanged: (bool value) {
-                    setState(() {
-                      isHindi = value;
-                      updateLanguage(isHindi);
-                      _toggleSwitch;
-                    });
-                    _saveSwitchState(value);
-                  },
+
+                Stack(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isHindi = !isHindi;
+                          updateLanguage(isHindi);
+                        });
+                      },
+                      child: Container(
+                        height:height*0.04,
+                        width: width * 0.4,
+                        decoration: BoxDecoration(
+                          // border: Border.all(color: tertiary),
+                          color: lightBlue,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              'English',
+                              style: TextStyle(
+                                  color:labelColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              'Hindi'.tr,
+                              style: const TextStyle(
+                                  color:labelColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                    ),
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 300),
+                      left: !isHindi ? 0 : width * 0.21,
+                      child: !isHindi
+                          ? Container(
+                        alignment: Alignment.center,
+                        // margin: const EdgeInsets.all(2),
+                        height:height*0.04,
+                        width: width * 0.18,
+                        decoration: BoxDecoration(
+                         color: tertiary,
+                          borderRadius: BorderRadius.circular(60),
+                        ),
+                        child: const Text(
+                          'English',
+                          style: TextStyle(
+                              color:white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      )
+                          : Container(
+                        alignment: Alignment.center,
+                        // margin: const EdgeInsets.all(2),
+                        height:height*0.04,
+                        width: width * 0.18,
+                        decoration: BoxDecoration(
+                          color: tertiary,
+                          borderRadius: BorderRadius.circular(60),
+                        ),
+                        child:  Text(
+                          'Hindi'.tr,
+                          style: const TextStyle(
+                              color:white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      )
+                    ),
+                  ],
                 ),
                 Divider(
                   height: height * 0.05,

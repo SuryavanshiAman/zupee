@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/custom_rich_text.dart';
 
 import '../../res/custom_back_button.dart';
 import '../../utils/routes_name.dart';
@@ -45,9 +47,9 @@ class _AddaScreenState extends State<AddaScreen> {
                 Icons.keyboard_arrow_left_rounded,color: black,size: 30,
               ),
             ),
-            const Text(
-              "Adda",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+             Text(
+              "Adda".tr,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -59,15 +61,29 @@ class _AddaScreenState extends State<AddaScreen> {
           shrinkWrap: false,
           children: [
             const SizedBox(height: 16),
-            const Text(
-              "Top Players(Past 7 days)",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+             Text(
+              "Top Players(Past 7 days)".tr,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            const Text(
-              "LAST UPDATE TODAY,12:00 AM",
-              style: TextStyle(
-                  fontSize: 10, color: labelColor, fontWeight: FontWeight.w500),
-            ),
+            CustomRichText(textSpans: [
+              CustomTextSpan(
+                  text: "LAST UPDATE:".tr,
+                fontSize: 10,
+                textColor: labelColor,
+                fontWeight: FontWeight.w500
+              ),
+              CustomTextSpan(
+                  text: "TODAY,12:00 AM".tr,
+                  fontSize: 10,
+                  textColor: labelColor,
+                  fontWeight: FontWeight.w500
+              ),
+            ]),
+            // const Text(
+            //   "LAST UPDATE TODAY,12:00 AM",
+            //   style: TextStyle(
+            //       fontSize: 10, color: labelColor, fontWeight: FontWeight.w500),
+            // ),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
@@ -97,9 +113,9 @@ class _AddaScreenState extends State<AddaScreen> {
                               onTap:(){
                                 Navigator.pushNamed(context, RoutesName.leaderboardScreen);
                               },
-                              child: const Text(
-                                'VIEW ALL',
-                                style: TextStyle(
+                              child:  Text(
+                                'VIEW ALL'.tr,
+                                style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: tertiary),
@@ -140,7 +156,7 @@ class _AddaScreenState extends State<AddaScreen> {
                   }),
             ),
             SizedBox(height: height*0.03,),
-            const Text("Top players for you to follow",style: TextStyle(
+             Text("Top players for you to follow".tr,style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: black),),

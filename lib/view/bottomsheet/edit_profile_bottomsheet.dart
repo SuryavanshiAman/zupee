@@ -2,6 +2,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 
@@ -37,24 +38,28 @@ class _PrivacyOptionsBottomSheetState
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 320.0),
-            child: Icon(Icons.close),
+           Padding(
+            padding: const EdgeInsets.only(left: 320.0),
+            child: InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: const Icon(Icons.close)),
           ),
-          const Text(
-            'Privacy Options: My Game \nHistory',
-            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+           Text(
+            'Privacy Options: My Game \nHistory'.tr,
+            style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
           ListTile(
             leading: const Icon(Icons.visibility),
-            title: const Text('Everyone'),
-            subtitle: const Text(
-              'Anyone on the Zupee platform will be able to see',
-              style: TextStyle(fontSize: 10, color: labelColor),
+            title:  Text('Everyone'.tr),
+            subtitle: Text(
+              'Anyone on the Zupee platform will be able to see'.tr,
+              style: const TextStyle(fontSize: 10, color: labelColor),
             ),
             trailing: Radio<String>(
-              value: 'Everyone',
+              value: 'Everyone'.tr,
               groupValue: _selectedOption,
               onChanged: (value) {
                 setState(() {
@@ -69,13 +74,13 @@ class _PrivacyOptionsBottomSheetState
           ),
           ListTile(
             leading: const Icon(Icons.lock),
-            title: const Text('Only me'),
-            subtitle: const Text(
-              'Nobody can see',
-              style: TextStyle(fontSize: 10, color: labelColor),
+            title:  Text('Only me'.tr),
+            subtitle:  Text(
+              'Nobody can see'.tr,
+              style: const TextStyle(fontSize: 10, color: labelColor),
             ),
             trailing: Radio<String>(
-              value: 'Only me',
+              value: 'Only me'.tr,
               groupValue: _selectedOption,
               onChanged: (value) {
                 setState(() {
@@ -91,12 +96,12 @@ class _PrivacyOptionsBottomSheetState
           ListTile(
             leading: const Icon(Icons.people),
             title: const Text('My Connections'),
-            subtitle: const Text(
-              'Only your connections (followers and following) will be able to see',
-              style: TextStyle(fontSize: 10, color: labelColor),
+            subtitle:  Text(
+              'Only your connections (followers and following) will be able to see'.tr,
+              style: const TextStyle(fontSize: 10, color: labelColor),
             ),
             trailing: Radio<String>(
-              value: 'My Connections',
+              value: 'My Connections'.tr,
               groupValue: _selectedOption,
               onChanged: (value) {
                 setState(() {
@@ -118,9 +123,9 @@ class _PrivacyOptionsBottomSheetState
               decoration: const BoxDecoration(
                   color: secondary,
                   borderRadius: BorderRadius.all(Radius.circular(20))),
-              child: const Text(
-                "Done",
-                style: TextStyle(fontWeight: FontWeight.w600, color: tertiary),
+              child:  Text(
+                "Done".tr,
+                style: const TextStyle(fontWeight: FontWeight.w600, color: tertiary),
               ),
             ),
           ),

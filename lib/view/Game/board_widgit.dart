@@ -45,6 +45,7 @@ class BoardWidget extends StatelessWidget {
                     image: AssetImage(Assets.ludoLudoBoard),
                     fit: BoxFit.cover)),
             child: Consumer<LudoProvider>(builder: (context, value, child) {
+
               return GridView.builder(
                 padding: const EdgeInsets.only(top: 50),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -53,24 +54,28 @@ class BoardWidget extends StatelessWidget {
                     crossAxisSpacing: 80.0,
                     childAspectRatio: 2),
                 shrinkWrap: true,
-                itemCount: 4,
+                itemCount:value.players.length ,
                 itemBuilder: (context, itemIndex) {
+                  var player = value.players[itemIndex];
+                  int totalSteps = player.pawns.fold(0, (sum, pawn) {
+                    return sum + (pawn.step - (pawn.initialStep ?? 0));
+                  });
                   return Container(
                     padding: const EdgeInsets.only(top: 10),
                     alignment: Alignment.center,
                     decoration: const BoxDecoration(
                         shape: BoxShape.circle, color: white),
-                    child: const Column(
+                    child:  Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("Score",
+                        const Text("Score",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16,
                                 color: tertiary)),
                         Text(
-                          "0",
-                          style: TextStyle(
+                            "$totalSteps",
+                          style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 18,
                               color: tertiary),
@@ -226,22 +231,24 @@ class BoardWidget extends StatelessWidget {
     int y = 0;
 
     switch (turn) {
-      // case LudoPlayerType.green:
-      //   x = 0;
-      //   y = 0;
-      //   break;
-      case LudoPlayerType.yellow:
+      case LudoPlayerType.blue:
         x = 1;
-        y = 0;
+        y = 1;
         break;
-      // case LudoPlayerType.blue:
-      //   x = 1;
-      //   y = 1;
-      //   break;
       case LudoPlayerType.red:
         x = 0;
         y = 1;
         break;
+      case LudoPlayerType.green:
+        x = 0;
+        y = 0;
+        break;
+      case LudoPlayerType.yellow:
+        x = 1;
+        y = 0;
+        break;
+
+
     }
     String stageText = "Roll the dice";
     switch (stage) {
@@ -313,22 +320,24 @@ class BoardWidget extends StatelessWidget {
           }
 
           switch (winners[index]) {
-            // case LudoPlayerType.green:
-            //   x = 0;
-            //   y = 0;
-            //   break;
-            case LudoPlayerType.yellow:
+            case LudoPlayerType.blue:
               x = 1;
-              y = 0;
+              y = 1;
               break;
-            // case LudoPlayerType.blue:
-            //   x = 1;
-            //   y = 1;
-            //   break;
             case LudoPlayerType.red:
               x = 0;
               y = 1;
               break;
+            case LudoPlayerType.green:
+              x = 0;
+              y = 0;
+              break;
+            case LudoPlayerType.yellow:
+              x = 1;
+              y = 0;
+              break;
+
+
           }
           return Positioned(
             top: y == 0 ? 0 : null,

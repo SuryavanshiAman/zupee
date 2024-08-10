@@ -6,6 +6,7 @@ import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_container.dart';
+import 'package:zupee/res/time_page.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/bottomsheet/tournament_bottomsheet.dart';
 
@@ -44,7 +45,6 @@ class LudoSupremeState extends State<LudoSupreme>
     _scrollController.addListener(_handleScroll);
   }
 
-  Timer? countdownTimer;
   Duration myDuration = const Duration(days: 5);
 
   void _handleScroll() {
@@ -59,31 +59,29 @@ class LudoSupremeState extends State<LudoSupreme>
     });
   }
 
-  int _start = 60;
-  Timer? _timer;
 
-  void startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_start == 0) {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+  bool nextPage=false;
+  int setTime = 0;
+  void _updateTimerValue(int value, context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (value == 10 && nextPage==false ) {
+        Navigator.pushNamed(context, RoutesName.timerScreen);
+      } else if (value == 9 ) {
+       setState(() {
+         nextPage==true;
+       });
+      }
+     else {
         setState(() {
-          timer.cancel();
-          Navigator.pushNamed(context, RoutesName.timerScreen);
-          time = false;
-        });
-      } else {
-        setState(() {
-          _start--;
+          setTime = (value - 1) % 60;
         });
       }
     });
   }
-
-  @override
-  void dispose() {
-    _timer!.cancel();
-    super.dispose();
-  }
-
   bool time = false;
   bool _isExpanded = false;
   Set<int> selectedIndices = {0};
@@ -112,9 +110,6 @@ class LudoSupremeState extends State<LudoSupreme>
       SecondList("2 Players - 1 Winners"),
       SecondList("2 Players - 1 Winners"),
     ];
-    String strDigits(int n) => n.toString().padLeft(2, '0');
-    final seconds = strDigits(myDuration.inSeconds.remainder(60));
-    final minutes = strDigits(myDuration.inMinutes.remainder(60));
     return Scaffold(
       backgroundColor: appBarColor,
       body: CustomScrollView(
@@ -166,10 +161,10 @@ class LudoSupremeState extends State<LudoSupreme>
                                             BorderRadius.circular(10)),
                                     child: Center(
                                         child: Text(
-                                      list[index].title,
+                                      list[index].title.tr,
                                       style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
                                           color: black),
                                     ))),
                               )
@@ -295,14 +290,15 @@ class LudoSupremeState extends State<LudoSupreme>
                           const Icon(Icons.hourglass_empty,
                               color: Colors.green, size: 50),
                           const SizedBox(height: 10),
-                          const Text(
-                            'Game starting in...',
-                            style: TextStyle(
+                           Text(
+                            'Game starting in...'.tr,
+                            style: const TextStyle(
                                 color: Colors.green,
                                 fontSize: 24,
                                 fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(height: 10),
+
                           Container(
                             padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                             decoration: const BoxDecoration(
@@ -310,21 +306,20 @@ class LudoSupremeState extends State<LudoSupreme>
                               borderRadius:
                                   BorderRadius.all(Radius.circular(35)),
                             ),
-                            child: Text(
-                              "00m:${_start}s",
-                              style: const TextStyle(
-                                  color: white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600),
+                            child:  CountdownTimer(
+                              onTimerTick: (int value) {
+                                _updateTimerValue(value, context);
+                              }, fontWeight: FontWeight.w600, fontSize: 20, color: white,
                             ),
+
                           ),
                           const SizedBox(height: 10),
                           const Divider(
                             color: green,
                           ),
-                          const Text(
-                            '4 PLAYERS • 2 WINNERS • ₹16 Prize',
-                            style: TextStyle(
+                           Text(
+                            '4 PLAYERS • 2 WINNERS • ₹16 Prize'.tr,
+                            style: const TextStyle(
                                 color: Colors.green,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600),
@@ -373,18 +368,22 @@ class LudoSupremeState extends State<LudoSupreme>
                                         color: Colors.black,
                                         size: 18,
                                       ),
-                                      Text("2130+",
+                                      SizedBox(
+                                        width: width * 0.01,
+                                      ),
+                                      const Text("2130+",
                                           style: TextStyle(
-                                              fontSize: width * 0.03,
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w600,
                                               color: Colors.black)),
                                       SizedBox(
                                         width: width * 0.16,
                                       ),
-                                      Text(listNew[index].title,
-                                          style: TextStyle(
-                                              fontSize: width * 0.03,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w400))
+                                      Text(listNew[index].title.tr,
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              color: black,
+                                              fontWeight: FontWeight.w500))
                                     ],
                                   ),
                                 ),
@@ -399,17 +398,17 @@ class LudoSupremeState extends State<LudoSupreme>
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text("PRIZE POOL".tr,
-                                          style: TextStyle(
-                                              fontSize: width * 0.03,
+                                          style: const TextStyle(
+                                              fontSize: 12,
                                               color: labelColor,
-                                              fontWeight: FontWeight.w400
+                                              fontWeight: FontWeight.w500
                                               // fontWeight: FontWeight.bold
                                               )),
                                       Text("ENTRY".tr,
-                                          style: TextStyle(
-                                              fontSize: width * 0.03,
+                                          style: const TextStyle(
+                                              fontSize: 12,
                                               color: labelColor,
-                                              fontWeight: FontWeight.w400))
+                                              fontWeight: FontWeight.w500))
                                     ],
                                   ),
                                 ),
@@ -429,10 +428,10 @@ class LudoSupremeState extends State<LudoSupreme>
                                         child: Center(
                                           child: Text(
                                               addAmount[index].title.toString(),
-                                              style: TextStyle(
-                                                  fontSize: width * 0.05,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold)),
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: black,
+                                                  fontWeight: FontWeight.w600)),
                                         ),
                                       ),
                                       InkWell(
@@ -453,16 +452,20 @@ class LudoSupremeState extends State<LudoSupreme>
                                                 color: red,
                                                 size: 12,
                                               ),
-                                              Text('${minutes}m',
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: red,
-                                                  )),
-                                              Text('${seconds}s',
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: red,
-                                                  )),
+                                              CountdownTimer(
+                                                onTimerTick: (int value) {
+                                                }, fontWeight: FontWeight.w500, fontSize: 10, color: red,
+                                              ),
+                                              // Text('${minutes}m',
+                                              //     style: const TextStyle(
+                                              //       fontSize: 12,
+                                              //       color: red,
+                                              //     )),
+                                              // Text('${seconds}s',
+                                              //     style: const TextStyle(
+                                              //       fontSize: 12,
+                                              //       color: red,
+                                              //     )),
                                             ],
                                           ),
                                         ),
@@ -501,8 +504,8 @@ class LudoSupremeState extends State<LudoSupreme>
                                               style: const TextStyle(
                                                 color:
                                                     tertiary, // Replace with your tertiary color
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16,
                                               ),
                                             ),
                                           ),
@@ -648,16 +651,10 @@ class LudoSupremeState extends State<LudoSupreme>
                                                 color: red,
                                                 size: 12,
                                               ),
-                                              Text('${minutes}m',
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: red,
-                                                  )),
-                                              Text('${seconds}s',
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: red,
-                                                  )),
+                                              CountdownTimer(
+                                                onTimerTick: (int value) {
+                                                }, fontWeight: FontWeight.w500, fontSize: 10, color: red,
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -727,10 +724,10 @@ class LudoSupremeState extends State<LudoSupreme>
                             Image(image: AssetImage(Assets.imagesRupeesBlue)))),
               ),
               const SizedBox(height: 8),
-              const Center(
+               Center(
                 child: Text(
-                  'Confirm Payment',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                  'Confirm Payment'.tr,
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
                 ),
               ),
               const SizedBox(height: 16),
@@ -747,8 +744,8 @@ class LudoSupremeState extends State<LudoSupreme>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Entry Fee',
-                            style: TextStyle(
+                         Text('Entry Fee'.tr,
+                            style: const TextStyle(
                                 fontSize: 17, fontWeight: FontWeight.w600)),
                         const Spacer(),
                         const Text('₹1',
@@ -776,25 +773,25 @@ class LudoSupremeState extends State<LudoSupreme>
                               children: [
                                 SizedBox(
                                   width: width * 0.5,
-                                  child: const Column(
+                                  child:  Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text('From Bonus',
-                                          style: TextStyle(
+                                      Text('From Bonus'.tr,
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                               color: labelColor)),
                                       Text(
-                                        'From Cashback',
-                                        style: TextStyle(
+                                        'From Cashback'.tr,
+                                        style: const TextStyle(
                                             fontSize: 16,
                                             color: labelColor,
                                             fontWeight: FontWeight.w600),
                                       ),
-                                      SizedBox(height: 8),
-                                      Text('From Winning & Deposits',
-                                          style: TextStyle(
+                                      const SizedBox(height: 8),
+                                      Text('From Winning & Deposits'.tr,
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                               color: labelColor)),
@@ -832,24 +829,24 @@ class LudoSupremeState extends State<LudoSupreme>
                               children: [
                                 SizedBox(
                                   width: width * 0.5,
-                                  child: const Column(
+                                  child:  Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text('Entry Fee Breakdown',
-                                          style: TextStyle(
+                                      Text('Entry Fee Breakdown'.tr,
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600)),
                                       Text(
-                                        'To Prize Pool',
-                                        style: TextStyle(
+                                        'To Prize Pool'.tr,
+                                        style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
                                             color: labelColor),
                                       ),
-                                      SizedBox(height: 8),
-                                      Text('To Platform Fee',
-                                          style: TextStyle(
+                                      const SizedBox(height: 8),
+                                      Text('To Platform Fee'.tr,
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                               color: labelColor)),
@@ -890,7 +887,6 @@ class LudoSupremeState extends State<LudoSupreme>
                   onTap: () {
                     setState(() {
                       time = true;
-                      startTimer();
                     });
                     Navigator.pop(context);
                     showModalBottomSheet(
@@ -903,7 +899,7 @@ class LudoSupremeState extends State<LudoSupreme>
                               topRight: Radius.circular(35))),
                       context: context,
                       builder: (context) {
-                        return  TournamentBottomsheet(time:_start);
+                        return  TournamentBottomsheet();
                       },
                     );
                   },

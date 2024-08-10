@@ -13,4 +13,5 @@ class ApiUrl{
   static const String getAboutDataApi = '${baseUrl}getAboutData';
   static const String addAccountApi = '${baseUrl}addAccount';
   static const String accountViewApi = '${baseUrl}accountView';
+  static const String depositApi = "https://admin.100xbull.com/Api/add_wallet";
 }

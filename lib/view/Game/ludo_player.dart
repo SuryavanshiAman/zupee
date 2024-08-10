@@ -27,26 +27,28 @@ class LudoPlayer {
 
     ///Initialize path
     switch (type) {
-    // case LudoPlayerType.green:
-    //   path = LudoPath.greenPath;
-    //   color = LudoColor.green;
-    //   homePath = LudoPath.greenHomePath;
-    //   break;
-      case LudoPlayerType.yellow:
-        path = LudoPath.yellowPath;
-        color = LudoColor.yellow;
-        homePath = LudoPath.yellowHomePath;
+      case LudoPlayerType.blue:
+        path = LudoPath.bluePath;
+        color = LudoColor.blue;
+        homePath = LudoPath.blueHomePath;
         break;
-    // case LudoPlayerType.blue:
-    //   path = LudoPath.bluePath;
-    //   color = LudoColor.blue;
-    //   homePath = LudoPath.blueHomePath;
-    //   break;
       case LudoPlayerType.red:
         path = LudoPath.redPath;
         color = LudoColor.red;
         homePath = LudoPath.redHomePath;
         break;
+    case LudoPlayerType.green:
+      path = LudoPath.greenPath;
+      color = LudoColor.green;
+      homePath = LudoPath.greenHomePath;
+      break;
+      case LudoPlayerType.yellow:
+        path = LudoPath.yellowPath;
+        color = LudoColor.yellow;
+        homePath = LudoPath.yellowHomePath;
+        break;
+
+
     }
   }
 

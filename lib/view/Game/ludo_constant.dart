@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 
 enum LudoPlayerType {
-  // green,
+  blue,
+  red,
+  green,
   yellow,
-  // blue,
-  red
+
 }
 
 enum LudoGameState { throwDice, pickPawn, moving, finish}
 
 ///Ludo colors constant class
 class LudoColor {
-  static const Color green = Color(0xFF1aaa30);
-  static const Color yellow = Color(0xffeac550);
   static const Color blue = Color(0xFF4a5fd);
   static const Color red = Color(0xffd94646);
+  static const Color green = Color(0xFF1aaa30);
+  static const Color yellow = Color(0xffeac550);
+
+  //
 }
 
 ///Ludo path constant class which contains all the path of the pawns

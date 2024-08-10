@@ -14,8 +14,10 @@ import 'language/english.dart';
 import 'view/Game/ludo_provider.dart';
 import 'view_model/add_bank_details_view_model.dart';
 import 'view_model/auth_view_model.dart';
+import 'view_model/deposit_view_model.dart';
 import 'view_model/help_view_model.dart';
 import 'view_model/profile_update_view_model.dart';
+import 'view_model/update_language_view_model.dart';
 import 'view_model/user_view_model.dart';
 import 'view_model/view_bank_details_view_model.dart';
 
@@ -42,6 +44,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AboutViewModel()),
         ChangeNotifierProvider(create: (_) => AddBankDetailsViewModel()),
         ChangeNotifierProvider(create: (_) => ViewBankDetailViewModel()),
+        ChangeNotifierProvider(create: (_) => UpdateLanguageViewModel()),
+        ChangeNotifierProvider(create: (_) => DepositViewModel()),
       ],
       child: GetMaterialApp(
         title: 'Flutter Demo',

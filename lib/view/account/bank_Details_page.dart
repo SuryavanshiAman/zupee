@@ -22,7 +22,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   TextEditingController iFSC = TextEditingController();
   TextEditingController branch = TextEditingController();
   TextEditingController bankName = TextEditingController();
-  // TextEditingController uPI = TextEditingController();
   TextEditingController acHolder = TextEditingController();
 
   @override
@@ -100,9 +99,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
               shrinkWrap: true,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               children: [
-                const Text(
-                  "Enter Bank Details:-",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                 Text(
+                  "Enter Bank Details:-".tr,
+                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(
                   height: height * 0.02,
@@ -135,10 +134,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                   hintColor: labelColor,
                   height: 70,
                   width: width * 0.8,
-                  // maxLength: 10,
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-                  // borderRadius: ,
                   filled: true,
                   borderSide: const BorderSide(color: tertiary, width: 2),
                   borderSideFocus: const BorderSide(color: blue),
@@ -153,12 +150,10 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                 ),
                 CustomTextField(
                   controller: bankName,
-                  // keyboardType: TextInputType.number,
                   label: "Enter Bank Name".tr,
                   hintColor: labelColor,
                   height: 70,
                   width: width * 0.8,
-                  // maxLength: 10,
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                   filled: true,
@@ -175,12 +170,10 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                 ),
                 CustomTextField(
                   controller: branch,
-                  // keyboardType: TextInputType.number,
                   label: "Enter branch Name".tr,
                   hintColor: labelColor,
                   height: 70,
                   width: width * 0.8,
-                  // maxLength: 10,
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                   filled: true,
@@ -200,7 +193,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                   onChanged: (value) {
                     validateIFSC(value.toUpperCase());
                   },
-                  // keyboardType: TextInputType.number,
                   label: "Enter iFSC Code".tr,
                   hintColor: labelColor,
                   height: 70,
@@ -233,7 +225,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                           context);
                     } else {
                       Utils.flushBarErrorMessage(
-                        "Please enter valid ifsc",
+                        "Please enter valid ifsc".tr,
                         context,
                         white
                       );
@@ -247,9 +239,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                             color: secondary,
                             borderRadius: BorderRadius.circular(35),
                           ),
-                          child: const Text(
-                            "SUBMIT",
-                            style: TextStyle(
+                          child:  Text(
+                            "SUBMIT".tr,
+                            style: const TextStyle(
                                 color: tertiary, fontWeight: FontWeight.w600),
                           ),
                         ),

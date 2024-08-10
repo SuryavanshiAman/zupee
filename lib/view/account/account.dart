@@ -11,6 +11,7 @@ import 'package:zupee/view_model/profile_view_model.dart';
 import 'package:zupee/view_model/user_view_model.dart';
 
 import '../../generated/assets.dart';
+import '../../view_model/update_language_view_model.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -20,48 +21,39 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  bool isHindi = false;
+  // bool isHindi = false;
 
-  updateLanguage(bool isHindi) {
-    Locale locale =
-        isHindi ? const Locale('hi', 'IN') : const Locale('en', 'US');
-    Get.updateLocale(locale);
-    _saveLanguagePreference(isHindi);
-  }
-
-  bool _isSecondPage = false;
+  // updateLanguage(bool isHindi) {
+  //   Locale locale =
+  //       isHindi ? const Locale('hi', 'IN') : const Locale('en', 'US');
+  //   Get.updateLocale(locale);
+  //   _saveLanguagePreference(isHindi);
+  // }
+  UpdateLanguageViewModel updateLanguageViewModel =UpdateLanguageViewModel();
   @override
   void initState() {
     super.initState();
-    _loadSwitchState();
+    getLanguage();
+    // updateLanguageViewModel.setButtonState(true);
   }
 
-  void _toggleSwitch(bool value) {
-    setState(() {
-      _isSecondPage = value;
-    });
-  }
-  void _saveLanguagePreference(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isHindi', value);
-  }
-  void _loadSwitchState() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      isHindi = prefs.getBool('isHindi') ?? false;
-      updateLanguage(isHindi);  // Update the language based on the saved state
-    });
-  }
-  // void _loadLanguagePreference() async {
+  // void _saveLanguagePreference(bool value) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setBool('isHindi', value);
+  // }
+  // void _loadSwitchState() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   setState(() {
   //     isHindi = prefs.getBool('isHindi') ?? false;
   //     updateLanguage(isHindi);  // Update the language based on the saved state
   //   });
   // }
-  void _saveSwitchState(bool value) async {
+bool?isSelectedLanguage;
+  getLanguage()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isHindi', value);
+    setState(() {
+      isSelectedLanguage =  prefs.getBool('isHindi');
+    });
   }
 
   bool viewItem = false;
@@ -69,6 +61,9 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
     final profileViewModel =
         Provider.of<ProfileViewModel>(context).profileResponse?.data;
+    final language=Provider.of<UpdateLanguageViewModel>(context);
+
+    print("languagebuttonState:${ language.buttonState}");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primary,
@@ -92,7 +87,8 @@ class _AccountScreenState extends State<AccountScreen> {
           ],
         ),
       ),
-      body: ListView(
+      body:isSelectedLanguage==null?Center(
+          child: CircularProgressIndicator()): ListView(
         shrinkWrap: true,
         children: [
           Padding(
@@ -131,14 +127,13 @@ class _AccountScreenState extends State<AccountScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              profileViewModel?.username.toString() ??
-                                  profileViewModel?.mobileNumber.toString() ??
+                              profileViewModel.username.toString() ??
                                   "",
                               style: const TextStyle(
                                   fontSize: 13, fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              profileViewModel?.mobileNumber.toString() ?? "",
+                              profileViewModel   .mobileNumber.toString() ?? "",
                               style: const TextStyle(
                                   fontSize: 13,
                                   color: labelColor,
@@ -168,23 +163,28 @@ class _AccountScreenState extends State<AccountScreen> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        setState(() {
-                          isHindi = !isHindi;
-                          updateLanguage(isHindi);
-                        });
+                        language.setButtonState(!language.buttonState);
+                        if(language.buttonState==false){
+                          language.updateLanguage(const Locale('en', 'US')  );
+                        }
+                        else{
+                          language.updateLanguage(const Locale('hi', 'IN')  );
+
+                        }
+                        getLanguage();
+
                       },
                       child: Container(
                         height:height*0.04,
                         width: width * 0.4,
                         decoration: BoxDecoration(
-                          // border: Border.all(color: tertiary),
                           color: lightBlue,
                           borderRadius: BorderRadius.circular(50),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text(
+                            const Text(
                               'English',
                               style: TextStyle(
                                   color:labelColor,
@@ -205,11 +205,10 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
                     AnimatedPositioned(
                       duration: const Duration(milliseconds: 300),
-                      left: !isHindi ? 0 : width * 0.21,
-                      child: !isHindi
+                      left:!isSelectedLanguage!? 0 : width * 0.21,
+                      child:!isSelectedLanguage!
                           ? Container(
                         alignment: Alignment.center,
-                        // margin: const EdgeInsets.all(2),
                         height:height*0.04,
                         width: width * 0.18,
                         decoration: BoxDecoration(
@@ -226,7 +225,6 @@ class _AccountScreenState extends State<AccountScreen> {
                       )
                           : Container(
                         alignment: Alignment.center,
-                        // margin: const EdgeInsets.all(2),
                         height:height*0.04,
                         width: width * 0.18,
                         decoration: BoxDecoration(

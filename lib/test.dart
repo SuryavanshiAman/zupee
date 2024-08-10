@@ -293,3 +293,207 @@
 //     );
 //   }
 // }
+// import 'dart:math';
+// import 'package:flutter/material.dart';
+// import 'package:zupee/view/Game/ludo_constant.dart';
+// import 'package:zupee/view/Game/ludo_player.dart';
+//
+// class LudoProvider extends ChangeNotifier {
+//   bool _isMoving = false;
+//   bool _stopMoving = false;
+//   bool _isPlayer1Turn = true;
+//   bool get isPlayer1Turn => _isPlayer1Turn;
+//   LudoGameState _gameState = LudoGameState.throwDice;
+//   LudoGameState get gameState => _gameState;
+//   LudoPlayerType _currentTurn = LudoPlayerType.yellow;
+//   LudoPlayer get currentPlayer => player(_currentTurn);
+//   int _diceResult = 0;
+//   int? _previousDiceResult;
+//   int _totalPoints = 0;
+//   int get totalPoints => _totalPoints;
+//   bool _loading = false;
+//   bool get loading => _loading;
+//
+//   setLoading(bool value) {
+//     _loading = value;
+//     notifyListeners();
+//   }
+//
+//   int get diceResult {
+//     if (_diceResult < 1) {
+//       return 1;
+//     } else if (_diceResult > 6) {
+//       return 6;
+//     } else {
+//       return _diceResult;
+//     }
+//   }
+//
+//   int? get previousDiceResult => _previousDiceResult;
+//   bool _diceStarted = false;
+//   bool get diceStarted => _diceStarted;
+//
+//   setDiceStarted(bool value) {
+//     _diceStarted = value;
+//     notifyListeners();
+//   }
+//
+//   final List<LudoPlayer> players = [
+//     LudoPlayer(LudoPlayerType.blue),
+//     LudoPlayer(LudoPlayerType.red),
+//     LudoPlayer(LudoPlayerType.green),
+//     LudoPlayer(LudoPlayerType.yellow),
+//   ];
+//
+//   final List<LudoPlayerType> winners = [];
+//
+//   LudoPlayer player(LudoPlayerType type) => players.firstWhere((element) => element.type == type);
+//
+//   void switchPlayerTurn() {
+//     _isPlayer1Turn = !_isPlayer1Turn;
+//     notifyListeners();
+//   }
+//
+//   void throwDice() async {
+//     if (_gameState != LudoGameState.throwDice) return;
+//     _diceStarted = true;
+//     notifyListeners();
+//
+//     LudoPlayer currentPlayer = player(_currentTurn);
+//
+//     // Skip turn if player is already a winner
+//     if (winners.contains(currentPlayer.type)) {
+//       await Future.delayed(const Duration(seconds: 1), nextTurn);
+//       return;
+//     }
+//
+//     currentPlayer.highlightAllPawns(false);
+//     await Future.delayed(const Duration(seconds: 1));
+//
+//     _diceStarted = false;
+//     _previousDiceResult = _diceResult;
+//
+//     // Roll the dice
+//     _diceResult = Random().nextInt(6) + 1; // Random between 1 - 6
+//     notifyListeners();
+//
+//     _totalPoints += (_previousDiceResult ?? 0);
+//
+//     if (diceResult == 6) {
+//       currentPlayer.highlightAllPawns();
+//       _gameState = LudoGameState.pickPawn;
+//       notifyListeners();
+//       _totalPoints += _diceResult;
+//     } else {
+//       if (currentPlayer.pawnInsideCount != 4) {
+//         currentPlayer.highlightOutside();
+//         _gameState = LudoGameState.pickPawn;
+//         await Future.delayed(const Duration(seconds: 1), nextTurn);
+//       } else {
+//         currentPlayer.highlightOutside();
+//         _gameState = LudoGameState.pickPawn;
+//       }
+//     }
+//
+//     for (var i = 0; i < currentPlayer.pawns.length; i++) {
+//       var pawn = currentPlayer.pawns[i];
+//       if ((pawn.step + diceResult) > currentPlayer.path.length - 1) {
+//         currentPlayer.highlightPawn(i, false);
+//       }
+//     }
+//
+//     var moveablePawn = currentPlayer.pawns.where((e) => e.highlight).toList();
+//     if (moveablePawn.length > 1) {
+//       var biggestStep = moveablePawn.map((e) => e.step).reduce(max);
+//       if (moveablePawn.every((element) => element.step == biggestStep)) {
+//         var randomIndex = 1 + Random().nextInt(moveablePawn.length - 1);
+//         var thePawn = moveablePawn[randomIndex];
+//         move(thePawn.type, thePawn.index, thePawn.step + diceResult + 1);
+//         return;
+//       }
+//     }
+//
+//     if (currentPlayer.pawns.every((element) => !element.highlight)) {
+//       _gameState = LudoGameState.throwDice;
+//       await Future.delayed(const Duration(seconds: 1), nextTurn);
+//       return;
+//     }
+//
+//     if (moveablePawn.length == 1) {
+//       var index = currentPlayer.pawns.indexWhere((element) => element.highlight);
+//       move(currentPlayer.type, index, currentPlayer.pawns[index].step + diceResult + 1);
+//     }
+//   }
+//
+//   void move(LudoPlayerType type, int index, int step) async {
+//     if (_isMoving) return;
+//
+//     _isMoving = true;
+//     _gameState = LudoGameState.moving;
+//     LudoPlayer currentPlayer = player(type);
+//     currentPlayer.highlightAllPawns(false);
+//
+//     for (int i = currentPlayer.pawns[index].step; i < step; i++) {
+//       if (_stopMoving) break;
+//       if (currentPlayer.pawns[index].step == i) continue;
+//       currentPlayer.movePawn(index, i);
+//       notifyListeners();
+//       if (_stopMoving) break;
+//     }
+//
+//     if (checkToKill(type, index, step, currentPlayer.path)) {
+//       _gameState = LudoGameState.throwDice;
+//     } else {
+//       validateWin(type);
+//       nextTurn();
+//     }
+//
+//     _isMoving = false;
+//     notifyListeners();
+//   }
+//
+//   bool checkToKill(LudoPlayerType type, int index, int step, List<List<double>> path) {
+//     bool killSomeone = false;
+//     for (var playerType in [LudoPlayerType.red, LudoPlayerType.yellow]) {
+//       if (type == playerType) continue;
+//
+//       var opponent = player(playerType);
+//       for (var pawn in opponent.pawns) {
+//         if (pawn.step > -1 &&
+//             !LudoPath.safeArea.contains(opponent.path[pawn.step]) &&
+//             opponent.path[pawn.step] == path[step - 1]) {
+//           killSomeone = true;
+//           opponent.movePawn(pawn.index, -1);
+//           notifyListeners();
+//         }
+//       }
+//     }
+//     return killSomeone;
+//   }
+//
+//   void validateWin(LudoPlayerType color) {
+//     if (winners.contains(color)) return;
+//
+//     if (player(color).pawns.every((pawn) => pawn.step == player(color).path.length - 1)) {
+//       winners.add(color);
+//       notifyListeners();
+//     }
+//
+//     if (winners.length == 3) {
+//       _gameState = LudoGameState.finish;
+//     }
+//   }
+//
+//   void nextTurn() {
+//     _currentTurn = LudoPlayerType.values[(_currentTurn.index + 1) % LudoPlayerType.values.length];
+//     if (winners.contains(_currentTurn)) return nextTurn();
+//     _gameState = LudoGameState.throwDice;
+//     notifyListeners();
+//   }
+//
+//   @override
+//   void dispose() {
+//     _stopMoving = true;
+//     super.dispose();
+//   }
+// }

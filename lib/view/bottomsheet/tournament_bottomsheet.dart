@@ -3,10 +3,11 @@ import 'package:get/get.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/time_page.dart';
 
 class TournamentBottomsheet extends StatefulWidget {
-  final int time;
-  const TournamentBottomsheet({super.key,required this.time});
+
+  const TournamentBottomsheet({super.key});
 
   @override
   State<TournamentBottomsheet> createState() => _TournamentBottomsheetState();
@@ -52,13 +53,20 @@ class _TournamentBottomsheetState extends State<TournamentBottomsheet> {
               decoration: const BoxDecoration(
                   color: green,
                   borderRadius: BorderRadius.all(Radius.circular(25))),
-              child:  Text(
-                "00:${widget.time.toString()}",
-                style: const TextStyle(
-                    fontSize: 24,
-                    color: white,
-                    fontWeight: FontWeight.w600),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                decoration: const BoxDecoration(
+                  color: green,
+                  borderRadius:
+                  BorderRadius.all(Radius.circular(35)),
+                ),
+                child:  CountdownTimer(
+                  onTimerTick: (int value) {
+                  }, fontWeight: FontWeight.w600, fontSize: 24, color: white,
+                ),
+
               ),
+
             ),
           )
         ],

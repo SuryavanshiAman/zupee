@@ -31,11 +31,12 @@ class _BottomNevBarState extends State<BottomNevBar> {
     super.initState();
 
     Future.delayed(Duration.zero, () {
-      Map<String, dynamic> arguments =
-          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-      setState(() {
-        pageIndex = (arguments['index'] ?? pageIndex);
-      });
+      final routeArgs = ModalRoute.of(context)?.settings.arguments;
+      if (routeArgs != null && routeArgs is Map<String, dynamic>) {
+        setState(() {
+          pageIndex = (routeArgs['index'] ?? pageIndex);
+        });
+      }
     });
   }
 

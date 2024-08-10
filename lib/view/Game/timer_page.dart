@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/time_page.dart';
 import 'package:zupee/utils/routes_name.dart';
 
 class TimerScreen extends StatefulWidget {
@@ -56,6 +57,10 @@ class _TimerScreenState extends State<TimerScreen> {
             child:  Column(
               children: [
                 SizedBox(height: height*0.1,),
+                // CountdownTimer(
+                //   onTimerTick: (int value) {
+                //   }, fontWeight: FontWeight.w00, fontSize: 60, color: white,
+                // ),
                 Text(
                   _seconds.toString(),
                   style: const TextStyle(color: white,fontSize: 60,fontWeight: FontWeight.w900),

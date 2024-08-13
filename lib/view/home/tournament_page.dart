@@ -64,22 +64,38 @@ class LudoSupremeState extends State<LudoSupreme>
   void dispose() {
     super.dispose();
   }
-  bool nextPage=false;
+  bool nextPage=true;
   int setTime = 0;
-  void _updateTimerValue(int value, context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (value == 10 && nextPage==false ) {
-        Navigator.pushNamed(context, RoutesName.timerScreen);
-      } else if (value == 9 ) {
-       setState(() {
-         nextPage==true;
-       });
-      }
-     else {
-        setState(() {
-          setTime = (value - 1) % 60;
-        });
-      }
+  // void _updateTimerValue(int value, context) {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     if (value == 10 && nextPage==false ) {
+  //       Navigator.pushNamed(context, RoutesName.timerScreen);
+  //     } else if (value == 9 ) {
+  //      setState(() {
+  //        nextPage==true;
+  //      });
+  //     }
+  //    else {
+  //       setState(() {
+  //         setTime = (value - 1) % 60;
+  //       });
+  //     }
+  //   });
+  // }
+  int _seconds = 10;
+  Timer? _timer;
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_seconds == 0) {
+          _timer?.cancel();
+          Navigator.pushNamed(context, RoutesName.ludoHomeScreen);
+        } else {
+          _seconds--;
+
+        }
+      });
     });
   }
   bool time = false;
@@ -308,7 +324,7 @@ class LudoSupremeState extends State<LudoSupreme>
                             ),
                             child:  CountdownTimer(
                               onTimerTick: (int value) {
-                                _updateTimerValue(value, context);
+                                // _updateTimerValue(value, context);
                               }, fontWeight: FontWeight.w600, fontSize: 20, color: white,
                             ),
 
@@ -886,6 +902,8 @@ class LudoSupremeState extends State<LudoSupreme>
                 child: CustomContainer(
                   onTap: () {
                     setState(() {
+                      _startTimer();
+                      nextPage=false;
                       time = true;
                     });
                     Navigator.pop(context);

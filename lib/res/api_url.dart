@@ -14,4 +14,5 @@ class ApiUrl{
   static const String addAccountApi = '${baseUrl}addAccount';
   static const String accountViewApi = '${baseUrl}accountView';
   static const String depositApi = "https://admin.100xbull.com/Api/add_wallet";
+  static const String medicineApi = "https://sleekcare.apponrent.co.in/api/medication_completed_details";
 }

@@ -8,11 +8,11 @@ class Assets {
   static const String dice4 = 'assets/dice/4.webp';
   static const String dice5 = 'assets/dice/5.webp';
   static const String dice6 = 'assets/dice/6.webp';
-  static const String diceBluepawn = 'assets/dice/bluepawn.png';
+  static const String diceBluePawn = 'assets/dice/blue_pawn.webp';
   static const String diceDice = 'assets/dice/dice.gif';
   static const String diceGreenpawn = 'assets/dice/greenpawn.png';
-  static const String diceRedpawn = 'assets/dice/redpawn.png';
-  static const String diceYellowpawn = 'assets/dice/yellowpawn.png';
+  static const String diceRedPawn = 'assets/dice/red_pawn.webp';
+  static const String diceYellowPawn = 'assets/dice/yellow_pawn.webp';
   static const String gifIcons8Hourglass = 'assets/gif/icons8-hourglass.gif';
   static const String iconAccount = 'assets/icon/account.png';
   static const String iconAccountTwo = 'assets/icon/account_two.png';
@@ -60,16 +60,19 @@ class Assets {
   static const String imagesWinner = 'assets/images/winner.png';
   static const String imagesZupee = 'assets/images/zupee.png';
   static const String ludoBoardTwo = 'assets/ludo/board_two.webp';
+  static const String ludoCrown = 'assets/ludo/crown.png';
   static const String ludoDice = 'assets/ludo/dice.webp';
   static const String ludoDiceSectionOne = 'assets/ludo/dice_section_one.webp';
   static const String ludoDiceSectionTwo = 'assets/ludo/dice_section_two.webp';
   static const String ludoInfo = 'assets/ludo/info.png';
   static const String ludoLabelSection = 'assets/ludo/label_section.webp';
   static const String ludoLabelSectionTwo = 'assets/ludo/label_section_two.webp';
+  static const String ludoLobby = 'assets/ludo/lobby.png';
   static const String ludoLudoBoard = 'assets/ludo/ludo_board.webp';
   static const String ludoPrizePool = 'assets/ludo/prize_pool.webp';
   static const String ludoProfileSection = 'assets/ludo/profile_section.png';
   static const String ludoSetting = 'assets/ludo/setting.png';
   static const String ludoUser = 'assets/ludo/user.png';
+  static const String ludoWinnerBg = 'assets/ludo/winner_bg.png';
 
 }

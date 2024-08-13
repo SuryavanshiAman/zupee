@@ -40,19 +40,19 @@ class PawnWidget extends StatelessWidget {
 
     }
 
-    String pown = Assets.diceYellowpawn;
+    String pown = Assets.diceYellowPawn;
     switch (type) {
     case LudoPlayerType.blue:
       pown = "Assets.diceBluepawn";
       break;
       case LudoPlayerType.red:
-        pown = Assets.diceRedpawn;
+        pown = Assets.diceRedPawn;
         break;
       case LudoPlayerType.green:
         pown = "Assets.diceGreenpawn";
         break;
       case LudoPlayerType.yellow:
-        pown = Assets.diceYellowpawn;
+        pown = Assets.diceYellowPawn;
         break;
 
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
@@ -5,6 +7,7 @@ import 'package:zupee/main.dart';
 import 'package:zupee/view/Game/dice_widgit.dart';
 import 'package:zupee/view/Game/ludo_constant.dart';
 
+import '../../res/app_colors.dart';
 import 'board_widgit.dart';
 import 'ludo_provider.dart';
 
@@ -16,6 +19,38 @@ class LudoHomeScreen extends StatefulWidget {
 }
 
 class _LudoHomeScreenState extends State<LudoHomeScreen> {
+  static const maxSeconds = 300; // 5 minutes = 300 seconds
+  int _remainingSeconds = maxSeconds;
+  Timer? _timer;
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+  void startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingSeconds > 0) {
+        setState(() {
+          _remainingSeconds--;
+        });
+      } else {
+        _timer?.cancel();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String get timerText {
+    int minutes = _remainingSeconds ~/ 60;
+    int seconds = _remainingSeconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -78,6 +113,27 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
               SizedBox(
                 height: height * 0.02,
               ),
+              Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.only(left: 2,right: 2),
+                  height: height * 0.033,
+                  width: width * 0.24,
+                  decoration:  BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                      image: const DecorationImage(
+                          image: AssetImage(Assets.ludoLabelSection),
+                          fit: BoxFit.fill)),
+                  child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      const Icon(Icons.watch_later_outlined,color: white,size: 19,),
+                       Text(timerText.toString(),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20)),
+                    ],
+                  )),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -127,7 +183,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                 ],
               ),
               Padding(
-                padding:  EdgeInsets.all(6.0),
+                padding:  const EdgeInsets.all(6.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -201,7 +257,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                   ],
                 ),
               ),
-              BoardWidget(),
+              const BoardWidget(),
               // Center(
               //   child: Container(
               //     width: width,
@@ -350,7 +406,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   Widget userDiceDesign() {
     return Consumer<LudoProvider>(
       builder: (context, value, child) => Padding(
-        padding: EdgeInsets.only(bottom:0, left:  0),
+        padding: const EdgeInsets.only(bottom:0, left:  0),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -368,7 +424,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
               width: width * 0.23,
               fit: BoxFit.fill,
             )),
-          value.currentPlayer.type !=LudoPlayerType.yellow?DiceWidget():
+          value.currentPlayer.type !=LudoPlayerType.yellow?const DiceWidget():
           Container(
               alignment: Alignment.center,
               height: height * 0.08,
@@ -400,7 +456,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            value.currentPlayer.type ==LudoPlayerType.yellow?DiceWidget():
+            value.currentPlayer.type ==LudoPlayerType.yellow?const DiceWidget():
             Container(
                 alignment: Alignment.center,
                 height: height * 0.08,

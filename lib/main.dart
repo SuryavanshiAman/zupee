@@ -3,19 +3,23 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/root/internacionalization.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/language/hindi.dart';
+import 'package:zupee/res/app_constant.dart';
 import 'package:zupee/test.dart';
 import 'package:zupee/utils/routes.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/Game/ludo_game_home_page.dart';
+import 'package:zupee/view/Game/winner_screen.dart';
 import 'package:zupee/view_model/about_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 
+import 'frzi.dart';
 import 'language/english.dart';
 import 'view/Game/ludo_provider.dart';
 import 'view_model/add_bank_details_view_model.dart';
 import 'view_model/auth_view_model.dart';
 import 'view_model/deposit_view_model.dart';
 import 'view_model/help_view_model.dart';
+import 'view_model/medecine_view_model.dart';
 import 'view_model/profile_update_view_model.dart';
 import 'view_model/update_language_view_model.dart';
 import 'view_model/user_view_model.dart';
@@ -46,24 +50,25 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ViewBankDetailViewModel()),
         ChangeNotifierProvider(create: (_) => UpdateLanguageViewModel()),
         ChangeNotifierProvider(create: (_) => DepositViewModel()),
+        ChangeNotifierProvider(create: (_) => MedicineViewModel()),
       ],
       child: GetMaterialApp(
-        title: 'Flutter Demo',
+        title: AppConstants.appName,
         translations: LocaleTranslations(),
         locale: const Locale('en', 'US'), // Set the default locale
         fallbackLocale: const Locale('en''US'),
         debugShowCheckedModeBanner: false,
-        initialRoute: RoutesName.splashScreen,
-        onGenerateRoute: (settings) {
-          if (settings.name != null) {
-            return MaterialPageRoute(
-              builder: Routers.generateRoute(settings.name!),
-              settings: settings,
-            );
-          }
-          return null;
-        },
-        // home:  LudoHomeScreen(),
+        // initialRoute: RoutesName.splashScreen,
+        // onGenerateRoute: (settings) {
+        //   if (settings.name != null) {
+        //     return MaterialPageRoute(
+        //       builder: Routers.generateRoute(settings.name!),
+        //       settings: settings,
+        //     );
+        //   }
+        //   return null;
+        // },
+        home:  WinnerScreen(),
       ),
     );
   }

@@ -18,6 +18,7 @@ class Assets {
   static const String iconAccountTwo = 'assets/icon/account_two.png';
   static const String iconAdda = 'assets/icon/adda.png';
   static const String iconAddaTwo = 'assets/icon/adda_two.png';
+  static const String iconFacebok = 'assets/icon/facebok.png';
   static const String iconHome = 'assets/icon/home.png';
   static const String iconHomeTwo = 'assets/icon/home_two.png';
   static const String iconKyc = 'assets/icon/kyc.png';
@@ -37,9 +38,11 @@ class Assets {
   static const String imagesDownword = 'assets/images/downword.png';
   static const String imagesFacebook = 'assets/images/facebook.png';
   static const String imagesFewGame = 'assets/images/few_game.png';
+  static const String imagesFirsrt = 'assets/images/firsrt.png';
   static const String imagesGoogle = 'assets/images/google.png';
   static const String imagesHomeLogo = 'assets/images/home_logo.webp';
   static const String imagesInstagram = 'assets/images/instagram.png';
+  static const String imagesLoos = 'assets/images/loos.png';
   static const String imagesLudoHomeBg = 'assets/images/ludo_home_bg.png';
   static const String imagesLudoSupreem = 'assets/images/ludo_supreem.png';
   static const String imagesMaukebaaz = 'assets/images/maukebaaz.png';
@@ -50,7 +53,9 @@ class Assets {
   static const String imagesRisk = 'assets/images/risk.png';
   static const String imagesRupeesBlue = 'assets/images/rupees_blue.png';
   static const String imagesRupeesWhite = 'assets/images/rupees_white.png';
+  static const String imagesShare = 'assets/images/share.png';
   static const String imagesStressed = 'assets/images/stressed.png';
+  static const String imagesStx = 'assets/images/stx.webp';
   static const String imagesSugestion = 'assets/images/sugestion.png';
   static const String imagesTimerPage = 'assets/images/timer_page.webp';
   static const String imagesTimerPageBg = 'assets/images/timer_page_bg.png';

@@ -14,3 +14,5 @@ const white = Color(0xffffffff);
 const red = Color(0xffff0000);
 const green = Color(0xff30b542);
 const lightBlue = Color(0xffe0e6f6);
+const lightBlueTwo = Color(0xff213b89);
+const cream = Color(0xffebdd9a);

@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/view/Game/dice_widgit.dart';
 import 'package:zupee/view/Game/ludo_constant.dart';
+import 'package:zupee/view_model/firebase_view_model.dart';
 
 import '../../res/app_colors.dart';
 import 'board_widgit.dart';
@@ -50,356 +53,444 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
     int seconds = _remainingSeconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
-
+  String user1 = '';
+  String user2 = '';
+  String user3 = '';
+  String user4 = '';
+  String key = '';
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          height: height,
-          width: width,
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(Assets.imagesLudoHomeBg),
-                  fit: BoxFit.fill)),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+        body:StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance.collection('ludo').doc(documentId).snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              );
+            }
+            var data = snapshot.data!.data() as Map<String, dynamic>;
+
+            // Parse the 'player1' JSON string
+            Map<String, dynamic> player1Data = jsonDecode(data['player1']);
+            // if (!snapshot.hasData ||snapshot.data!.docs.isEmpty) {
+            //   return const Text("No data available");
+            // }
+            //
+            // var specificDocument = snapshot.data!.docs.firstWhere(
+            //       (doc) => doc.id == context.read<FirebaseViewModel>().table.toString(),
+            //   orElse: () => null!,
+            // );
+            //
+            // if (specificDocument == null) {
+            //   return const Text("No data available");
+            // }
+            //
+            // // var chat = specificDocument['chat'];
+            // // // if (chat != null) {
+            // // var v = jsonDecode(chat);
+            // // print("KKK");
+            //
+            // int myPos =
+            // int.parse(context.read<FirebaseViewModel>().myPosition.toString());
+            // switch (myPos) {
+            //   case 1:
+            //     user1 = specificDocument['1'];
+            //     user2 = specificDocument['2'];
+            //     user3 = specificDocument['3'];
+            //     user4 = specificDocument['4'];
+            //     break;
+            //   case 2:
+            //     user1 = specificDocument['1'];
+            //     user2 = specificDocument['2'];
+            //     user3 = specificDocument['3'];
+            //     user4 = specificDocument['4'];
+            //     break;
+            //   case 3:
+            //     user4 = specificDocument['1'];
+            //     user1 = specificDocument['2'];
+            //     user2 = specificDocument['3'];
+            //     user3 = specificDocument['4'];
+            //     break;
+            //   case 4:
+            //     user3 = specificDocument['1'];
+            //     user4 = specificDocument['2'];
+            //     user1 = specificDocument['3'];
+            //     user2 = specificDocument['4'];
+            //     break;
+            //   case 5:
+            //     user2 = specificDocument['1'];
+            //     user3 = specificDocument['2'];
+            //     user4 = specificDocument['3'];
+            //     user1 = specificDocument['4'];
+            //     break;
+            //   default:
+            //     break;
+            //
+            // }
+            // // }
+            //
+            // key = context.read<FirebaseViewModel>().myPosition.toString();
+            // String? userName;
+            // try {
+            //   // userName = jsonDecode(user1)[0]['name'].toString();
+            // } catch (e) {
+            //   print("Failed to decode JSON: $e");
+            //   userName = "Unknown";
+            // }
+            // Return appropriate widget based on your logic
+            return Container(
+              height: height,
+              width: width,
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(Assets.imagesLudoHomeBg),
+                      fit: BoxFit.fill)),
+              child: Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: width * 0.1,
+                      ),
+                      Container(
+                          height: height * 0.07,
+                          width: width * 0.45,
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(Assets.ludoPrizePool),
+                                  fit: BoxFit.fill)),
+                          child: const Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 12.0),
+                                child: Text(
+                                  "Prize Pool",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 11),
+                                ),
+                              ),
+                              Text(
+                                "₹20",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13),
+                              ),
+                            ],
+                          )),
+                      SizedBox(
+                        width: width * 0.14,
+                      ),
+                      SizedBox(
+                          height: height * 0.04,
+                          child:
+                          const Image(image: AssetImage(Assets.ludoSetting))),
+                      SizedBox(
+                        width: width * 0.03,
+                      )
+                    ],
+                  ),
                   SizedBox(
-                    width: width * 0.1,
+                    height: height * 0.02,
                   ),
                   Container(
-                      height: height * 0.07,
-                      width: width * 0.45,
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(Assets.ludoPrizePool),
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(left: 2,right: 2),
+                      height: height * 0.033,
+                      width: width * 0.24,
+                      decoration:  BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          image: const DecorationImage(
+                              image: AssetImage(Assets.ludoLabelSection),
                               fit: BoxFit.fill)),
-                      child: const Column(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 12.0),
-                            child: Text(
-                              "Prize Pool",
+                          const Icon(Icons.watch_later_outlined,color: white,size: 19,),
+                          Text(timerText.toString(),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20)),
+                        ],
+                      )),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                          alignment: Alignment.center,
+                          height: height * 0.03,
+                          width: width * 0.23,
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(Assets.ludoLabelSection),
+                                  fit: BoxFit.fill)),
+                          child:  Text(
+                              docs[index],
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12))),
+                      Image(
+                        image: const AssetImage(
+                          Assets.ludoInfo,
+                        ),
+                        height: height * 0.03,
+                        width: width * 0.08,
+                        fit: BoxFit.fill,
+                      ),
+                      const Spacer(),
+                      Image(
+                        image: const AssetImage(
+                          Assets.ludoInfo,
+                        ),
+                        height: height * 0.03,
+                        width: width * 0.08,
+                        fit: BoxFit.fill,
+                      ),
+                      Container(
+                          alignment: Alignment.center,
+                          height: height * 0.03,
+                          width: width * 0.23,
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(Assets.ludoLabelSectionTwo),
+                                  fit: BoxFit.fill)),
+                          child: const Text("Shweta",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 11),
-                            ),
-                          ),
-                          Text(
-                            "₹20",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13),
-                          ),
-                        ],
-                      )),
-                  SizedBox(
-                    width: width * 0.14,
-                  ),
-                  SizedBox(
-                      height: height * 0.04,
-                      child:
-                          const Image(image: AssetImage(Assets.ludoSetting))),
-                  SizedBox(
-                    width: width * 0.03,
-                  )
-                ],
-              ),
-              SizedBox(
-                height: height * 0.02,
-              ),
-              Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.only(left: 2,right: 2),
-                  height: height * 0.033,
-                  width: width * 0.24,
-                  decoration:  BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                      image: const DecorationImage(
-                          image: AssetImage(Assets.ludoLabelSection),
-                          fit: BoxFit.fill)),
-                  child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const Icon(Icons.watch_later_outlined,color: white,size: 19,),
-                       Text(timerText.toString(),
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20)),
+                                  fontSize: 12))),
                     ],
-                  )),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                      alignment: Alignment.center,
-                      height: height * 0.03,
-                      width: width * 0.23,
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(Assets.ludoLabelSection),
-                              fit: BoxFit.fill)),
-                      child: const Text("Aman",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12))),
-                  Image(
-                    image: const AssetImage(
-                      Assets.ludoInfo,
-                    ),
-                    height: height * 0.03,
-                    width: width * 0.08,
-                    fit: BoxFit.fill,
                   ),
-                  const Spacer(),
-                  Image(
-                    image: const AssetImage(
-                      Assets.ludoInfo,
+                  Padding(
+                    padding:  const EdgeInsets.all(6.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        userDiceDesign(),
+                        // Container(
+                        //     height: height * 0.07,
+                        //     width: width * 0.15,
+                        //     decoration: const BoxDecoration(
+                        //         image: DecorationImage(
+                        //             image: AssetImage(Assets.ludoProfileSection))),
+                        //     child: Image(
+                        //       image: const AssetImage(
+                        //         Assets.ludoUser,
+                        //       ),
+                        //       height: height * 0.03,
+                        //       width: width * 0.23,
+                        //       fit: BoxFit.fill,
+                        //     )),
+                        // Container(
+                        //     alignment: Alignment.center,
+                        //     height: height * 0.08,
+                        //     width: width * 0.19,
+                        //     decoration: const BoxDecoration(
+                        //         image: DecorationImage(
+                        //             image: AssetImage(Assets.ludoDiceSectionOne),
+                        //             fit: BoxFit.fill)),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.only(left: 8.0),
+                        //       child: Image(
+                        //         image: const AssetImage(
+                        //           Assets.ludoDice,
+                        //         ),
+                        //         height: height * 0.06,
+                        //         width: width * 0.17,
+                        //       ),
+                        //     )),
+                        const Spacer(),
+                        opponentsTurn(),
+                        // Container(
+                        //     alignment: Alignment.center,
+                        //     height: height * 0.08,
+                        //     width: width * 0.19,
+                        //     decoration: const BoxDecoration(
+                        //         image: DecorationImage(
+                        //             image: AssetImage(Assets.ludoDiceSectionTwo),
+                        //             fit: BoxFit.fill)),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.only(right: 8.0),
+                        //       child: Image(
+                        //         image: const AssetImage(
+                        //           Assets.ludoDice,
+                        //         ),
+                        //         height: height * 0.06,
+                        //         width: width * 0.17,
+                        //       ),
+                        //     )),
+                        // Container(
+                        //     height: height * 0.07,
+                        //     width: width * 0.15,
+                        //     decoration: const BoxDecoration(
+                        //         image: DecorationImage(
+                        //             image: AssetImage(Assets.ludoProfileSection))),
+                        //     child: Image(
+                        //       image: const AssetImage(
+                        //         Assets.ludoUser,
+                        //       ),
+                        //       height: height * 0.03,
+                        //       width: width * 0.23,
+                        //       fit: BoxFit.fill,
+                        //     )),
+                      ],
                     ),
-                    height: height * 0.03,
-                    width: width * 0.08,
-                    fit: BoxFit.fill,
                   ),
-                  Container(
-                      alignment: Alignment.center,
-                      height: height * 0.03,
-                      width: width * 0.23,
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(Assets.ludoLabelSectionTwo),
-                              fit: BoxFit.fill)),
-                      child: const Text("Shweta",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12))),
-                ],
-              ),
-              Padding(
-                padding:  const EdgeInsets.all(6.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    userDiceDesign(),
-                    // Container(
-                    //     height: height * 0.07,
-                    //     width: width * 0.15,
-                    //     decoration: const BoxDecoration(
-                    //         image: DecorationImage(
-                    //             image: AssetImage(Assets.ludoProfileSection))),
-                    //     child: Image(
-                    //       image: const AssetImage(
-                    //         Assets.ludoUser,
-                    //       ),
-                    //       height: height * 0.03,
-                    //       width: width * 0.23,
-                    //       fit: BoxFit.fill,
-                    //     )),
-                    // Container(
-                    //     alignment: Alignment.center,
-                    //     height: height * 0.08,
-                    //     width: width * 0.19,
-                    //     decoration: const BoxDecoration(
-                    //         image: DecorationImage(
-                    //             image: AssetImage(Assets.ludoDiceSectionOne),
-                    //             fit: BoxFit.fill)),
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.only(left: 8.0),
-                    //       child: Image(
-                    //         image: const AssetImage(
-                    //           Assets.ludoDice,
-                    //         ),
-                    //         height: height * 0.06,
-                    //         width: width * 0.17,
-                    //       ),
-                    //     )),
-                    const Spacer(),
-                    opponentsTurn(),
-                    // Container(
-                    //     alignment: Alignment.center,
-                    //     height: height * 0.08,
-                    //     width: width * 0.19,
-                    //     decoration: const BoxDecoration(
-                    //         image: DecorationImage(
-                    //             image: AssetImage(Assets.ludoDiceSectionTwo),
-                    //             fit: BoxFit.fill)),
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.only(right: 8.0),
-                    //       child: Image(
-                    //         image: const AssetImage(
-                    //           Assets.ludoDice,
-                    //         ),
-                    //         height: height * 0.06,
-                    //         width: width * 0.17,
-                    //       ),
-                    //     )),
-                    // Container(
-                    //     height: height * 0.07,
-                    //     width: width * 0.15,
-                    //     decoration: const BoxDecoration(
-                    //         image: DecorationImage(
-                    //             image: AssetImage(Assets.ludoProfileSection))),
-                    //     child: Image(
-                    //       image: const AssetImage(
-                    //         Assets.ludoUser,
-                    //       ),
-                    //       height: height * 0.03,
-                    //       width: width * 0.23,
-                    //       fit: BoxFit.fill,
-                    //     )),
-                  ],
-                ),
-              ),
-              const BoardWidget(),
-              // Center(
-              //   child: Container(
-              //     width: width,
-              //     height: height * 0.5,
-              //     decoration: const BoxDecoration(
-              //         image: DecorationImage(
-              //             image: AssetImage(Assets.ludoLudoBoard),
-              //             fit: BoxFit.cover)),
-              //     child: Padding(
-              //       padding: const EdgeInsets.all(8.0),
-              //       child: Container(
-              //         decoration: const BoxDecoration(
-              //             image: DecorationImage(
-              //                 image: AssetImage(Assets.ludoBoardTwo))),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                        height: height * 0.07,
-                        width: width * 0.15,
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(Assets.ludoProfileSection))),
-                        child: Image(
-                          image: const AssetImage(
-                            Assets.ludoUser,
-                          ),
+                  const BoardWidget(),
+                  // Center(
+                  //   child: Container(
+                  //     width: width,
+                  //     height: height * 0.5,
+                  //     decoration: const BoxDecoration(
+                  //         image: DecorationImage(
+                  //             image: AssetImage(Assets.ludoLudoBoard),
+                  //             fit: BoxFit.cover)),
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: Container(
+                  //         decoration: const BoxDecoration(
+                  //             image: DecorationImage(
+                  //                 image: AssetImage(Assets.ludoBoardTwo))),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            height: height * 0.07,
+                            width: width * 0.15,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage(Assets.ludoProfileSection))),
+                            child: Image(
+                              image: const AssetImage(
+                                Assets.ludoUser,
+                              ),
+                              height: height * 0.03,
+                              width: width * 0.23,
+                              fit: BoxFit.fill,
+                            )),
+                        Container(
+                            alignment: Alignment.center,
+                            height: height * 0.08,
+                            width: width * 0.19,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage(Assets.ludoDiceSectionOne),
+                                    fit: BoxFit.fill)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Image(
+                                image: const AssetImage(
+                                  Assets.ludoDice,
+                                ),
+                                height: height * 0.06,
+                                width: width * 0.17,
+                              ),
+                            )),
+                        const Spacer(),
+                        Container(
+                            alignment: Alignment.center,
+                            height: height * 0.08,
+                            width: width * 0.19,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage(Assets.ludoDiceSectionTwo),
+                                    fit: BoxFit.fill)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Image(
+                                image: const AssetImage(
+                                  Assets.ludoDice,
+                                ),
+                                height: height * 0.06,
+                                width: width * 0.17,
+                              ),
+                            )),
+                        Container(
+                            height: height * 0.07,
+                            width: width * 0.15,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage(Assets.ludoProfileSection))),
+                            child: Image(
+                              image: const AssetImage(
+                                Assets.ludoUser,
+                              ),
+                              height: height * 0.03,
+                              width: width * 0.23,
+                              fit: BoxFit.fill,
+                            )),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                          alignment: Alignment.center,
                           height: height * 0.03,
                           width: width * 0.23,
-                          fit: BoxFit.fill,
-                        )),
-                    Container(
-                        alignment: Alignment.center,
-                        height: height * 0.08,
-                        width: width * 0.19,
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(Assets.ludoDiceSectionOne),
-                                fit: BoxFit.fill)),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Image(
-                            image: const AssetImage(
-                              Assets.ludoDice,
-                            ),
-                            height: height * 0.06,
-                            width: width * 0.17,
-                          ),
-                        )),
-                    const Spacer(),
-                    Container(
-                        alignment: Alignment.center,
-                        height: height * 0.08,
-                        width: width * 0.19,
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(Assets.ludoDiceSectionTwo),
-                                fit: BoxFit.fill)),
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Image(
-                            image: const AssetImage(
-                              Assets.ludoDice,
-                            ),
-                            height: height * 0.06,
-                            width: width * 0.17,
-                          ),
-                        )),
-                    Container(
-                        height: height * 0.07,
-                        width: width * 0.15,
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(Assets.ludoProfileSection))),
-                        child: Image(
-                          image: const AssetImage(
-                            Assets.ludoUser,
-                          ),
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(Assets.ludoLabelSection),
+                                  fit: BoxFit.fill)),
+                          child: const Text("Anurag",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12))),
+                      Image(
+                        image: const AssetImage(
+                          Assets.ludoInfo,
+                        ),
+                        height: height * 0.03,
+                        width: width * 0.08,
+                        fit: BoxFit.fill,
+                      ),
+                      const Spacer(),
+                      Image(
+                        image: const AssetImage(
+                          Assets.ludoInfo,
+                        ),
+                        height: height * 0.03,
+                        width: width * 0.08,
+                        fit: BoxFit.fill,
+                      ),
+                      Container(
+                          alignment: Alignment.center,
                           height: height * 0.03,
                           width: width * 0.23,
-                          fit: BoxFit.fill,
-                        )),
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                      alignment: Alignment.center,
-                      height: height * 0.03,
-                      width: width * 0.23,
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(Assets.ludoLabelSection),
-                              fit: BoxFit.fill)),
-                      child: const Text("Anurag",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12))),
-                  Image(
-                    image: const AssetImage(
-                      Assets.ludoInfo,
-                    ),
-                    height: height * 0.03,
-                    width: width * 0.08,
-                    fit: BoxFit.fill,
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(Assets.ludoLabelSectionTwo),
+                                  fit: BoxFit.fill)),
+                          child: const Text("Tanisha",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12))),
+                    ],
                   ),
-                  const Spacer(),
-                  Image(
-                    image: const AssetImage(
-                      Assets.ludoInfo,
-                    ),
-                    height: height * 0.03,
-                    width: width * 0.08,
-                    fit: BoxFit.fill,
-                  ),
-                  Container(
-                      alignment: Alignment.center,
-                      height: height * 0.03,
-                      width: width * 0.23,
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(Assets.ludoLabelSectionTwo),
-                              fit: BoxFit.fill)),
-                      child: const Text("Tanisha",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12))),
                 ],
               ),
-            ],
-          ),
-        ),
+            ) ;
+          },
+        )
+
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
@@ -9,6 +11,8 @@ import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/time_page.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/bottomsheet/tournament_bottomsheet.dart';
+import 'package:zupee/view_model/firebase_view_model.dart';
+import 'package:zupee/view_model/profile_view_model.dart';
 
 class FirstList {
   String title;
@@ -59,12 +63,12 @@ class LudoSupremeState extends State<LudoSupreme>
     });
   }
 
-
   @override
   void dispose() {
     super.dispose();
   }
-  bool nextPage=true;
+
+  bool nextPage = true;
   int setTime = 0;
   // void _updateTimerValue(int value, context) {
   //   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -93,11 +97,11 @@ class LudoSupremeState extends State<LudoSupreme>
           Navigator.pushNamed(context, RoutesName.ludoHomeScreen);
         } else {
           _seconds--;
-
         }
       });
     });
   }
+
   bool time = false;
   bool _isExpanded = false;
   Set<int> selectedIndices = {0};
@@ -306,7 +310,7 @@ class LudoSupremeState extends State<LudoSupreme>
                           const Icon(Icons.hourglass_empty,
                               color: Colors.green, size: 50),
                           const SizedBox(height: 10),
-                           Text(
+                          Text(
                             'Game starting in...'.tr,
                             style: const TextStyle(
                                 color: Colors.green,
@@ -314,7 +318,6 @@ class LudoSupremeState extends State<LudoSupreme>
                                 fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(height: 10),
-
                           Container(
                             padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                             decoration: const BoxDecoration(
@@ -322,18 +325,20 @@ class LudoSupremeState extends State<LudoSupreme>
                               borderRadius:
                                   BorderRadius.all(Radius.circular(35)),
                             ),
-                            child:  CountdownTimer(
+                            child: CountdownTimer(
                               onTimerTick: (int value) {
                                 // _updateTimerValue(value, context);
-                              }, fontWeight: FontWeight.w600, fontSize: 20, color: white,
+                              },
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              color: white,
                             ),
-
                           ),
                           const SizedBox(height: 10),
                           const Divider(
                             color: green,
                           ),
-                           Text(
+                          Text(
                             '4 PLAYERS • 2 WINNERS • ₹16 Prize'.tr,
                             style: const TextStyle(
                                 color: Colors.green,
@@ -469,8 +474,10 @@ class LudoSupremeState extends State<LudoSupreme>
                                                 size: 12,
                                               ),
                                               CountdownTimer(
-                                                onTimerTick: (int value) {
-                                                }, fontWeight: FontWeight.w500, fontSize: 10, color: red,
+                                                onTimerTick: (int value) {},
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 10,
+                                                color: red,
                                               ),
                                               // Text('${minutes}m',
                                               //     style: const TextStyle(
@@ -668,8 +675,10 @@ class LudoSupremeState extends State<LudoSupreme>
                                                 size: 12,
                                               ),
                                               CountdownTimer(
-                                                onTimerTick: (int value) {
-                                                }, fontWeight: FontWeight.w500, fontSize: 10, color: red,
+                                                onTimerTick: (int value) {},
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 10,
+                                                color: red,
                                               ),
                                             ],
                                           ),
@@ -708,7 +717,20 @@ class LudoSupremeState extends State<LudoSupreme>
   }
 
 
+  void sendJsonDataToFirebase(Map<String, dynamic> jsonData) async {
+    // Reference to the Firestore collection "ludo"
+    CollectionReference ludoCollection = FirebaseFirestore.instance.collection('ludo');
+
+    // Add the JSON data to the collection
+    await ludoCollection.add(jsonData).then((docRef) {
+      print("Document added with ID: ${docRef.id}");
+    }).catchError((error) {
+      print("Error adding document: $error");
+    });
+  }
   void confirmPaymentBottomSheet(BuildContext context) async {
+    final profile =
+        Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -740,10 +762,11 @@ class LudoSupremeState extends State<LudoSupreme>
                             Image(image: AssetImage(Assets.imagesRupeesBlue)))),
               ),
               const SizedBox(height: 8),
-               Center(
+              Center(
                 child: Text(
                   'Confirm Payment'.tr,
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.w500),
                 ),
               ),
               const SizedBox(height: 16),
@@ -760,7 +783,7 @@ class LudoSupremeState extends State<LudoSupreme>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                         Text('Entry Fee'.tr,
+                        Text('Entry Fee'.tr,
                             style: const TextStyle(
                                 fontSize: 17, fontWeight: FontWeight.w600)),
                         const Spacer(),
@@ -776,7 +799,9 @@ class LudoSupremeState extends State<LudoSupreme>
                                 _isExpanded = !_isExpanded;
                               });
                             },
-                            child:  Icon(_isExpanded ? Icons.expand_less : Icons.expand_more))
+                            child: Icon(_isExpanded
+                                ? Icons.expand_less
+                                : Icons.expand_more))
                       ],
                     ),
                     if (_isExpanded)
@@ -789,7 +814,7 @@ class LudoSupremeState extends State<LudoSupreme>
                               children: [
                                 SizedBox(
                                   width: width * 0.5,
-                                  child:  Column(
+                                  child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
@@ -845,7 +870,7 @@ class LudoSupremeState extends State<LudoSupreme>
                               children: [
                                 SizedBox(
                                   width: width * 0.5,
-                                  child:  Column(
+                                  child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
@@ -900,13 +925,17 @@ class LudoSupremeState extends State<LudoSupreme>
               SizedBox(height: height * 0.03),
               Center(
                 child: CustomContainer(
-                  onTap: () {
+                  onTap: () async {
                     setState(() {
                       _startTimer();
-                      nextPage=false;
+                      nextPage = false;
                       time = true;
                     });
-                    Navigator.pop(context);
+                    // Navigator.pop(context);
+                    Map<String, dynamic> jsonData = {
+                      'player1': '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}"}',
+                    };
+                    sendJsonDataToFirebase(jsonData);
                     showModalBottomSheet(
                       elevation: 5,
                       backgroundColor: primary,
@@ -917,7 +946,7 @@ class LudoSupremeState extends State<LudoSupreme>
                               topRight: Radius.circular(35))),
                       context: context,
                       builder: (context) {
-                        return  TournamentBottomsheet();
+                        return TournamentBottomsheet();
                       },
                     );
                   },

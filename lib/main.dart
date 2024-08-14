@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/root/internacionalization.dart';
@@ -10,6 +11,7 @@ import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/Game/ludo_game_home_page.dart';
 import 'package:zupee/view/Game/winner_screen.dart';
 import 'package:zupee/view_model/about_view_model.dart';
+import 'package:zupee/view_model/firebase_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 
 import 'frzi.dart';
@@ -25,7 +27,9 @@ import 'view_model/update_language_view_model.dart';
 import 'view_model/user_view_model.dart';
 import 'view_model/view_bank_details_view_model.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -51,6 +55,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UpdateLanguageViewModel()),
         ChangeNotifierProvider(create: (_) => DepositViewModel()),
         ChangeNotifierProvider(create: (_) => MedicineViewModel()),
+        ChangeNotifierProvider(create: (_) => FirebaseViewModel()),
       ],
       child: GetMaterialApp(
         title: AppConstants.appName,
@@ -58,17 +63,17 @@ class MyApp extends StatelessWidget {
         locale: const Locale('en', 'US'), // Set the default locale
         fallbackLocale: const Locale('en''US'),
         debugShowCheckedModeBanner: false,
-        // initialRoute: RoutesName.splashScreen,
-        // onGenerateRoute: (settings) {
-        //   if (settings.name != null) {
-        //     return MaterialPageRoute(
-        //       builder: Routers.generateRoute(settings.name!),
-        //       settings: settings,
-        //     );
-        //   }
-        //   return null;
-        // },
-        home:  WinnerScreen(),
+        initialRoute: RoutesName.splashScreen,
+        onGenerateRoute: (settings) {
+          if (settings.name != null) {
+            return MaterialPageRoute(
+              builder: Routers.generateRoute(settings.name!),
+              settings: settings,
+            );
+          }
+          return null;
+        },
+        // home:  WinnerScreen(),
       ),
     );
   }

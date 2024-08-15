@@ -137,7 +137,7 @@ setDiceStarted(bool value){
     // Audio.rollDice();
     LudoPlayer currentPlayer = player(_currentTurn);
     if (winners.contains(currentPlayer.type)) {
-      await Future.delayed(const Duration(seconds: 1),(){
+      await Future.delayed(const Duration(seconds: 2),(){
         nextTurn();
       });
       return;
@@ -157,12 +157,14 @@ setDiceStarted(bool value){
         _gameState = LudoGameState.pickPawn;
         notifyListeners();
         _totalPoints += _diceResult; // Add only when diceResult is 6
-         Future.delayed(const Duration(seconds: 1),(){
+         Future.delayed(const Duration(seconds: 2),(){
           nextTurn();
         });
       } else {
         if (currentPlayer.pawnInsideCount == 4) {
-          return nextTurn();
+          Future.delayed(const Duration(seconds: 2),(){
+            nextTurn();
+          });
         } else {
           currentPlayer.highlightOutside();
           _gameState = LudoGameState.pickPawn;
@@ -195,7 +197,7 @@ setDiceStarted(bool value){
         if (loading==true) {
           _gameState = LudoGameState.throwDice;
         } else {
-           Future.delayed(const Duration(seconds: 1),(){
+           Future.delayed(const Duration(seconds: 2),(){
             nextTurn();
           });
           return;
@@ -247,7 +249,9 @@ setDiceStarted(bool value){
       _gameState = LudoGameState.throwDice;
       notifyListeners();
     } else {
-      nextTurn();
+      Future.delayed(const Duration(seconds: 2),(){
+        nextTurn();
+      });
       notifyListeners();
     }
     _isMoving = false;

@@ -15,6 +15,7 @@ import 'board_widgit.dart';
 import 'ludo_provider.dart';
 
 class LudoHomeScreen extends StatefulWidget {
+  // final int documentId;
   const LudoHomeScreen({super.key});
 
   @override
@@ -25,9 +26,13 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   static const maxSeconds = 300; // 5 minutes = 300 seconds
   int _remainingSeconds = maxSeconds;
   Timer? _timer;
+  late FirebaseFirestore firestore;
+  late CollectionReference ludoCollection;
   @override
   void initState() {
     super.initState();
+    firestore = FirebaseFirestore.instance;
+    ludoCollection = firestore.collection('ludo');
     startTimer();
   }
   void startTimer() {
@@ -60,89 +65,36 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   String key = '';
   @override
   Widget build(BuildContext context) {
+    CollectionReference ludoCollection = FirebaseFirestore.instance.collection('ludo');
+    String argument = ModalRoute.of(context)!.settings.arguments.toString();
+    print("amanArg$argument");
     return SafeArea(
       child: Scaffold(
-        body:StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance.collection('ludo').doc(documentId).snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-              );
+        body: StreamBuilder<DocumentSnapshot>(
+          // Replace '1' with the specific document ID you want to listen to
+          stream: ludoCollection.doc(argument).snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return Text('Something went wrong');
             }
-            var data = snapshot.data!.data() as Map<String, dynamic>;
 
-            // Parse the 'player1' JSON string
-            Map<String, dynamic> player1Data = jsonDecode(data['player1']);
-            // if (!snapshot.hasData ||snapshot.data!.docs.isEmpty) {
-            //   return const Text("No data available");
-            // }
-            //
-            // var specificDocument = snapshot.data!.docs.firstWhere(
-            //       (doc) => doc.id == context.read<FirebaseViewModel>().table.toString(),
-            //   orElse: () => null!,
-            // );
-            //
-            // if (specificDocument == null) {
-            //   return const Text("No data available");
-            // }
-            //
-            // // var chat = specificDocument['chat'];
-            // // // if (chat != null) {
-            // // var v = jsonDecode(chat);
-            // // print("KKK");
-            //
-            // int myPos =
-            // int.parse(context.read<FirebaseViewModel>().myPosition.toString());
-            // switch (myPos) {
-            //   case 1:
-            //     user1 = specificDocument['1'];
-            //     user2 = specificDocument['2'];
-            //     user3 = specificDocument['3'];
-            //     user4 = specificDocument['4'];
-            //     break;
-            //   case 2:
-            //     user1 = specificDocument['1'];
-            //     user2 = specificDocument['2'];
-            //     user3 = specificDocument['3'];
-            //     user4 = specificDocument['4'];
-            //     break;
-            //   case 3:
-            //     user4 = specificDocument['1'];
-            //     user1 = specificDocument['2'];
-            //     user2 = specificDocument['3'];
-            //     user3 = specificDocument['4'];
-            //     break;
-            //   case 4:
-            //     user3 = specificDocument['1'];
-            //     user4 = specificDocument['2'];
-            //     user1 = specificDocument['3'];
-            //     user2 = specificDocument['4'];
-            //     break;
-            //   case 5:
-            //     user2 = specificDocument['1'];
-            //     user3 = specificDocument['2'];
-            //     user4 = specificDocument['3'];
-            //     user1 = specificDocument['4'];
-            //     break;
-            //   default:
-            //     break;
-            //
-            // }
-            // // }
-            //
-            // key = context.read<FirebaseViewModel>().myPosition.toString();
-            // String? userName;
-            // try {
-            //   // userName = jsonDecode(user1)[0]['name'].toString();
-            // } catch (e) {
-            //   print("Failed to decode JSON: $e");
-            //   userName = "Unknown";
-            // }
-            // Return appropriate widget based on your logic
-            return Container(
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }
+
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              return Text('No data available');
+            }
+
+            // Fetch the data and display it
+            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+            Map<String, dynamic> player1Data = data['1'].isNotEmpty ? json.decode(data['1']) : {};
+            Map<String, dynamic> player2Data = data['2'].isNotEmpty ? json.decode(data['2']) : {};
+            Map<String, dynamic> player3Data = data['3'].isNotEmpty ? json.decode(data['3']) : {};
+            Map<String, dynamic> player4Data = data['4'].isNotEmpty ? json.decode(data['4']) : {};
+            return
+              // buildLudoWidget(context, player1Data, player2Data, player3Data, player4Data);
+              Container(
               height: height,
               width: width,
               decoration: const BoxDecoration(
@@ -233,7 +185,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                                   image: AssetImage(Assets.ludoLabelSection),
                                   fit: BoxFit.fill)),
                           child:  Text(
-                              docs[index],
+                              player1Data['name'].toString(),
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -263,7 +215,8 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                               image: DecorationImage(
                                   image: AssetImage(Assets.ludoLabelSectionTwo),
                                   fit: BoxFit.fill)),
-                          child: const Text("Shweta",
+                          child:  Text(
+                              player2Data['name'] ?? 'No Name',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -448,7 +401,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                               image: DecorationImage(
                                   image: AssetImage(Assets.ludoLabelSection),
                                   fit: BoxFit.fill)),
-                          child: const Text("Anurag",
+                          child:  Text(player3Data['name'] ?? 'No Name',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -478,7 +431,8 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                               image: DecorationImage(
                                   image: AssetImage(Assets.ludoLabelSectionTwo),
                                   fit: BoxFit.fill)),
-                          child: const Text("Tanisha",
+                          child:  Text(
+                              player4Data['name'] ?? 'No Name',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -487,13 +441,17 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                   ),
                 ],
               ),
-            ) ;
+            );
           },
-        )
+        ),
+
 
       ),
     );
   }
+
+
+
   Widget userDiceDesign() {
     return Consumer<LudoProvider>(
       builder: (context, value, child) => Padding(

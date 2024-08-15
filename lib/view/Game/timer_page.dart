@@ -21,21 +21,30 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   void initState() {
     super.initState();
-    _startTimer();
+    String argument = ModalRoute.of(context)!.settings.arguments.toString();
+    print(":timeArg$argument");
+    _startTimer(argument);
   }
 
-  void _startTimer() {
+  void _startTimer(argument) {
+
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_seconds == 0) {
           _timer?.cancel();
-          Navigator.pushNamed(context, RoutesName.ludoHomeScreen);
+          Navigator.pushNamed(context, RoutesName.ludoHomeScreen,arguments: argument);
         } else {
           _seconds--;
 
         }
       });
     });
+  }
+  @override
+  void dispose() {
+_timer!.cancel();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {

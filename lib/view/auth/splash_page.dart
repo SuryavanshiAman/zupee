@@ -32,12 +32,18 @@ getLanguage()async{
   final isSelectedLanguage=  prefs.getBool('isHindi');
   // print("langua hai:${updateLanguageViewModel.isDefaultSelectedLanguage}");
   print("ghfh :$isSelectedLanguage");
-  if(isSelectedLanguage==true){   updateLanguageViewModel.updateLanguage(Locale('hi', 'IN'));
-    // updateLanguageViewModel.setButtonState(true);
+  if(isSelectedLanguage != null){
+    if(isSelectedLanguage==true){
+      updateLanguageViewModel.updateLanguage(Locale('hi', 'IN'));
+      // updateLanguageViewModel.setButtonState(true);
+    }else{
+      // updateLanguageViewModel.setButtonState(false);
+      updateLanguageViewModel.updateLanguage(Locale('en', 'US'));
+    }
   }else{
-    // updateLanguageViewModel.setButtonState(false);
     updateLanguageViewModel.updateLanguage(Locale('en', 'US'));
   }
+
 }
 
   final bool _visible = true;

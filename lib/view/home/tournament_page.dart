@@ -89,12 +89,13 @@ class LudoSupremeState extends State<LudoSupreme>
   int _seconds = 10;
   Timer? _timer;
 
-  void _startTimer() {
+  void _startTimer(document) {
+    print("eeee:$document");
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_seconds == 0) {
           _timer?.cancel();
-          Navigator.pushNamed(context, RoutesName.ludoHomeScreen);
+          Navigator.pushNamed(context, RoutesName.timerScreen,arguments: document);
         } else {
           _seconds--;
         }
@@ -926,16 +927,56 @@ class LudoSupremeState extends State<LudoSupreme>
               Center(
                 child: CustomContainer(
                   onTap: () async {
+                    int documentId = 1;
                     setState(() {
-                      _startTimer();
+                      _startTimer(documentId);
                       nextPage = false;
                       time = true;
                     });
-                    // Navigator.pop(context);
-                    Map<String, dynamic> jsonData = {
-                      'player1': '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}"}',
-                    };
-                    sendJsonDataToFirebase(jsonData);
+                    FirebaseFirestore firestore = FirebaseFirestore.instance;
+                    CollectionReference ludoCollection = firestore.collection('ludo');
+
+                    // int documentId = 1;
+                    DocumentSnapshot documentSnapshot = await ludoCollection.doc(documentId.toString()).get();
+
+                    if (!documentSnapshot.exists) {
+                      Map<String, dynamic> jsonData = {
+                        "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${ profile.data!.profilePicture}"}',
+                        "2": '',
+                        "3": '',
+                        "4": '',
+                        "cardImage":""
+                      };
+                      await ludoCollection.doc(documentId.toString()).set(jsonData);
+                    }
+                    else {
+                      // Document exists, check for available spaces
+                      Map<String, dynamic>? existingData = documentSnapshot.data() as Map<String, dynamic>?;
+
+                      // Iterate through fields "1" to "4" to find an empty space
+                      bool isAdded = false;
+                      for (int i = 1; i <= 4; i++) {
+                        String fieldKey = i.toString();
+                        if (existingData != null && (existingData[fieldKey] == '' || existingData[fieldKey] == null)) {
+                          await ludoCollection.doc(documentId.toString()).update({
+                            fieldKey: '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${ profile.data!.profilePicture}"}'
+                          });
+                          isAdded = true;
+                          break;
+                        }
+                      }
+                      if (!isAdded) {
+                        documentId += 1;
+                        await ludoCollection.doc(documentId.toString()).set({
+                          "1":'{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${ profile.data!.profilePicture}"}',
+                          "2": '',
+                          "3": '',
+                          "4": '',
+                          "cardImage":""
+                        });
+                      }
+                    }
+
                     showModalBottomSheet(
                       elevation: 5,
                       backgroundColor: primary,

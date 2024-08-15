@@ -52,7 +52,7 @@ bool?isSelectedLanguage;
   getLanguage()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      isSelectedLanguage =  prefs.getBool('isHindi');
+      isSelectedLanguage =  prefs.getBool('isHindi')??false;
     });
   }
 

@@ -21,33 +21,14 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  // bool isHindi = false;
 
-  // updateLanguage(bool isHindi) {
-  //   Locale locale =
-  //       isHindi ? const Locale('hi', 'IN') : const Locale('en', 'US');
-  //   Get.updateLocale(locale);
-  //   _saveLanguagePreference(isHindi);
-  // }
   UpdateLanguageViewModel updateLanguageViewModel =UpdateLanguageViewModel();
   @override
   void initState() {
     super.initState();
     getLanguage();
-    // updateLanguageViewModel.setButtonState(true);
   }
 
-  // void _saveLanguagePreference(bool value) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.setBool('isHindi', value);
-  // }
-  // void _loadSwitchState() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     isHindi = prefs.getBool('isHindi') ?? false;
-  //     updateLanguage(isHindi);  // Update the language based on the saved state
-  //   });
-  // }
 bool?isSelectedLanguage;
   getLanguage()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 
 class FirebaseViewModel with ChangeNotifier {
-  int _table = 1;
+  int _table = 0;
   int _myPosition = 0;
 
   int get table => _table;

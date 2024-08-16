@@ -21,9 +21,12 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   void initState() {
     super.initState();
-    String argument = ModalRoute.of(context)!.settings.arguments.toString();
-    print(":timeArg$argument");
-    _startTimer(argument);
+ WidgetsBinding.instance.addPostFrameCallback((_){
+ String argument = ModalRoute.of(context,)!.settings.arguments.toString();
+ print(":timeArg$argument");
+ _startTimer(argument);
+ });
+
   }
 
   void _startTimer(argument) {

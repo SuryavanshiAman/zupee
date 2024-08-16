@@ -1,3 +1,112 @@
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+// import 'package:simple_ripple_animation/simple_ripple_animation.dart';
+// import 'package:zupee/generated/assets.dart';
+// import 'package:zupee/main.dart';
+//
+// import '../../res/app_colors.dart';
+// import 'ludo_constant.dart';
+// import 'ludo_provider.dart';
+//
+// ///Widget for the pawn
+// class PawnWidget extends StatelessWidget {
+//   final int index;
+//   final LudoPlayerType type;
+//    final int step;
+//   final bool highlight;
+//   final int ?initialStep;
+//
+//   const PawnWidget(this.index, this.type, {Key? key, this.highlight = false, this.step = -0,this.initialStep}) : super(key: key);
+//   int get stepsMoved => (step >= 0 && initialStep != null) ? (step - initialStep!) : 0;
+//   @override
+//   Widget build(BuildContext context) {
+//
+//
+//     Color color = Colors.white;
+//     switch (type) {
+//     case LudoPlayerType.blue:
+//       color = LudoColor.blue;
+//       break;
+//       case LudoPlayerType.red:
+//         color = LudoColor.red;
+//         break;
+//       case LudoPlayerType.green:
+//         color = LudoColor.green;
+//         break;
+//       case LudoPlayerType.yellow:
+//         color = LudoColor.yellow;
+//         break;
+//
+//
+//     }
+//
+//     String pown = Assets.diceYellowPawn;
+//     switch (type) {
+//     case LudoPlayerType.blue:
+//       pown = "Assets.diceBluepawn";
+//       break;
+//       case LudoPlayerType.red:
+//         pown = Assets.diceRedPawn;
+//         break;
+//       case LudoPlayerType.green:
+//         pown = "Assets.diceGreenpawn";
+//         break;
+//       case LudoPlayerType.yellow:
+//         pown = Assets.diceYellowPawn;
+//         break;
+//
+//
+//     }
+//
+//     return IgnorePointer(
+//       ignoring: !highlight,
+//       child: Stack(
+//         alignment: Alignment.center,
+//         children: [
+//           if (highlight)
+//             const RippleAnimation(
+//               color: white,
+//               minRadius: 20,
+//               repeat: true,
+//               ripplesCount: 3,
+//               child: SizedBox.shrink(),
+//             ),
+//           Consumer<LudoProvider>(
+//             builder: (context, provider, child) => GestureDetector(
+//               onTap: () {
+//                 // if (step == -1) {
+//                 //   provider.move(type, index, (step + 1) + 1);
+//                 // } else {
+//                 //   provider.move(type, index, (step + 1) + provider.diceResult);
+//                 // }
+//                 // context.read<LudoProvider>().move(type, index, step);
+//                 if (provider.diceResult > 0) {
+//                   int nextStep = step == -1 ? 1 : step + provider.diceResult;
+//                   provider.move(type, index, nextStep);
+//                 }
+//               },
+//               child: Stack(
+//                   children: [
+//                     SizedBox(height: height*0.01,),
+//                     Padding(
+//                       padding: const EdgeInsets.only(left: 5.0),
+//                       child: Transform.scale(
+//                         scale: 2.5,
+//                         child: Image.asset(pown),
+//                       ),
+//                     ),
+//                   ]
+//               ),
+//
+//             ),
+//           ),
+//         ],
+//
+//       ),
+//
+//     );
+//   }
+// }
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
@@ -8,54 +117,42 @@ import '../../res/app_colors.dart';
 import 'ludo_constant.dart';
 import 'ludo_provider.dart';
 
-///Widget for the pawn
 class PawnWidget extends StatelessWidget {
   final int index;
   final LudoPlayerType type;
-  final int step;
+  int step;
   final bool highlight;
-  final int ?initialStep;
+  final int? initialStep;
+  PawnWidget(this.index, this.type, {Key? key, this.highlight = false, this.step = -0, this.initialStep}) : super(key: key);
+  // const PawnWidget(this.index, this.type, {super.key, this.highlight = false, this.step = -1, this.initialStep});
 
-  const PawnWidget(this.index, this.type, {Key? key, this.highlight = false, this.step = -0,this.initialStep}) : super(key: key);
-  int get stepsMoved => (step != -0 && initialStep != null) ? (step - initialStep!) : 0;
+  int get stepsMoved => (step >= 0 && initialStep != null) ? (step - initialStep!) : 0;
+
   @override
   Widget build(BuildContext context) {
+    Color color;
+    String pawnAsset;
 
-
-    Color color = Colors.white;
     switch (type) {
-    case LudoPlayerType.blue:
-      color = LudoColor.blue;
-      break;
+      case LudoPlayerType.blue:
+        color = LudoColor.blue;
+        pawnAsset = "Assets.diceBluepawn";
+        break;
       case LudoPlayerType.red:
         color = LudoColor.red;
+        pawnAsset = Assets.diceRedPawn;
         break;
       case LudoPlayerType.green:
         color = LudoColor.green;
+        pawnAsset = "Assets.diceGreenpawn";
         break;
       case LudoPlayerType.yellow:
         color = LudoColor.yellow;
+        pawnAsset = Assets.diceYellowPawn;
         break;
-
-
-    }
-
-    String pown = Assets.diceYellowPawn;
-    switch (type) {
-    case LudoPlayerType.blue:
-      pown = "Assets.diceBluepawn";
-      break;
-      case LudoPlayerType.red:
-        pown = Assets.diceRedPawn;
-        break;
-      case LudoPlayerType.green:
-        pown = "Assets.diceGreenpawn";
-        break;
-      case LudoPlayerType.yellow:
-        pown = Assets.diceYellowPawn;
-        break;
-
-
+      default:
+        color = Colors.white;
+        pawnAsset = Assets.diceYellowPawn;
     }
 
     return IgnorePointer(
@@ -65,7 +162,7 @@ class PawnWidget extends StatelessWidget {
         children: [
           if (highlight)
             const RippleAnimation(
-              color: white,
+              color: Colors.white,
               minRadius: 20,
               repeat: true,
               ripplesCount: 3,
@@ -74,32 +171,29 @@ class PawnWidget extends StatelessWidget {
           Consumer<LudoProvider>(
             builder: (context, provider, child) => GestureDetector(
               onTap: () {
-                if (step == -1) {
-                  provider.move(type, index, (step + 1) + 1);
-                } else {
-                  provider.move(type, index, (step + 1) + provider.diceResult);
+                if (provider.diceResult > 0) {
+                  int nextStep = step == -1 ? 1 : step + provider.diceResult;
+
+                  provider.move(type, index, nextStep); // Send move to provider
                 }
-                context.read<LudoProvider>().move(type, index, step);
               },
               child: Stack(
-                  children: [
-                    SizedBox(height: height*0.01,),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: Transform.scale(
-                        scale: 2.5,
-                        child: Image.asset(pown),
-                      ),
+                children: [
+                  SizedBox(height: height * 0.01),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5.0),
+                    child: Transform.scale(
+                      scale: 2.5,
+                      child: Image.asset(pawnAsset),
                     ),
-                  ]
+                  ),
+                ],
               ),
-
             ),
           ),
         ],
-
       ),
-
     );
   }
 }
+

@@ -60,6 +60,8 @@ class LudoPlayer {
 
   ///Moving mean you'll replace the current widget with the new widget
   void movePawn(int index, int step) async {
+    print("hii in a game widget");
+    print("type: $type, index: $step, next step : $step");
     pawns[index] = PawnWidget(index, type, step: step, highlight: false);
   }
 

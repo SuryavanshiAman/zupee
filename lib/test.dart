@@ -497,3 +497,142 @@
 //     super.dispose();
 //   }
 // }
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+class CustomPinField extends StatefulWidget {
+  final int pinLength;
+  final ValueChanged<String>? onCompleted;
+  final TextStyle? textStyle;
+  final BoxDecoration? decoration;
+  final Color cursorColor;
+
+  const CustomPinField({
+    Key? key,
+    required this.pinLength,
+    this.onCompleted,
+    this.textStyle,
+    this.decoration,
+    this.cursorColor = Colors.black,
+  }) : super(key: key);
+
+  @override
+  _CustomPinFieldState createState() => _CustomPinFieldState();
+}
+
+class _CustomPinFieldState extends State<CustomPinField> {
+  late List<TextEditingController> _controllers;
+  late List<FocusNode> _focusNodes;
+  late List<String> _pinValues;
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = List.generate(widget.pinLength, (_) => TextEditingController());
+    _focusNodes = List.generate(widget.pinLength, (_) => FocusNode());
+    _pinValues = List.generate(widget.pinLength, (_) => '');
+
+    for (int i = 0; i < widget.pinLength; i++) {
+      _controllers[i].addListener(() {
+        if (_controllers[i].text.isNotEmpty && i < widget.pinLength - 1) {
+          FocusScope.of(context).requestFocus(_focusNodes[i + 1]);
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    for (var focusNode in _focusNodes) {
+      focusNode.dispose();
+    }
+    super.dispose();
+  }
+
+  void _onFieldChanged(String value, int index) {
+    setState(() {
+      _pinValues[index] = value;
+    });
+
+    if (_pinValues.every((v) => v.isNotEmpty)) {
+      widget.onCompleted?.call(_pinValues.join());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(widget.pinLength, (index) {
+        return Container(
+          margin: const EdgeInsets.all(5.0),
+          width: 44,
+          height: 44,
+          decoration: widget.decoration ??
+              BoxDecoration(
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(8),
+              ),
+          child: TextField(
+            controller: _controllers[index],
+            focusNode: _focusNodes[index],
+            keyboardType: TextInputType.number,
+            maxLength: 1,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(1),
+            ],
+            textAlign: TextAlign.center,
+            cursorColor: widget.cursorColor,
+            style: widget.textStyle ?? const TextStyle(fontSize: 20),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              counterText: '',
+            ),
+            onChanged: (value) {
+              _onFieldChanged(value, index);
+              if (value.isEmpty && index > 0) {
+                FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+              }
+            },
+          ),
+        );
+      }),
+    );
+  }
+}
+
+
+class PinEntryPage extends StatelessWidget {
+  const PinEntryPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Enter PIN')),
+      body: Center(
+        child: CustomPinField(
+          pinLength: 6,
+          onCompleted: (pin) {
+            // Handle PIN completion
+            print("Entered PIN: $pin");
+          },
+          textStyle: const TextStyle(
+            fontSize: 24,
+            color: Colors.black,
+          ),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.orange),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          cursorColor: Colors.orange,
+        ),
+      ),
+    );
+  }
+}
+
+

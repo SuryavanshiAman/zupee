@@ -66,12 +66,12 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   Widget build(BuildContext context) {
     CollectionReference ludoCollection = FirebaseFirestore.instance.collection('ludo');
     String argument = ModalRoute.of(context)!.settings.arguments.toString();
-    print("amanArg$argument");
+    // print("amanArg$argument");
     return SafeArea(
       child: Scaffold(
         body: StreamBuilder(
           // Replace '1' with the specific document ID you want to listen to
-          stream: ludoCollection.doc(argument).snapshots(),
+          stream: ludoCollection.doc("1").snapshots(),
           builder: ( context, snapshot) {
             if(snapshot.connectionState==ConnectionState.active){
               if (snapshot.hasError) {

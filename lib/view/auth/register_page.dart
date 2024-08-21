@@ -197,7 +197,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
             child: InkWell(
               onTap: (){
-                if(_controller.text.isEmpty){
+                if(_controller.text.isEmpty || _controller.text.length <10){
                   Utils.flushBarErrorMessage("Please Enter Contact No.", context, white);
                 }else{
                   authApi.authApi(_controller.text.toString(), context);

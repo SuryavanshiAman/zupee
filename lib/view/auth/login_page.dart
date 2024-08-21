@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +12,7 @@ import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/custom_text_field.dart';
 import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view_model/auth_view_model.dart';
+import 'package:zupee/view_model/user_view_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,12 +24,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _controller = TextEditingController();
   Color _containerColor = lightGray;
+  UserViewModel userViewModel = UserViewModel();
   @override
   void initState() {
     super.initState();
+login();
     _controller.addListener(_updateContainerColor);
   }
-
+login()async{
+  String? userId = await userViewModel.getUser();
+  print(":uuuuu${userId}");
+}
   void _updateContainerColor() {
     setState(() {
       if (_controller.text.length == 10) {
@@ -128,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             CustomContainer(
               onTap: () {
-                if (_controller.text.isEmpty) {
+                if (_controller.text.isEmpty || _controller.text.length <10) {
                   Utils.flushBarErrorMessage(
                       "Please Enter Contact No.", context, white);
                 } else {

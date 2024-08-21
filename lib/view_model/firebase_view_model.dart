@@ -13,10 +13,10 @@ class FirebaseViewModel with ChangeNotifier {
 
   setTable(int value) {
     _table = value;
-    // notifyListeners();
+    notifyListeners();
   }
   setMyPosition(int value) {
     _myPosition = value;
-    // notifyListeners();
+    notifyListeners();
   }
 }

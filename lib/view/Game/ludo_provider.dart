@@ -329,6 +329,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:zupee/view_model/firebase_view_model.dart';
 import 'ludo_constant.dart';
 import 'ludo_player.dart';
 
@@ -345,13 +346,23 @@ class LudoProvider extends ChangeNotifier {
     LudoPlayer(LudoPlayerType.green),
     LudoPlayer(LudoPlayerType.yellow),
   ];
-
+  FirebaseViewModel firebaseViewModel=FirebaseViewModel();
   final List<LudoPlayerType> winners = [];
-  final DocumentReference<Map<String, dynamic>> gameDoc = FirebaseFirestore.instance.collection('ludo').doc('1');
+  late final DocumentReference<Map<String, dynamic>> gameDoc;
 
-  LudoProvider() {
+  LudoProvider(this.firebaseViewModel) {
+    print("firebaseViewModel:${firebaseViewModel.table.toString()}");
+    gameDoc = FirebaseFirestore.instance.collection('ludo').doc("1");
     _listenToGameUpdates();
   }
+  // final DocumentReference<Map<String, dynamic>> gameDoc = FirebaseFirestore
+  //     .instance
+  //     .collection('ludo')
+  //     .doc(firebaseViewModel.table.toString());
+
+  // LudoProvider() {
+  //   _listenToGameUpdates();
+  // }
 
   void _listenToGameUpdates() {
     gameDoc.snapshots().listen((snapshot) {
@@ -367,7 +378,9 @@ class LudoProvider extends ChangeNotifier {
             for (var playerType in LudoPlayerType.values) {
               var pawnsData = playersData[playerType.toString()];
               if (pawnsData != null) {
-                for (int i = 0; i < players[playerType.index].pawns.length; i++) {
+                for (int i = 0;
+                    i < players[playerType.index].pawns.length;
+                    i++) {
                   players[playerType.index].pawns[i].step = pawnsData[i];
                 }
               }
@@ -379,12 +392,14 @@ class LudoProvider extends ChangeNotifier {
       }
     });
   }
+
   LudoPlayer get currentPlayer => player(_currentTurn);
   bool get diceStarted => _diceStarted;
   int get diceResult => _diceResult;
   LudoGameState get gameState => _gameState;
 
-  LudoPlayer player(LudoPlayerType type) => players.firstWhere((element) => element.type == type);
+  LudoPlayer player(LudoPlayerType type) =>
+      players.firstWhere((element) => element.type == type);
 
   void throwDice() async {
     _diceStarted = true;
@@ -418,19 +433,31 @@ class LudoProvider extends ChangeNotifier {
     LudoPlayer currentPlayer = player(type);
     currentPlayer.highlightAllPawns(false);
 
-    for (int i = currentPlayer.pawns[index].step + 1; i <= step; i++) {
+    for (int i = currentPlayer.pawns[index].step; i <= step; i++) {
       currentPlayer.movePawn(index, i);
-
+      await Future.delayed(const Duration(milliseconds: 300));
       await gameDoc.update({
-        'players.${type.toString()}': players[type.index].pawns.map((pawn) => pawn.step).toList(),
+        'players.${type.toString()}':
+        players[type.index].pawns.map((pawn) => pawn.step).toList(),
         'currentTurn': _currentTurn.index,
         'gameState': _gameState.index,
       });
-
-      await Future.delayed(const Duration(milliseconds: 300));
       notifyListeners();
     }
-
+    // for (int i = currentPlayer.pawns[index].step; i < step; i++) {
+    //   // if (_stopMoving) break;
+    //   if (currentPlayer.pawns[index].step == i) continue;
+    //   currentPlayer.movePawn(index, i);
+    //   await Future.delayed(const Duration(milliseconds: 500));
+    //   await gameDoc.update({
+    //     'players.${type.toString()}':
+    //     players[type.index].pawns.map((pawn) => pawn.step).toList(),
+    //     'currentTurn': _currentTurn.index,
+    //     'gameState': _gameState.index,
+    //   });
+    //   // await Audio.playMove();
+    //   notifyListeners();
+    // }
     if (checkToKill(type, index, step, currentPlayer.path)) {
       _gameState = LudoGameState.throwDice;
       _isMoving = false;
@@ -443,27 +470,54 @@ class LudoProvider extends ChangeNotifier {
     _isMoving = false;
     notifyListeners();
   }
-
+  // bool checkToKill(
+  //     LudoPlayerType type, int index, int step, List<List<double>> path)
+  // {
+  //   bool killSomeone = false;
+  //   List<LudoPlayerType> opponentTypes =
+  //       LudoPlayerType.values.where((t) => t != type).toList();
+  //
+  //   for (var opponentType in opponentTypes) {
+  //     for (var opponentPawn in player(opponentType).pawns) {
+  //       if (opponentPawn.step == step &&
+  //           !LudoPath.safeArea.contains(path[step])) {
+  //         opponentPawn.step = -1;
+  //         killSomeone = true;
+  //         notifyListeners();
+  //       }
+  //     }
+  //   }
+  //
+  //   return killSomeone;
+  // }
   bool checkToKill(LudoPlayerType type, int index, int step, List<List<double>> path) {
     bool killSomeone = false;
-    List<LudoPlayerType> opponentTypes = LudoPlayerType.values.where((t) => t != type).toList();
-
-    for (var opponentType in opponentTypes) {
-      for (var opponentPawn in player(opponentType).pawns) {
-        if (opponentPawn.step == step && !LudoPath.safeArea.contains(path[step])) {
-          opponentPawn.step = -1;
+    for (int i = 0; i < 4; i++) {
+      var redElement = player(LudoPlayerType.red).pawns[i];
+      var yellowElement = player(LudoPlayerType.yellow).pawns[i];
+      if ((yellowElement.step > -1 && !LudoPath.safeArea.map((e) => e.toString()).contains(player(LudoPlayerType.yellow).path[yellowElement.step].toString())) && type != LudoPlayerType.yellow) {
+        if (player(LudoPlayerType.yellow).path[yellowElement.step].toString() == path[step - 1].toString()) {
           killSomeone = true;
+          player(LudoPlayerType.yellow).movePawn(i, -1);
+          notifyListeners();
+        }
+      }
+      if ((redElement.step > -1 && !LudoPath.safeArea.map((e) => e.toString()).contains(player(LudoPlayerType.red).path[redElement.step].toString())) && type != LudoPlayerType.red) {
+        if (player(LudoPlayerType.red).path[redElement.step].toString() == path[step - 1].toString()) {
+          killSomeone = true;
+          player(LudoPlayerType.red).movePawn(i, -1);
           notifyListeners();
         }
       }
     }
-
     return killSomeone;
   }
 
   void validateWin(LudoPlayerType color) {
     if (winners.contains(color)) return;
-    if (player(color).pawns.every((pawn) => pawn.step == player(color).path.length - 1)) {
+    if (player(color)
+        .pawns
+        .every((pawn) => pawn.step == player(color).path.length - 1)) {
       winners.add(color);
       notifyListeners();
     }

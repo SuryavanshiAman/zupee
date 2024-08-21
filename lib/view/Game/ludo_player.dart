@@ -22,7 +22,7 @@ class LudoPlayer {
 
   LudoPlayer(this.type) {
     for (int i = 0; i < 4; i++) {
-      pawns.add(PawnWidget(i, type));
+      pawns.add(PawnWidget(i, type,));
     }
 
     ///Initialize path
@@ -62,14 +62,14 @@ class LudoPlayer {
   void movePawn(int index, int step) async {
     print("hii in a game widget");
     print("type: $type, index: $step, next step : $step");
-    pawns[index] = PawnWidget(index, type, step: step, highlight: false);
+    pawns[index] = PawnWidget(index, type, step: step, highlight: false,);
   }
 
   ///Highlight the pawn
   void highlightPawn(int index, [bool highlight = true]) {
     var pawn = pawns[index];
     pawns.removeAt(index);
-    pawns.insert(index, PawnWidget(index, pawn.type, highlight: highlight, step: pawn.step));
+    pawns.insert(index, PawnWidget(index, pawn.type, highlight: highlight, step: pawn.step, ));
   }
 
   ///Highlight all the pawns

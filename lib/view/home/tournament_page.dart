@@ -936,46 +936,105 @@ class LudoSupremeState extends State<LudoSupreme>
                     FirebaseFirestore firestore = FirebaseFirestore.instance;
                     CollectionReference ludoCollection = firestore.collection('ludo');
 
-                    // int documentId = 1;
-                    DocumentSnapshot documentSnapshot = await ludoCollection.doc(documentId.toString()).get();
+                    bool isAdded = false;  // Start with the first document ID
 
-                    if (!documentSnapshot.exists) {
-                      Map<String, dynamic> jsonData = {
-                        "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${ profile.data!.profilePicture}"}',
-                        "2": '',
-                        "3": '',
-                        "4": '',
-                        "cardImage":""
-                      };
-                      await ludoCollection.doc(documentId.toString()).set(jsonData);
-                    }
-                    else {
-                      // Document exists, check for available spaces
-                      Map<String, dynamic>? existingData = documentSnapshot.data() as Map<String, dynamic>?;
+                    while (!isAdded) {
+                      DocumentSnapshot documentSnapshot = await ludoCollection.doc(documentId.toString()).get();
 
-                      // Iterate through fields "1" to "4" to find an empty space
-                      bool isAdded = false;
-                      for (int i = 1; i <= 4; i++) {
-                        String fieldKey = i.toString();
-                        if (existingData != null && (existingData[fieldKey] == '' || existingData[fieldKey] == null)) {
-                          await ludoCollection.doc(documentId.toString()).update({
-                            fieldKey: '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${ profile.data!.profilePicture}"}'
-                          });
-                          isAdded = true;
-                          break;
-                        }
-                      }
-                      if (!isAdded) {
-                        documentId += 1;
-                        await ludoCollection.doc(documentId.toString()).set({
-                          "1":'{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${ profile.data!.profilePicture}"}',
+                      if (!documentSnapshot.exists) {
+                        // If the document does not exist, create a new document and add the data
+                        print("Creating new document with ID $documentId");
+                        Map<String, dynamic> jsonData = {
+                          "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}"}',
                           "2": '',
                           "3": '',
                           "4": '',
-                          "cardImage":""
-                        });
+                          "cardImage": ""
+                        };
+                        await ludoCollection.doc(documentId.toString()).set(jsonData);
+                        isAdded = true; // Data is added, stop the loop
+                      } else {
+                        // Document exists, check for available spaces
+                        print("Document $documentId exists, checking for available spaces");
+                        Map<String, dynamic>? existingData = documentSnapshot.data() as Map<String, dynamic>?;
+
+                        // Iterate through fields "1" to "4" to find an empty space
+                        for (int i = 1; i <= 4; i++) {
+                          String fieldKey = i.toString();
+                          print("Checking field $fieldKey in document $documentId");
+
+                          // Check if the field is empty or null
+                          if (existingData != null && (existingData[fieldKey] == '' || existingData[fieldKey] == null)) {
+                            print("Empty spot found at $fieldKey in document $documentId, updating...");
+                            await ludoCollection.doc(documentId.toString()).update({
+                              fieldKey: '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}"}'
+                            });
+                            isAdded = true; // Data is added, stop the loop
+                            break; // Exit the loop after updating the first empty spot
+                          }
+                        }
+
+                        if (!isAdded) {
+                          // If no empty spots were found in the current document, move to the next document ID
+                          documentId += 1;
+                        }
                       }
                     }
+
+                    if (isAdded) {
+                      print("hellow");
+                      // Optionally, set the document ID in your FirebaseViewModel
+                      Provider.of<FirebaseViewModel>(context, listen: false).setTable(documentId);
+                    }
+
+                    // FirebaseFirestore firestore = FirebaseFirestore.instance;
+                    // CollectionReference ludoCollection = firestore.collection('ludo');
+                    //
+                    // // int documentId = 1;
+                    // DocumentSnapshot documentSnapshot = await ludoCollection.doc(documentId.toString()).get();
+                    //
+                    // if (!documentSnapshot.exists) {
+                    //   print("Amab");
+                    //   Map<String, dynamic> jsonData = {
+                    //     "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${ profile.data!.profilePicture}"}',
+                    //     "2": '',
+                    //     "3": '',
+                    //     "4": '',
+                    //     "cardImage":""
+                    //   };
+                    //   await ludoCollection.doc(documentId.toString()).set(jsonData);
+                    // }
+                    // else {
+                    //   print("Aman");
+                    //   // Document exists, check for available spaces
+                    //   Map<String, dynamic>? existingData = documentSnapshot.data() as Map<String, dynamic>?;
+                    //
+                    //   // Iterate through fields "1" to "4" to find an empty space
+                    //   bool isAdded = false;
+                    //
+                    //   for (int i = 1; i <= 4; i++) {
+                    //     print("dddddd");
+                    //     String fieldKey = i.toString();
+                    //     if (existingData != null && (existingData[fieldKey] == '' || existingData[fieldKey] == null)) {
+                    //       await ludoCollection.doc(documentId.toString()).update({
+                    //         fieldKey: '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${ profile.data!.profilePicture}"}'
+                    //       });
+                    //       isAdded = true;
+                    //       break;
+                    //     }
+                    //   }
+                    //   if (!isAdded) {
+                    //     print("Akc");
+                    //     documentId += 1;
+                    //     await ludoCollection.doc(documentId.toString()).set({
+                    //       "1":'{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${ profile.data!.profilePicture}"}',
+                    //       "2": '',
+                    //       "3": '',
+                    //       "4": '',
+                    //       "cardImage":""
+                    //     });
+                    //   }
+                    // }
 
                     showModalBottomSheet(
                       elevation: 5,

@@ -326,6 +326,9 @@
 //     super.dispose();
 //   }
 // }
+
+
+/// working
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -416,48 +419,60 @@ class LudoProvider extends ChangeNotifier {
     _diceStarted = false;
     notifyListeners();
 
-    if (_diceResult != 6 && currentPlayer.pawnInsideCount == 4) {
-      await Future.delayed(Duration(seconds: 1));
-      nextTurn();
+    if (_diceResult != 6) {
+      if (currentPlayer.pawnInsideCount == 4) {
+        await Future.delayed(const Duration(seconds: 1));
+        nextTurn();
+      } else {
+        currentPlayer.highlightOutside();
+        _gameState = LudoGameState.pickPawn;
+        notifyListeners();
+      }
     } else {
+      // When 6 is rolled, the player gets another chance
       currentPlayer.highlightOutside();
       _gameState = LudoGameState.pickPawn;
       notifyListeners();
     }
-  }
+    ///Check and disable if any pawn already in the finish box
+    for (var i = 0; i < currentPlayer.pawns.length; i++) {
+      var pawn = currentPlayer.pawns[i];
+      if ((pawn.step + diceResult) > currentPlayer.path.length - 1) {
+        currentPlayer.highlightPawn(i, false);
+      }
+    }
+    ///If User have 6 dice, but it inside finish line, it will make him to throw again, else it will turn to next player
+    if (currentPlayer.pawns.every((element) => !element.highlight)) {
+      if (diceResult == 6) {
+        _gameState = LudoGameState.throwDice;
+      } else {
+        nextTurn();
+        return;
+      }
+    }
 
+    // if (currentPlayer.pawns.where((element) => element.highlight).length == 1) {
+    //   var index = currentPlayer.pawns.indexWhere((element) => element.highlight);
+    //   move(currentPlayer.type, index, (currentPlayer.pawns[index].step + 1) + diceResult);
+    // }
+  }
   void move(LudoPlayerType type, int index, int step) async {
     if (_isMoving) return;
     _isMoving = true;
     _gameState = LudoGameState.moving;
     LudoPlayer currentPlayer = player(type);
     currentPlayer.highlightAllPawns(false);
-
     for (int i = currentPlayer.pawns[index].step; i <= step; i++) {
       currentPlayer.movePawn(index, i);
       await Future.delayed(const Duration(milliseconds: 300));
-      await gameDoc.update({
-        'players.${type.toString()}':
-        players[type.index].pawns.map((pawn) => pawn.step).toList(),
-        'currentTurn': _currentTurn.index,
-        'gameState': _gameState.index,
-      });
+      // await gameDoc.update({
+      //   'players.${type.toString()}':
+      //   players[type.index].pawns.map((pawn) => pawn.step).toList(),
+      //   'currentTurn': _currentTurn.index,
+      //   'gameState': _gameState.index,
+      // });
       notifyListeners();
     }
-    // for (int i = currentPlayer.pawns[index].step; i < step; i++) {
-    //   // if (_stopMoving) break;
-    //   if (currentPlayer.pawns[index].step == i) continue;
-    //   currentPlayer.movePawn(index, i);
-    //   await Future.delayed(const Duration(milliseconds: 500));
-    //   await gameDoc.update({
-    //     'players.${type.toString()}':
-    //     players[type.index].pawns.map((pawn) => pawn.step).toList(),
-    //     'currentTurn': _currentTurn.index,
-    //     'gameState': _gameState.index,
-    //   });
-    //   // await Audio.playMove();
-    //   notifyListeners();
-    // }
     if (checkToKill(type, index, step, currentPlayer.path)) {
       _gameState = LudoGameState.throwDice;
       _isMoving = false;
@@ -490,6 +505,27 @@ class LudoProvider extends ChangeNotifier {
   //
   //   return killSomeone;
   // }
+  // bool checkToKill(
+  //     LudoPlayerType type, int index, int step, List<List<double>> path) {
+  //   bool killSomeone = false;
+  //   List<LudoPlayerType> opponentTypes =
+  //   LudoPlayerType.values.where((t) => t != type).toList();
+  //
+  //   for (var opponentType in opponentTypes) {
+  //     for (var opponentPawn in player(opponentType).pawns) {
+  //       if (opponentPawn.step == step &&
+  //           !LudoPath.safeArea.contains(path[step])) {
+  //         // Reset the opponent's pawn to starting position (or initial state)
+  //         opponentPawn.step = -1;  // or any value that represents the starting point
+  //         killSomeone = true;
+  //         notifyListeners();
+  //       }
+  //     }
+  //   }
+  //
+  //   return killSomeone;
+  // }
+
   bool checkToKill(LudoPlayerType type, int index, int step, List<List<double>> path) {
     bool killSomeone = false;
     for (int i = 0; i < 4; i++) {
@@ -498,21 +534,20 @@ class LudoProvider extends ChangeNotifier {
       if ((yellowElement.step > -1 && !LudoPath.safeArea.map((e) => e.toString()).contains(player(LudoPlayerType.yellow).path[yellowElement.step].toString())) && type != LudoPlayerType.yellow) {
         if (player(LudoPlayerType.yellow).path[yellowElement.step].toString() == path[step - 1].toString()) {
           killSomeone = true;
-          player(LudoPlayerType.yellow).movePawn(i, -1);
+          player(LudoPlayerType.yellow).movePawn(i, -0);
           notifyListeners();
         }
       }
       if ((redElement.step > -1 && !LudoPath.safeArea.map((e) => e.toString()).contains(player(LudoPlayerType.red).path[redElement.step].toString())) && type != LudoPlayerType.red) {
         if (player(LudoPlayerType.red).path[redElement.step].toString() == path[step - 1].toString()) {
           killSomeone = true;
-          player(LudoPlayerType.red).movePawn(i, -1);
+          player(LudoPlayerType.red).movePawn(i, -0);
           notifyListeners();
         }
       }
     }
     return killSomeone;
   }
-
   void validateWin(LudoPlayerType color) {
     if (winners.contains(color)) return;
     if (player(color)
@@ -528,6 +563,13 @@ class LudoProvider extends ChangeNotifier {
   }
 
   void nextTurn() async {
+    if (_diceResult == 6) {
+      // Skip the turn change if a 6 was rolled
+      _gameState = LudoGameState.throwDice;
+      notifyListeners();
+      return;
+    }
+
     switch (_currentTurn) {
       case LudoPlayerType.blue:
         _currentTurn = LudoPlayerType.green;
@@ -556,6 +598,7 @@ class LudoProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+
     super.dispose();
   }
 }

@@ -69,33 +69,36 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
     // print("amanArg$argument");
     return SafeArea(
       child: Scaffold(
-        body: StreamBuilder(
-          // Replace '1' with the specific document ID you want to listen to
-          stream: ludoCollection.doc("1").snapshots(),
-          builder: ( context, snapshot) {
-            if(snapshot.connectionState==ConnectionState.active){
-              if (snapshot.hasError) {
-                return Text('Something went wrong');
-              }
-            }else{
-              return CircularProgressIndicator();
-            }
-            if (snapshot.hasError) {
-              return Text(snapshot.hasError.toString());
-            }
+        body:Consumer<LudoProvider>(
+            builder: (context, provider, child) {
+              return StreamBuilder(
+                // Replace '1' with the specific document ID you want to listen to
+                stream: ludoCollection.doc("1").snapshots(),
+                builder: (context, snapshot) {
+                  // if (snapshot.connectionState == ConnectionState.active) {
+                  //   if (snapshot.hasError) {
+                  //     return Text('Something went wrong');
+                  //   }
+                  // } else {
+                  //   return CircularProgressIndicator();
+                  // }
+                  // if (snapshot.hasError) {
+                  //   return Text(snapshot.hasError.toString());
+                  // }
+                  //
+                  // if (!snapshot.hasData || !snapshot.data!.exists) {
+                  //   return Text('No data available');
+                  // }
 
-            if (!snapshot.hasData || !snapshot.data!.exists) {
-              return Text('No data available');
-            }
+                  // Fetch the data and display it
+                  Map<String, dynamic> data = snapshot.data!.data() as Map<
+                      String,
+                      dynamic>;
 
-            // Fetch the data and display it
-            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-
-            return _buildDynamicContent(context, data);
-          },
-        ),
-
-
+                  return _buildDynamicContent(context, data);
+                },
+              );
+            })
       ),
     );
   }

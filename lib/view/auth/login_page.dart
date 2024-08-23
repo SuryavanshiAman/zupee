@@ -51,7 +51,8 @@ login()async{
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
-        leadingWidth: 250,
+        leadingWidth: width*0.6,
+        backgroundColor: appBarColor,
         leading: Row(
           children: [
             GestureDetector(

@@ -44,7 +44,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
-        leadingWidth: 250,
+        leadingWidth: width*0.6,
+        backgroundColor: appBarColor,
         leading: const Text(
           " ${AppConstants.appNameTwo}",
           style: TextStyle(

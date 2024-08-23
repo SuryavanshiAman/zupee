@@ -932,9 +932,24 @@ class LudoSupremeState extends State<LudoSupreme>
                       _startTimer(documentId);
                       nextPage = false;
                       time = true;
+                      Navigator.pop(context);
                     });
-                    FirebaseFirestore firestore = FirebaseFirestore.instance;
-                    CollectionReference ludoCollection = firestore.collection('ludo');
+                    showModalBottomSheet(
+                      elevation: 5,
+                      backgroundColor: primary,
+                      shape: const RoundedRectangleBorder(
+                          side: BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(35),
+                              topRight: Radius.circular(35))),
+                      context: context,
+                      builder: (context) {
+                        return const TournamentBottomsheet();
+                      },
+                    );
+
+                    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+                    CollectionReference ludoCollection = fireStore.collection('ludo');
 
                     bool isAdded = false;  // Start with the first document ID
 
@@ -1036,19 +1051,7 @@ class LudoSupremeState extends State<LudoSupreme>
                     //   }
                     // }
 
-                    showModalBottomSheet(
-                      elevation: 5,
-                      backgroundColor: primary,
-                      shape: const RoundedRectangleBorder(
-                          side: BorderSide(width: 2, color: Colors.white),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(35),
-                              topRight: Radius.circular(35))),
-                      context: context,
-                      builder: (context) {
-                        return TournamentBottomsheet();
-                      },
-                    );
+
                   },
                   alignment: Alignment.center,
                   height: height * 0.07,

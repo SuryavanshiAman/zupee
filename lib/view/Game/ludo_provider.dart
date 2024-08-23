@@ -326,9 +326,7 @@
 //     super.dispose();
 //   }
 // }
-
-
-/// working
+/// working 23-08
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -349,7 +347,7 @@ class LudoProvider extends ChangeNotifier {
     LudoPlayer(LudoPlayerType.green),
     LudoPlayer(LudoPlayerType.yellow),
   ];
-  FirebaseViewModel firebaseViewModel=FirebaseViewModel();
+  FirebaseViewModel firebaseViewModel = FirebaseViewModel();
   final List<LudoPlayerType> winners = [];
   late final DocumentReference<Map<String, dynamic>> gameDoc;
 
@@ -434,6 +432,7 @@ class LudoProvider extends ChangeNotifier {
       _gameState = LudoGameState.pickPawn;
       notifyListeners();
     }
+
     ///Check and disable if any pawn already in the finish box
     for (var i = 0; i < currentPlayer.pawns.length; i++) {
       var pawn = currentPlayer.pawns[i];
@@ -441,6 +440,7 @@ class LudoProvider extends ChangeNotifier {
         currentPlayer.highlightPawn(i, false);
       }
     }
+
     ///If User have 6 dice, but it inside finish line, it will make him to throw again, else it will turn to next player
     if (currentPlayer.pawns.every((element) => !element.highlight)) {
       if (diceResult == 6) {
@@ -456,6 +456,7 @@ class LudoProvider extends ChangeNotifier {
     //   move(currentPlayer.type, index, (currentPlayer.pawns[index].step + 1) + diceResult);
     // }
   }
+
   void move(LudoPlayerType type, int index, int step) async {
     if (_isMoving) return;
     _isMoving = true;
@@ -526,20 +527,30 @@ class LudoProvider extends ChangeNotifier {
   //   return killSomeone;
   // }
 
-  bool checkToKill(LudoPlayerType type, int index, int step, List<List<double>> path) {
+  bool checkToKill(
+      LudoPlayerType type, int index, int step, List<List<double>> path) {
     bool killSomeone = false;
     for (int i = 0; i < 4; i++) {
       var redElement = player(LudoPlayerType.red).pawns[i];
       var yellowElement = player(LudoPlayerType.yellow).pawns[i];
-      if ((yellowElement.step > -1 && !LudoPath.safeArea.map((e) => e.toString()).contains(player(LudoPlayerType.yellow).path[yellowElement.step].toString())) && type != LudoPlayerType.yellow) {
-        if (player(LudoPlayerType.yellow).path[yellowElement.step].toString() == path[step - 1].toString()) {
+      if ((yellowElement.step > 0 && !LudoPath.safeArea.map((e) => e.toString()).contains(player(LudoPlayerType.yellow).path[yellowElement.step]
+          .toString())) &&
+          type != LudoPlayerType.yellow) {
+        if (player(LudoPlayerType.yellow).path[yellowElement.step].toString() ==
+            path[step - 0].toString()) {
           killSomeone = true;
           player(LudoPlayerType.yellow).movePawn(i, -0);
           notifyListeners();
         }
       }
-      if ((redElement.step > -1 && !LudoPath.safeArea.map((e) => e.toString()).contains(player(LudoPlayerType.red).path[redElement.step].toString())) && type != LudoPlayerType.red) {
-        if (player(LudoPlayerType.red).path[redElement.step].toString() == path[step - 1].toString()) {
+      if ((redElement.step > 0 &&
+              !LudoPath.safeArea.map((e) => e.toString()).contains(
+                  player(LudoPlayerType.red)
+                      .path[redElement.step]
+                      .toString())) &&
+          type != LudoPlayerType.red) {
+        if (player(LudoPlayerType.red).path[redElement.step].toString() ==
+            path[step - 0].toString()) {
           killSomeone = true;
           player(LudoPlayerType.red).movePawn(i, -0);
           notifyListeners();
@@ -548,6 +559,7 @@ class LudoProvider extends ChangeNotifier {
     }
     return killSomeone;
   }
+
   void validateWin(LudoPlayerType color) {
     if (winners.contains(color)) return;
     if (player(color)
@@ -598,7 +610,7 @@ class LudoProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-
     super.dispose();
   }
 }
+

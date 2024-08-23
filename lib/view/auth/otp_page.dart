@@ -10,6 +10,7 @@ import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/custom_pin_field.dart';
 import 'package:zupee/res/custom_rich_text.dart';
 import '../../res/app_constant.dart';
+import '../../res/pinput/pinput.dart';
 import '../../utils/toast.dart';
 import '../../view_model/auth_view_model.dart';
 
@@ -23,10 +24,8 @@ class VerifyPage extends StatefulWidget {
 }
 
 class _VerifyPageState extends State<VerifyPage> {
-  List<TextEditingController> otpCon = List.generate(
-    6,
-    (index) => TextEditingController(),
-  );
+  final TextEditingController otpCon = TextEditingController();
+
   int countdown = 30;
   late Timer countdownTimer;
 
@@ -56,7 +55,7 @@ class _VerifyPageState extends State<VerifyPage> {
   Color _containerColor = lightGray;
   void _updateContainerColor() {
     setState(() {
-      if (otpCon.length == 6) {
+      if (otpCon.text.length == 6) {
         _containerColor = secondary;
       } else {
         _containerColor = lightGray;
@@ -68,9 +67,8 @@ class _VerifyPageState extends State<VerifyPage> {
   void initState() {
     super.initState();
     startCountdown();
-    for (var controller in otpCon) {
-      controller.addListener(_updateContainerColor);
-    }
+      otpCon.addListener(_updateContainerColor);
+
   }
 
   @override
@@ -115,13 +113,38 @@ class _VerifyPageState extends State<VerifyPage> {
             SizedBox(
               height: height / 30,
             ),
-            Padding(
+             Padding(
               padding: const EdgeInsets.only(left: 18, right: 18),
-              child: Center(
-                  child: OtpFieldWidget(
-                pinLength: 6,
-                controllers: otpCon,
-              )),
+              child:Pinput(
+                controller: otpCon,
+                length: 6,
+                defaultPinTheme: PinTheme(
+                  width: width*0.11,
+                  height: height*0.07,
+                  textStyle: const TextStyle(fontSize: 20, color: black),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: labelColor, width: 2),
+                    ),
+                  ),
+                ),
+                focusedPinTheme: const PinTheme(
+                  width: 56,
+                  height: 56,
+                  textStyle: TextStyle(fontSize: 20, color: labelColor),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: tertiary, width: 2),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Center(
+              //     child: OtpFieldWidget(
+              //   pinLength: 6,
+              //   controllers: otpCon,
+              // )),
             ),
             const SizedBox(
               height: 20,
@@ -179,11 +202,11 @@ class _VerifyPageState extends State<VerifyPage> {
               ),
               child: CustomContainer(
                 onTap: () {
-                  otpCon.map((e) => e.text).join().isEmpty
+                  otpCon.text.isEmpty
                       ? Utils.flushBarErrorMessage(
                           "Please Enter OTP", context, white)
                       : verifyOtpApi.verifyOtpApi(phone.toString(),
-                          otpCon.map((e) => e.text).join().toString(), context);
+                          otpCon.text, context);
                 },
                 alignment: Alignment.center,
                 height: height * 0.07,

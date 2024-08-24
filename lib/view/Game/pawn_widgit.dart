@@ -147,7 +147,7 @@ class _PawnWidgetState extends State<PawnWidget> {
     super.initState();
     gameDoc = FirebaseFirestore.instance.collection('ludo').doc("1");
     _fetchPawnAsset(); // Fetch the pawn asset on initialization
-    // _listenForPawnChanges(); // Listen for pawn position updates
+    _listenForPawnChanges(); // Listen for pawn position updates
   }
 
   @override
@@ -166,13 +166,13 @@ class _PawnWidgetState extends State<PawnWidget> {
         setState(() {
           switch (widget.type) {
             case LudoPlayerType.blue:
-              pawnAsset = data?['bluePawn'] ?? "Assets.diceBluePawn";
+              pawnAsset = data?['bluePawn'] ?? Assets.diceBluePawn;
               break;
             case LudoPlayerType.red:
               pawnAsset = data?['redPawn'] ?? Assets.diceRedPawn;
               break;
             case LudoPlayerType.green:
-              pawnAsset = data?['greenPawn'] ?? "Assets.diceGreenPawn";
+              pawnAsset = data?['greenPawn'] ?? Assets.diceGreenpawn;
               break;
             case LudoPlayerType.yellow:
               pawnAsset = data?['yellowPawn'] ?? Assets.diceYellowPawn;
@@ -191,18 +191,18 @@ class _PawnWidgetState extends State<PawnWidget> {
   }
 
   // Listen for pawn position changes
-  // void _listenForPawnChanges() {
-  //   _pawnSubscription = gameDoc.snapshots().listen((snapshot) {
-  //     if (snapshot.exists) {
-  //       final data = snapshot.data();
-  //       if (mounted) {
-  //         setState(() {
-  //           widget.step = data?['${widget.type.toString().split('.').last}PawnPosition${widget.index}'] ?? widget.step;
-  //         });
-  //       }
-  //     }
-  //   });
-  // }
+  void _listenForPawnChanges() {
+    _pawnSubscription = gameDoc.snapshots().listen((snapshot) {
+      if (snapshot.exists) {
+        final data = snapshot.data();
+        if (mounted) {
+          setState(() {
+            widget.step = data?['${widget.type.toString().split('.').last}PawnPosition${widget.index}'] ?? widget.step;
+          });
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +211,7 @@ class _PawnWidgetState extends State<PawnWidget> {
     switch (widget.type) {
       case LudoPlayerType.blue:
         color = LudoColor.blue;
-        pawnAsset = "Assets.diceBluePawn";
+        pawnAsset = Assets.diceBluePawn;
         break;
       case LudoPlayerType.red:
         color = LudoColor.red;
@@ -219,7 +219,7 @@ class _PawnWidgetState extends State<PawnWidget> {
         break;
       case LudoPlayerType.green:
         color = LudoColor.green;
-        pawnAsset =" Assets.diceGreenpawn";
+        pawnAsset =Assets.diceGreenpawn;
         break;
       case LudoPlayerType.yellow:
         color = LudoColor.yellow;

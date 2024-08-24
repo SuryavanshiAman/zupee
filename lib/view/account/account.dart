@@ -68,7 +68,7 @@ bool?isSelectedLanguage;
           ],
         ),
       ),
-      body:isSelectedLanguage==null?Center(
+      body:isSelectedLanguage==null|| profileViewModel==null?Center(
           child: CircularProgressIndicator()): ListView(
         shrinkWrap: true,
         children: [

@@ -581,19 +581,34 @@ class LudoProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
+///original
+    // switch (_currentTurn) {
+    //   case LudoPlayerType.blue:
+    //     _currentTurn = LudoPlayerType.green;
+    //     break;
+    //   case LudoPlayerType.yellow:
+    //     _currentTurn = LudoPlayerType.red;
+    //     break;
+    //   case LudoPlayerType.green:
+    //     _currentTurn = LudoPlayerType.blue;
+    //     break;
+    //   case LudoPlayerType.red:
+    //     _currentTurn = LudoPlayerType.yellow;
+    //     break;
+    // }
 
     switch (_currentTurn) {
       case LudoPlayerType.blue:
-        _currentTurn = LudoPlayerType.green;
-        break;
-      case LudoPlayerType.yellow:
         _currentTurn = LudoPlayerType.red;
         break;
-      case LudoPlayerType.green:
-        _currentTurn = LudoPlayerType.blue;
-        break;
       case LudoPlayerType.red:
+        _currentTurn = LudoPlayerType.green;
+        break;
+      case LudoPlayerType.green:
         _currentTurn = LudoPlayerType.yellow;
+        break;
+      case LudoPlayerType.yellow:
+        _currentTurn = LudoPlayerType.blue;
         break;
     }
 

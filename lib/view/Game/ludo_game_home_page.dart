@@ -86,9 +86,9 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                   //   return Text(snapshot.hasError.toString());
                   // }
                   //
-                  // if (!snapshot.hasData || !snapshot.data!.exists) {
-                  //   return Text('No data available');
-                  // }
+                  if (!snapshot.hasData || !snapshot.data!.exists) {
+                    return Center(child: CircularProgressIndicator());
+                  }
 
                   // Fetch the data and display it
                   Map<String, dynamic> data = snapshot.data!.data() as Map<
@@ -279,7 +279,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                 //       ),
                 //     )),
                 const Spacer(),
-                opponentsTurn(),
+                opponentsOneTurn(),
                 // Container(
                 //     alignment: Alignment.center,
                 //     height: height * 0.08,
@@ -339,71 +339,73 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                    height: height * 0.07,
-                    width: width * 0.15,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(Assets.ludoProfileSection))),
-                    child: Image(
-                      image: const AssetImage(
-                        Assets.ludoUser,
-                      ),
-                      height: height * 0.03,
-                      width: width * 0.23,
-                      fit: BoxFit.fill,
-                    )),
-                Container(
-                    alignment: Alignment.center,
-                    height: height * 0.08,
-                    width: width * 0.19,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(Assets.ludoDiceSectionOne),
-                            fit: BoxFit.fill)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Image(
-                        image: const AssetImage(
-                          Assets.ludoDice,
-                        ),
-                        height: height * 0.06,
-                        width: width * 0.17,
-                      ),
-                    )),
+                opponentsTwoTurn(),
+                // Container(
+                //     height: height * 0.07,
+                //     width: width * 0.15,
+                //     decoration: const BoxDecoration(
+                //         image: DecorationImage(
+                //             image: AssetImage(Assets.ludoProfileSection))),
+                //     child: Image(
+                //       image: const AssetImage(
+                //         Assets.ludoUser,
+                //       ),
+                //       height: height * 0.03,
+                //       width: width * 0.23,
+                //       fit: BoxFit.fill,
+                //     )),
+                // Container(
+                //     alignment: Alignment.center,
+                //     height: height * 0.08,
+                //     width: width * 0.19,
+                //     decoration: const BoxDecoration(
+                //         image: DecorationImage(
+                //             image: AssetImage(Assets.ludoDiceSectionOne),
+                //             fit: BoxFit.fill)),
+                //     child: Padding(
+                //       padding: const EdgeInsets.only(left: 8.0),
+                //       child: Image(
+                //         image: const AssetImage(
+                //           Assets.ludoDice,
+                //         ),
+                //         height: height * 0.06,
+                //         width: width * 0.17,
+                //       ),
+                //     )),
                 const Spacer(),
-                Container(
-                    alignment: Alignment.center,
-                    height: height * 0.08,
-                    width: width * 0.19,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(Assets.ludoDiceSectionTwo),
-                            fit: BoxFit.fill)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Image(
-                        image: const AssetImage(
-                          Assets.ludoDice,
-                        ),
-                        height: height * 0.06,
-                        width: width * 0.17,
-                      ),
-                    )),
-                Container(
-                    height: height * 0.07,
-                    width: width * 0.15,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(Assets.ludoProfileSection))),
-                    child: Image(
-                      image: const AssetImage(
-                        Assets.ludoUser,
-                      ),
-                      height: height * 0.03,
-                      width: width * 0.23,
-                      fit: BoxFit.fill,
-                    )),
+                opponentsThreeTurn(),
+                // Container(
+                //     alignment: Alignment.center,
+                //     height: height * 0.08,
+                //     width: width * 0.19,
+                //     decoration: const BoxDecoration(
+                //         image: DecorationImage(
+                //             image: AssetImage(Assets.ludoDiceSectionTwo),
+                //             fit: BoxFit.fill)),
+                //     child: Padding(
+                //       padding: const EdgeInsets.only(right: 8.0),
+                //       child: Image(
+                //         image: const AssetImage(
+                //           Assets.ludoDice,
+                //         ),
+                //         height: height * 0.06,
+                //         width: width * 0.17,
+                //       ),
+                //     )),
+                // Container(
+                //     height: height * 0.07,
+                //     width: width * 0.15,
+                //     decoration: const BoxDecoration(
+                //         image: DecorationImage(
+                //             image: AssetImage(Assets.ludoProfileSection))),
+                //     child: Image(
+                //       image: const AssetImage(
+                //         Assets.ludoUser,
+                //       ),
+                //       height: height * 0.03,
+                //       width: width * 0.23,
+                //       fit: BoxFit.fill,
+                //     )),
               ],
             ),
           ),
@@ -481,7 +483,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
               width: width * 0.23,
               fit: BoxFit.fill,
             )),
-          value.currentPlayer.type !=LudoPlayerType.yellow?const DiceWidget():
+          value.currentPlayer.type ==LudoPlayerType.blue?const DiceWidget():
           Container(
               alignment: Alignment.center,
               height: height * 0.08,
@@ -506,14 +508,104 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
     );
   }
 
-  bool isUserTurn = true;
-  Widget opponentsTurn() {
+  // bool isUserTurn = true;
+  Widget opponentsOneTurn() {
     return Consumer<LudoProvider>(
       builder: (context, value, child) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            value.currentPlayer.type ==LudoPlayerType.red?const DiceWidget():
+            Container(
+                alignment: Alignment.center,
+                height: height * 0.08,
+                width: width * 0.19,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(Assets.ludoDiceSectionOne),
+                        fit: BoxFit.fill)),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Image(
+                    image: const AssetImage(
+                      Assets.ludoDice,
+                    ),
+                    height: height * 0.06,
+                    width: width * 0.17,
+                  ),
+                )),
+            Container(
+                height: height * 0.07,
+                width: width * 0.15,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(Assets.ludoProfileSection))),
+                child: Image(
+                  image: const AssetImage(
+                    Assets.ludoUser,
+                  ),
+                  height: height * 0.03,
+                  width: width * 0.23,
+                  fit: BoxFit.fill,
+                )),
+          ],
+        );
+      },
+    );
+  }
+  Widget opponentsTwoTurn() {
+    return Consumer<LudoProvider>(
+      builder: (context, value, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+                height: height * 0.07,
+                width: width * 0.15,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(Assets.ludoProfileSection))),
+                child: Image(
+                  image: const AssetImage(
+                    Assets.ludoUser,
+                  ),
+                  height: height * 0.03,
+                  width: width * 0.23,
+                  fit: BoxFit.fill,
+                )),
             value.currentPlayer.type ==LudoPlayerType.yellow?const DiceWidget():
+
+            Container(
+                alignment: Alignment.center,
+                height: height * 0.08,
+                width: width * 0.19,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(Assets.ludoDiceSectionOne),
+                        fit: BoxFit.fill)),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: Image(
+                    image: const AssetImage(
+                      Assets.ludoDice,
+                    ),
+                    height: height * 0.06,
+                    width: width * 0.17,
+                  ),
+                )),
+
+          ],
+        );
+      },
+    );
+  }
+  Widget opponentsThreeTurn() {
+    return Consumer<LudoProvider>(
+      builder: (context, value, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            value.currentPlayer.type ==LudoPlayerType.green?const DiceWidget():
             Container(
                 alignment: Alignment.center,
                 height: height * 0.08,

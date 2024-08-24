@@ -584,16 +584,16 @@ class BoardWidget extends StatelessWidget {
         y = 1;
         break;
       case LudoPlayerType.red:
-        x = 0;
-        y = 1;
+        x = 1;
+        y = 0;
         break;
       case LudoPlayerType.green:
         x = 0;
         y = 0;
         break;
       case LudoPlayerType.yellow:
-        x = 1;
-        y = 0;
+        x = 0;
+        y = 1;
         break;
     }
     String stageText = "Roll the dice";

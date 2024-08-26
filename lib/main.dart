@@ -13,6 +13,7 @@ import 'package:zupee/view/Game/winner_screen.dart';
 import 'package:zupee/view_model/about_view_model.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
+import 'package:zupee/view_model/transaction_history_view_model.dart';
 
 import 'frzi.dart';
 import 'language/english.dart';
@@ -26,6 +27,7 @@ import 'view_model/profile_update_view_model.dart';
 import 'view_model/update_language_view_model.dart';
 import 'view_model/user_view_model.dart';
 import 'view_model/view_bank_details_view_model.dart';
+import 'view_model/withdraw_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +58,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DepositViewModel()),
         ChangeNotifierProvider(create: (_) => MedicineViewModel()),
         ChangeNotifierProvider(create: (_) => FirebaseViewModel()),
+        ChangeNotifierProvider(create: (_) => WithdrawViewModel()),
+        ChangeNotifierProvider(create: (_) => TransactionHistoryViewModel()),
       ],
       child: GetMaterialApp(
         title: AppConstants.appName,

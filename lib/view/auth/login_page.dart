@@ -10,6 +10,7 @@ import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/app_constant.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/custom_text_field.dart';
+import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view_model/auth_view_model.dart';
 import 'package:zupee/view_model/user_view_model.dart';
@@ -59,7 +60,7 @@ login()async{
               onTap: () {
                 // Navigator.pushNamed(context, RoutesName.bottomNevBar,
                 //     arguments: {"index": 0});
-                Navigator.of(context).pop();
+               Navigator.pushNamed(context, RoutesName.registerScreen);
               },
               child: const Icon(
                 Icons.keyboard_arrow_left_rounded,

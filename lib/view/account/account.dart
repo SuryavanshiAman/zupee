@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_switch/sliding_switch.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
-import 'package:zupee/res/custom_back_button.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 import 'package:zupee/view_model/user_view_model.dart';
@@ -68,7 +67,7 @@ bool?isSelectedLanguage;
           ],
         ),
       ),
-      body:isSelectedLanguage==null|| profileViewModel==null?Center(
+      body:isSelectedLanguage==null|| profileViewModel==null?const Center(
           child: CircularProgressIndicator()): ListView(
         shrinkWrap: true,
         children: [
@@ -91,7 +90,7 @@ bool?isSelectedLanguage;
                         SizedBox(
                           width: width * 0.06,
                         ),
-                        profileViewModel!.profilePicture != null
+                        profileViewModel.profilePicture != null
                             ? CircleAvatar(
                                 radius: 35,
                                 backgroundImage: NetworkImage(
@@ -108,13 +107,12 @@ bool?isSelectedLanguage;
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              profileViewModel.username.toString() ??
-                                  "",
+                              profileViewModel.username.toString(),
                               style: const TextStyle(
                                   fontSize: 13, fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              profileViewModel   .mobileNumber.toString() ?? "",
+                              profileViewModel.mobileNumber.toString(),
                               style: const TextStyle(
                                   fontSize: 13,
                                   color: labelColor,
@@ -250,7 +248,7 @@ bool?isSelectedLanguage;
                             "Wallet Balance".tr,
                             style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
-                          Text(profileViewModel?.wallet.toString() ?? "",
+                          Text(profileViewModel.wallet.toString(),
                               style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   color: labelColor)),
@@ -621,7 +619,7 @@ bool?isSelectedLanguage;
     );
   }
 
-  static showExitConfirmation(BuildContext context) async {
+   showExitConfirmation(BuildContext context) async {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return await showModalBottomSheet(
@@ -695,10 +693,12 @@ bool?isSelectedLanguage;
                                       horizontal: width * 0.34,
                                       vertical: height * 0.02)),
                               onPressed: () {
-                                UserViewModel userViewModel = UserViewModel();
-                                userViewModel.remove();
-                                Navigator.pushReplacementNamed(
-                                    context, RoutesName.loginScreen);
+                                setState((){
+                                  UserViewModel userViewModel = UserViewModel();
+                                  userViewModel.remove();
+                                  Navigator.pushReplacementNamed(context,  RoutesName.loginScreen);
+                                });
+
                               },
                               child: const Text("Yes,Logout",
                                   style: TextStyle(

@@ -327,12 +327,328 @@
 //   }
 // }
 /// working 23-08
+/// latest working26-08
+// import 'dart:math';
+// import 'package:flutter/material.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:zupee/view_model/firebase_view_model.dart';
+// import 'ludo_constant.dart';
+// import 'ludo_player.dart';
+//
+// class LudoProvider extends ChangeNotifier {
+//   bool _isMoving = false;
+//   LudoGameState _gameState = LudoGameState.throwDice;
+//   int _diceResult = 1;
+//   bool _diceStarted = false;
+//   LudoPlayerType _currentTurn = LudoPlayerType.yellow;
+//
+//   final List<LudoPlayer> players = [
+//     LudoPlayer(LudoPlayerType.blue),
+//     LudoPlayer(LudoPlayerType.red),
+//     LudoPlayer(LudoPlayerType.green),
+//     LudoPlayer(LudoPlayerType.yellow),
+//   ];
+//   FirebaseViewModel firebaseViewModel = FirebaseViewModel();
+//   final List<LudoPlayerType> winners = [];
+//   late final DocumentReference<Map<String, dynamic>> gameDoc;
+//
+//   LudoProvider(this.firebaseViewModel) {
+//     print("firebaseViewModel:${firebaseViewModel.table.toString()}");
+//     gameDoc = FirebaseFirestore.instance.collection('ludo').doc("1");
+//     _listenToGameUpdates();
+//   }
+//   // final DocumentReference<Map<String, dynamic>> gameDoc = FirebaseFirestore
+//   //     .instance
+//   //     .collection('ludo')
+//   //     .doc(firebaseViewModel.table.toString());
+//
+//   // LudoProvider() {
+//   //   _listenToGameUpdates();
+//   // }
+//
+//   void _listenToGameUpdates() {
+//     gameDoc.snapshots().listen((snapshot) {
+//       if (snapshot.exists) {
+//         var data = snapshot.data();
+//         if (data != null) {
+//           _diceResult = data['diceResult'] ?? 1;
+//           _currentTurn = LudoPlayerType.values[data['currentTurn'] ?? 3];
+//           _gameState = LudoGameState.values[data['gameState'] ?? 0];
+//
+//           var playersData = data['players'];
+//           if (playersData != null) {
+//             for (var playerType in LudoPlayerType.values) {
+//               var pawnsData = playersData[playerType.toString()];
+//               if (pawnsData != null) {
+//                 for (int i = 0;
+//                     i < players[playerType.index].pawns.length;
+//                     i++) {
+//                   players[playerType.index].pawns[i].step = pawnsData[i];
+//                 }
+//               }
+//             }
+//           }
+//
+//           notifyListeners(); // Notify listeners of any state change
+//         }
+//       }
+//     });
+//   }
+//
+//   LudoPlayer get currentPlayer => player(_currentTurn);
+//   bool get diceStarted => _diceStarted;
+//   int get diceResult => _diceResult;
+//   LudoGameState get gameState => _gameState;
+//
+//   LudoPlayer player(LudoPlayerType type) =>
+//       players.firstWhere((element) => element.type == type);
+//
+//   void throwDice() async {
+//     _diceStarted = true;
+//     notifyListeners();
+//
+//     _diceResult = Random().nextInt(6) + 1;
+//
+//     await gameDoc.update({
+//       'diceResult': _diceResult,
+//       'currentTurn': _currentTurn.index,
+//       'gameState': LudoGameState.pickPawn.index,
+//     });
+//
+//     _diceStarted = false;
+//     notifyListeners();
+//
+//     if (_diceResult != 6) {
+//       if (currentPlayer.pawnInsideCount == 4) {
+//         await Future.delayed(const Duration(seconds: 1));
+//         nextTurn();
+//       } else {
+//         currentPlayer.highlightOutside();
+//         _gameState = LudoGameState.pickPawn;
+//         notifyListeners();
+//       }
+//     } else {
+//       // When 6 is rolled, the player gets another chance
+//       currentPlayer.highlightOutside();
+//       _gameState = LudoGameState.pickPawn;
+//       notifyListeners();
+//     }
+//
+//     ///Check and disable if any pawn already in the finish box
+//     for (var i = 0; i < currentPlayer.pawns.length; i++) {
+//       var pawn = currentPlayer.pawns[i];
+//       if ((pawn.step + diceResult) > currentPlayer.path.length - 1) {
+//         currentPlayer.highlightPawn(i, false);
+//       }
+//     }
+//
+//     ///If User have 6 dice, but it inside finish line, it will make him to throw again, else it will turn to next player
+//     if (currentPlayer.pawns.every((element) => !element.highlight)) {
+//       if (diceResult == 6) {
+//         _gameState = LudoGameState.throwDice;
+//       } else {
+//         nextTurn();
+//         return;
+//       }
+//     }
+//
+//     // if (currentPlayer.pawns.where((element) => element.highlight).length == 1) {
+//     //   var index = currentPlayer.pawns.indexWhere((element) => element.highlight);
+//     //   move(currentPlayer.type, index, (currentPlayer.pawns[index].step + 1) + diceResult);
+//     // }
+//   }
+//
+//   void move(LudoPlayerType type, int index, int step) async {
+//     if (_isMoving) return;
+//     _isMoving = true;
+//     _gameState = LudoGameState.moving;
+//     LudoPlayer currentPlayer = player(type);
+//     currentPlayer.highlightAllPawns(false);
+//     for (int i = currentPlayer.pawns[index].step; i <= step; i++) {
+//       currentPlayer.movePawn(index, i);
+//       await Future.delayed(const Duration(milliseconds: 300));
+//       // await gameDoc.update({
+//       //   'players.${type.toString()}':
+//       //   players[type.index].pawns.map((pawn) => pawn.step).toList(),
+//       //   'currentTurn': _currentTurn.index,
+//       //   'gameState': _gameState.index,
+//       // });
+//       notifyListeners();
+//     }
+//     if (checkToKill(type, index, step, currentPlayer.path)) {
+//       _gameState = LudoGameState.throwDice;
+//       _isMoving = false;
+//       notifyListeners();
+//       return;
+//     }
+//
+//     validateWin(type);
+//     nextTurn();
+//     _isMoving = false;
+//     notifyListeners();
+//   }
+//
+//   bool checkToKill(LudoPlayerType type, int index, int step, List<List<double>> path) {
+//     bool killSomeone = false;
+//
+//     for (int i = 0; i < 4; i++) {
+//       var greenElement = player(LudoPlayerType.green).pawns[i];
+//       var blueElement = player(LudoPlayerType.blue).pawns[i];
+//       var redElement = player(LudoPlayerType.red).pawns[i];
+//       var yellowElement = player(LudoPlayerType.yellow).pawns[i];
+//
+//       // Check for green pawns
+//       if ((greenElement.step > 0 && !LudoPath.safeArea.contains(greenElement.step)) && type != LudoPlayerType.green) {
+//         if (player(LudoPlayerType.green).path[greenElement.step] == path[step]) {
+//           killSomeone = true;
+//           player(LudoPlayerType.green).movePawn(i, 0);
+//           _sendPawnMovementToFirestore(LudoPlayerType.green, i, 0); // Reset in Firestore
+//           notifyListeners();
+//         }
+//       }
+//
+//       // Repeat similar logic for blue, red, and yellow pawns...
+//
+//       // Check for blue pawns
+//       if ((blueElement.step > 0 && !LudoPath.safeArea.contains(blueElement.step)) && type != LudoPlayerType.blue) {
+//         if (player(LudoPlayerType.blue).path[blueElement.step] == path[step]) {
+//           killSomeone = true;
+//           player(LudoPlayerType.blue).movePawn(i, 0);
+//           _sendPawnMovementToFirestore(LudoPlayerType.blue, i, 0); // Reset in Firestore
+//           notifyListeners();
+//         }
+//       }
+//
+//       // Check for red pawns
+//       if ((redElement.step > 0 && !LudoPath.safeArea.contains(redElement.step)) && type != LudoPlayerType.red) {
+//         if (player(LudoPlayerType.red).path[redElement.step] == path[step]) {
+//           killSomeone = true;
+//           player(LudoPlayerType.red).movePawn(i, 0);
+//           _sendPawnMovementToFirestore(LudoPlayerType.red, i, 0); // Reset in Firestore
+//           notifyListeners();
+//         }
+//       }
+//
+//       // Check for yellow pawns
+//       if ((yellowElement.step > 0 && !LudoPath.safeArea.contains(yellowElement.step)) && type != LudoPlayerType.yellow) {
+//         if (player(LudoPlayerType.yellow).path[yellowElement.step] == path[step]) {
+//           killSomeone = true;
+//           player(LudoPlayerType.yellow).movePawn(i, 0);
+//           _sendPawnMovementToFirestore(LudoPlayerType.yellow, i, 0); // Reset in Firestore
+//           notifyListeners();
+//         }
+//       }
+//     }
+//
+//     return killSomeone;
+//   }
+//   // bool checkToKill(
+//   //     LudoPlayerType type, int index, int step, List<List<double>> path) {
+//   //   bool killSomeone = false;
+//   //   for (int i = 0; i < 4; i++) {
+//   //     var redElement = player(LudoPlayerType.red).pawns[i];
+//   //     var yellowElement = player(LudoPlayerType.yellow).pawns[i];
+//   //     if ((yellowElement.step > 0 && !LudoPath.safeArea.map((e) => e.toString()).contains(player(LudoPlayerType.yellow).path[yellowElement.step]
+//   //         .toString())) &&
+//   //         type != LudoPlayerType.yellow) {
+//   //       if (player(LudoPlayerType.yellow).path[yellowElement.step].toString() ==
+//   //           path[step - 0].toString()) {
+//   //         killSomeone = true;
+//   //         player(LudoPlayerType.yellow).movePawn(i, -0);
+//   //         notifyListeners();
+//   //       }
+//   //     }
+//   //     if ((redElement.step > 0 &&
+//   //             !LudoPath.safeArea.map((e) => e.toString()).contains(
+//   //                 player(LudoPlayerType.red)
+//   //                     .path[redElement.step]
+//   //                     .toString())) &&
+//   //         type != LudoPlayerType.red) {
+//   //       if (player(LudoPlayerType.red).path[redElement.step].toString() ==
+//   //           path[step - 0].toString()) {
+//   //         killSomeone = true;
+//   //         player(LudoPlayerType.red).movePawn(i, -0);
+//   //         notifyListeners();
+//   //       }
+//   //     }
+//   //   }
+//   //   return killSomeone;
+//   // }
+//
+//   void validateWin(LudoPlayerType color) {
+//     if (winners.contains(color)) return;
+//     if (player(color)
+//         .pawns
+//         .every((pawn) => pawn.step == player(color).path.length - 1)) {
+//       winners.add(color);
+//       notifyListeners();
+//     }
+//     if (winners.length == 3) {
+//       _gameState = LudoGameState.finish;
+//       notifyListeners();
+//     }
+//   }
+//
+//   void nextTurn() async {
+//     if (_diceResult == 6) {
+//       // Skip the turn change if a 6 was rolled
+//       _gameState = LudoGameState.throwDice;
+//       notifyListeners();
+//       return;
+//     }
+// ///original
+//     // switch (_currentTurn) {
+//     //   case LudoPlayerType.blue:
+//     //     _currentTurn = LudoPlayerType.green;
+//     //     break;
+//     //   case LudoPlayerType.yellow:
+//     //     _currentTurn = LudoPlayerType.red;
+//     //     break;
+//     //   case LudoPlayerType.green:
+//     //     _currentTurn = LudoPlayerType.blue;
+//     //     break;
+//     //   case LudoPlayerType.red:
+//     //     _currentTurn = LudoPlayerType.yellow;
+//     //     break;
+//     // }
+//
+//     switch (_currentTurn) {
+//       case LudoPlayerType.blue:
+//         _currentTurn = LudoPlayerType.red;
+//         break;
+//       case LudoPlayerType.red:
+//         _currentTurn = LudoPlayerType.green;
+//         break;
+//       case LudoPlayerType.green:
+//         _currentTurn = LudoPlayerType.yellow;
+//         break;
+//       case LudoPlayerType.yellow:
+//         _currentTurn = LudoPlayerType.blue;
+//         break;
+//     }
+//
+//     if (winners.contains(_currentTurn)) return nextTurn();
+//     _gameState = LudoGameState.throwDice;
+//
+//     await gameDoc.update({
+//       'currentTurn': _currentTurn.index,
+//       'gameState': _gameState.index,
+//     });
+//
+//     notifyListeners();
+//   }
+//
+//   @override
+//   void dispose() {
+//     super.dispose();
+//   }
+// }
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:zupee/view_model/firebase_view_model.dart';
 import 'ludo_constant.dart';
 import 'ludo_player.dart';
+import 'package:zupee/view_model/firebase_view_model.dart';
 
 class LudoProvider extends ChangeNotifier {
   bool _isMoving = false;
@@ -352,18 +668,9 @@ class LudoProvider extends ChangeNotifier {
   late final DocumentReference<Map<String, dynamic>> gameDoc;
 
   LudoProvider(this.firebaseViewModel) {
-    print("firebaseViewModel:${firebaseViewModel.table.toString()}");
     gameDoc = FirebaseFirestore.instance.collection('ludo').doc("1");
     _listenToGameUpdates();
   }
-  // final DocumentReference<Map<String, dynamic>> gameDoc = FirebaseFirestore
-  //     .instance
-  //     .collection('ludo')
-  //     .doc(firebaseViewModel.table.toString());
-
-  // LudoProvider() {
-  //   _listenToGameUpdates();
-  // }
 
   void _listenToGameUpdates() {
     gameDoc.snapshots().listen((snapshot) {
@@ -380,15 +687,15 @@ class LudoProvider extends ChangeNotifier {
               var pawnsData = playersData[playerType.toString()];
               if (pawnsData != null) {
                 for (int i = 0;
-                    i < players[playerType.index].pawns.length;
-                    i++) {
+                i < players[playerType.index].pawns.length;
+                i++) {
                   players[playerType.index].pawns[i].step = pawnsData[i];
                 }
               }
             }
           }
 
-          notifyListeners(); // Notify listeners of any state change
+          notifyListeners();
         }
       }
     });
@@ -433,7 +740,6 @@ class LudoProvider extends ChangeNotifier {
       notifyListeners();
     }
 
-    ///Check and disable if any pawn already in the finish box
     for (var i = 0; i < currentPlayer.pawns.length; i++) {
       var pawn = currentPlayer.pawns[i];
       if ((pawn.step + diceResult) > currentPlayer.path.length - 1) {
@@ -441,7 +747,6 @@ class LudoProvider extends ChangeNotifier {
       }
     }
 
-    ///If User have 6 dice, but it inside finish line, it will make him to throw again, else it will turn to next player
     if (currentPlayer.pawns.every((element) => !element.highlight)) {
       if (diceResult == 6) {
         _gameState = LudoGameState.throwDice;
@@ -450,11 +755,6 @@ class LudoProvider extends ChangeNotifier {
         return;
       }
     }
-
-    // if (currentPlayer.pawns.where((element) => element.highlight).length == 1) {
-    //   var index = currentPlayer.pawns.indexWhere((element) => element.highlight);
-    //   move(currentPlayer.type, index, (currentPlayer.pawns[index].step + 1) + diceResult);
-    // }
   }
 
   void move(LudoPlayerType type, int index, int step) async {
@@ -466,12 +766,6 @@ class LudoProvider extends ChangeNotifier {
     for (int i = currentPlayer.pawns[index].step; i <= step; i++) {
       currentPlayer.movePawn(index, i);
       await Future.delayed(const Duration(milliseconds: 300));
-      // await gameDoc.update({
-      //   'players.${type.toString()}':
-      //   players[type.index].pawns.map((pawn) => pawn.step).toList(),
-      //   'currentTurn': _currentTurn.index,
-      //   'gameState': _gameState.index,
-      // });
       notifyListeners();
     }
     if (checkToKill(type, index, step, currentPlayer.path)) {
@@ -486,74 +780,31 @@ class LudoProvider extends ChangeNotifier {
     _isMoving = false;
     notifyListeners();
   }
-  // bool checkToKill(
-  //     LudoPlayerType type, int index, int step, List<List<double>> path)
-  // {
-  //   bool killSomeone = false;
-  //   List<LudoPlayerType> opponentTypes =
-  //       LudoPlayerType.values.where((t) => t != type).toList();
-  //
-  //   for (var opponentType in opponentTypes) {
-  //     for (var opponentPawn in player(opponentType).pawns) {
-  //       if (opponentPawn.step == step &&
-  //           !LudoPath.safeArea.contains(path[step])) {
-  //         opponentPawn.step = -1;
-  //         killSomeone = true;
-  //         notifyListeners();
-  //       }
-  //     }
-  //   }
-  //
-  //   return killSomeone;
-  // }
-  // bool checkToKill(
-  //     LudoPlayerType type, int index, int step, List<List<double>> path) {
-  //   bool killSomeone = false;
-  //   List<LudoPlayerType> opponentTypes =
-  //   LudoPlayerType.values.where((t) => t != type).toList();
-  //
-  //   for (var opponentType in opponentTypes) {
-  //     for (var opponentPawn in player(opponentType).pawns) {
-  //       if (opponentPawn.step == step &&
-  //           !LudoPath.safeArea.contains(path[step])) {
-  //         // Reset the opponent's pawn to starting position (or initial state)
-  //         opponentPawn.step = -1;  // or any value that represents the starting point
-  //         killSomeone = true;
-  //         notifyListeners();
-  //       }
-  //     }
-  //   }
-  //
-  //   return killSomeone;
-  // }
 
-  bool checkToKill(
-      LudoPlayerType type, int index, int step, List<List<double>> path) {
+  bool checkToKill(LudoPlayerType type, int index, int step, List<List<double>> path) {
     bool killSomeone = false;
+
     for (int i = 0; i < 4; i++) {
-      var redElement = player(LudoPlayerType.red).pawns[i];
-      var yellowElement = player(LudoPlayerType.yellow).pawns[i];
-      if ((yellowElement.step > 0 && !LudoPath.safeArea.map((e) => e.toString()).contains(player(LudoPlayerType.yellow).path[yellowElement.step]
-          .toString())) &&
-          type != LudoPlayerType.yellow) {
-        if (player(LudoPlayerType.yellow).path[yellowElement.step].toString() ==
-            path[step - 0].toString()) {
-          killSomeone = true;
-          player(LudoPlayerType.yellow).movePawn(i, -0);
-          notifyListeners();
-        }
-      }
-      if ((redElement.step > 0 &&
-              !LudoPath.safeArea.map((e) => e.toString()).contains(
-                  player(LudoPlayerType.red)
-                      .path[redElement.step]
-                      .toString())) &&
-          type != LudoPlayerType.red) {
-        if (player(LudoPlayerType.red).path[redElement.step].toString() ==
-            path[step - 0].toString()) {
-          killSomeone = true;
-          player(LudoPlayerType.red).movePawn(i, -0);
-          notifyListeners();
+      var opponentTypes = LudoPlayerType.values.where((t) => t != type);
+      for (var opponentType in opponentTypes) {
+        var opponentPawn = player(opponentType).pawns[i];
+
+        if (opponentPawn.step > 0 &&
+            !LudoPath.safeArea
+                .map((e) => e.toString())
+                .contains(player(opponentType).path[opponentPawn.step].toString())) {
+          if (player(opponentType).path[opponentPawn.step].toString() ==
+              path[step].toString()) {
+            killSomeone = true;
+            opponentPawn.step = 0; // Send pawn back to start
+            gameDoc.update({
+              'players.${opponentType.toString()}': players[opponentType.index]
+                  .pawns
+                  .map((pawn) => pawn.step)
+                  .toList(),
+            });
+            notifyListeners();
+          }
         }
       }
     }
@@ -576,26 +827,10 @@ class LudoProvider extends ChangeNotifier {
 
   void nextTurn() async {
     if (_diceResult == 6) {
-      // Skip the turn change if a 6 was rolled
       _gameState = LudoGameState.throwDice;
       notifyListeners();
       return;
     }
-///original
-    // switch (_currentTurn) {
-    //   case LudoPlayerType.blue:
-    //     _currentTurn = LudoPlayerType.green;
-    //     break;
-    //   case LudoPlayerType.yellow:
-    //     _currentTurn = LudoPlayerType.red;
-    //     break;
-    //   case LudoPlayerType.green:
-    //     _currentTurn = LudoPlayerType.blue;
-    //     break;
-    //   case LudoPlayerType.red:
-    //     _currentTurn = LudoPlayerType.yellow;
-    //     break;
-    // }
 
     switch (_currentTurn) {
       case LudoPlayerType.blue:

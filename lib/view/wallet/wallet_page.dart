@@ -97,7 +97,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           Text(
                             "₹${profileViewModel?.depositWallet.toString() ?? ""}",
                             style: const TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.w500),
+                                fontSize: 28, fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
@@ -124,7 +124,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   "Add Cash".tr,
                                   style: const TextStyle(
                                       color: white,
-                                      fontSize: 16,
+                                      fontSize: 17,
                                       fontWeight: FontWeight.w700),
                                 )
                               ],
@@ -151,7 +151,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           Text(
                             "₹${profileViewModel?.winningAmountWallet.toString() ?? ""}",
                             style: const TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.w500),
+                                fontSize: 28, fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
@@ -177,7 +177,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                 "Withdraw".tr,
                                 style: const TextStyle(
                                     color: tertiary,
-                                    fontSize: 16,
+                                    fontSize: 17,
                                     fontWeight: FontWeight.w700),
                               )
                             ],
@@ -197,10 +197,10 @@ class _WalletScreenState extends State<WalletScreen> {
                             fontWeight: FontWeight.w400,
                             color: labelColor),
                       ),
-                      const Text(
-                        "₹0",
+                       Text(
+                        "₹${profileViewModel?.cashback.toString()??""}",
                         style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.w500),
+                            fontSize: 28, fontWeight: FontWeight.w600),
                       ),
                       Row(
                         // mainAxisAlignment: MainAxisAlignment.center,
@@ -242,10 +242,10 @@ class _WalletScreenState extends State<WalletScreen> {
                             fontWeight: FontWeight.w400,
                             color: labelColor),
                       ),
-                      const Text(
-                        "₹0",
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.w500),
+                       Text(
+                        profileViewModel!.bonus.toString(),
+                        style: const TextStyle(
+                            fontSize: 28, fontWeight: FontWeight.w600),
                       ),
                       Row(
                         // mainAxisAlignment: MainAxisAlignment.center,

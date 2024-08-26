@@ -412,37 +412,88 @@ class BoardWidget extends StatelessWidget {
               ),
               shrinkWrap: true,
               itemCount: value.players.length,
-              itemBuilder: (context, itemIndex) {
-                var player = value.players[itemIndex];
-                int totalSteps = player.pawns.fold(0, (sum, pawn) {
-                  return sum + (pawn.step - (pawn.initialStep ?? 0));
-                });
-                return Container(
-                  padding: const EdgeInsets.only(top: 10),
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: white,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Score",
+              // itemBuilder: (context, itemIndex) {
+              //   var player = value.players[itemIndex];
+              //   int totalSteps = player.pawns.fold(0, (sum, pawn) {
+              //     return sum + (pawn.step - (pawn.initialStep ?? 0));
+              //   });
+              //   return Container(
+              //     padding: const EdgeInsets.only(top: 10),
+              //     alignment: Alignment.center,
+              //     decoration: const BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       color: white,
+              //     ),
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         const Text("Score",
+              //             style: TextStyle(
+              //                 fontWeight: FontWeight.w600,
+              //                 fontSize: 16,
+              //                 color: tertiary)),
+              //         Text(
+              //           "$totalSteps",
+              //           style: const TextStyle(
+              //               fontWeight: FontWeight.w600,
+              //               fontSize: 18,
+              //               color: tertiary),
+              //         ),
+              //       ],
+              //     ),
+              //   );
+              // },
+                itemBuilder: (context, itemIndex) {
+                  // Sort players so that Yellow is displayed in index 2
+                  List<LudoPlayer> sortedPlayers = List.from(value.players);
+                  sortedPlayers.sort((a, b) {
+                    if (a.type == LudoPlayerType.yellow) return 1; // Move Yellow to last
+                    if (b.type == LudoPlayerType.yellow) return -1;
+                    return 0; // Maintain the order for other players
+                  });
+
+                  // Ensure Yellow is displayed at index 2
+                  var player = sortedPlayers[itemIndex == 2
+                      ? sortedPlayers.indexWhere((p) => p.type == LudoPlayerType.yellow)
+                      : itemIndex > 2
+                      ? itemIndex - 1
+                      : itemIndex];
+
+                  int totalSteps = player.pawns.fold(0, (sum, pawn) {
+                    return sum + (pawn.step - (pawn.initialStep ?? 0));
+                  });
+
+                  return Container(
+                    padding: const EdgeInsets.only(top: 10),
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: white,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Score",
                           style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              color: tertiary)),
-                      Text(
-                        "$totalSteps",
-                        style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: tertiary,
+                          ),
+                        ),
+                        Text(
+                          "$totalSteps",
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 18,
-                            color: tertiary),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                            color: tertiary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
             );
           }),
         ),
@@ -560,8 +611,8 @@ class BoardWidget extends StatelessWidget {
                   children: [
                     ...playersPawn,
                     ...winners(context, value.winners.cast<LudoPlayer>()),
-                    turnIndicator(context, value.currentPlayer.type,
-                        value.currentPlayer.color, value.gameState),
+                    // turnIndicator(context, value.currentPlayer.type,
+                    //     value.currentPlayer.color, value.gameState),
                   ],
                 ),
               );
@@ -573,76 +624,77 @@ class BoardWidget extends StatelessWidget {
   }
 
   ///This is for the turn indicator widget
-  Widget turnIndicator(BuildContext context, LudoPlayerType turn, Color color,
-      LudoGameState stage) {
-    int x = 0;
-    int y = 0;
-
-    switch (turn) {
-      case LudoPlayerType.blue:
-        x = 1;
-        y = 1;
-        break;
-      case LudoPlayerType.red:
-        x = 1;
-        y = 0;
-        break;
-      case LudoPlayerType.green:
-        x = 0;
-        y = 0;
-        break;
-      case LudoPlayerType.yellow:
-        x = 0;
-        y = 1;
-        break;
-    }
-    String stageText = "Roll the dice";
-    switch (stage) {
-      case LudoGameState.throwDice:
-        stageText = "Roll the dice";
-        break;
-      case LudoGameState.moving:
-        stageText = "Pawn is moving...";
-        break;
-      case LudoGameState.pickPawn:
-        stageText = "Pick a pawn";
-        break;
-      case LudoGameState.finish:
-        stageText = "Game is over";
-        break;
-    }
-    return Positioned(
-      top: y == 0 ? 0 : null,
-      left: x == 0 ? 0 : null,
-      right: x == 1 ? 0 : null,
-      bottom: y == 1 ? 0 : null,
-      width: ludoBoard(context) * .4,
-      height: ludoBoard(context) * .4,
-      child: IgnorePointer(
-        child: Padding(
-          padding: EdgeInsets.all(boxStepSize(context)),
-          child: Container(
-            alignment: Alignment.center,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                style: TextStyle(fontSize: 8, color: color),
-                children: [
-                  TextSpan(
-                      text: "Your turn!\n",
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold)),
-                  TextSpan(text: stageText),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget turnIndicator(
+  //     BuildContext context, LudoPlayerType turn, Color color,
+  //     LudoGameState stage) {
+  //   int x = 0;
+  //   int y = 0;
+  //
+  //   switch (turn) {
+  //     case LudoPlayerType.blue:
+  //       x = 1;
+  //       y = 1;
+  //       break;
+  //     case LudoPlayerType.red:
+  //       x = 1;
+  //       y = 0;
+  //       break;
+  //     case LudoPlayerType.green:
+  //       x = 0;
+  //       y = 0;
+  //       break;
+  //     case LudoPlayerType.yellow:
+  //       x = 0;
+  //       y = 1;
+  //       break;
+  //   }
+  //   String stageText = "Roll the dice";
+  //   switch (stage) {
+  //     case LudoGameState.throwDice:
+  //       stageText = "Roll the dice";
+  //       break;
+  //     case LudoGameState.moving:
+  //       stageText = "Pawn is moving...";
+  //       break;
+  //     case LudoGameState.pickPawn:
+  //       stageText = "Pick a pawn";
+  //       break;
+  //     case LudoGameState.finish:
+  //       stageText = "Game is over";
+  //       break;
+  //   }
+  //   return Positioned(
+  //     top: y == 0 ? 0 : null,
+  //     left: x == 0 ? 0 : null,
+  //     right: x == 1 ? 0 : null,
+  //     bottom: y == 1 ? 0 : null,
+  //     width: ludoBoard(context) * .4,
+  //     height: ludoBoard(context) * .4,
+  //     child: IgnorePointer(
+  //       child: Padding(
+  //         padding: EdgeInsets.all(boxStepSize(context)),
+  //         child: Container(
+  //           alignment: Alignment.center,
+  //           clipBehavior: Clip.antiAlias,
+  //           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+  //           child: RichText(
+  //             textAlign: TextAlign.center,
+  //             text: TextSpan(
+  //               style: TextStyle(fontSize: 8, color: color),
+  //               children: [
+  //                 TextSpan(
+  //                     text: "Your turn!\n",
+  //                     style: const TextStyle(
+  //                         fontSize: 12, fontWeight: FontWeight.bold)),
+  //                 TextSpan(text: stageText),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   ///This function checks which player has won the game and returns a list of widgets.
   List<Widget> winners(BuildContext context, List<LudoPlayer> winners) {

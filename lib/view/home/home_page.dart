@@ -43,9 +43,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    final profileViewModel= Provider.of<ProfileViewModel>(context,listen: false);
-    profileViewModel.getProfileApi(context);
-    _scrollController.addListener(_handleScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final profileViewModel= Provider.of<ProfileViewModel>(context,listen: false);
+      profileViewModel.getProfileApi(context);
+      _scrollController.addListener(_handleScroll);
+    });
+
   }
 
   void _handleScroll() {

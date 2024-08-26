@@ -36,6 +36,7 @@ class Data {
   String? winningAmountWallet;
   String? depositWallet;
   String? wallet;
+  String? cashback;
   String? referralCode;
   String? createdAt;
   String? updatedAt;
@@ -54,6 +55,7 @@ class Data {
         this.winningAmountWallet,
         this.depositWallet,
         this.wallet,
+        this.cashback,
         this.referralCode,
         this.createdAt,
         this.updatedAt});
@@ -73,6 +75,7 @@ class Data {
     winningAmountWallet = json['winning_amount_wallet'];
     depositWallet = json['deposit_wallet'];
     wallet = json['wallet'];
+    cashback = json['cashback'];
     referralCode = json['referral_code'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -93,6 +96,7 @@ class Data {
     data['winning_amount_wallet'] = winningAmountWallet;
     data['deposit_wallet'] = depositWallet;
     data['wallet'] = wallet;
+    data['cashback'] = cashback;
     data['referral_code'] = referralCode;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;

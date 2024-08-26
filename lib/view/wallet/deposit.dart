@@ -10,7 +10,7 @@ import 'package:zupee/res/custom_text_field.dart';
 import 'package:zupee/utils/toast.dart';
 
 import '../../view_model/deposit_view_model.dart';
-
+//
 class DepositScreen extends StatefulWidget {
   const DepositScreen({super.key});
 
@@ -35,7 +35,7 @@ class _DepositScreenState extends State<DepositScreen> {
   }
   void _updateContainerColor() {
     setState(() {
-      if (int.parse(amountCon.text )==int.parse(_currentAmount.toString())) {
+      if (int.parse(amountCon.text )==int.parse(_currentAmount.toString())||int.parse(amountCon.text )>=100) {
         _containerColor = secondary;
       } else {
         _containerColor = lightGray;
@@ -140,7 +140,7 @@ class _DepositScreenState extends State<DepositScreen> {
 
             ],
           ),
-          const Spacer(),
+          // const Spacer(),
           Container(
             alignment: Alignment.center,
             height: height*0.1,
@@ -211,3 +211,5 @@ class _DepositScreenState extends State<DepositScreen> {
     );
   }
 }
+
+

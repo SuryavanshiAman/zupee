@@ -15,6 +15,7 @@ class ProfileViewModel with ChangeNotifier {
   }
 
   Future<void> getProfileApi(BuildContext context) async {
+    print("mmmmmmmmmmmmmmmmmm");
     UserViewModel userViewModel = UserViewModel();
     String? userId = await userViewModel.getUser();
     _profileRepo.getProfileApi(userId).then((value) {

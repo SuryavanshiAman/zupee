@@ -199,7 +199,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                        Text(
                         "₹${profileViewModel?.cashback.toString()??""}",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 28, fontWeight: FontWeight.w600),
                       ),
                       Row(

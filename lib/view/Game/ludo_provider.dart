@@ -652,6 +652,7 @@ import 'package:zupee/view_model/firebase_view_model.dart';
 
 class LudoProvider extends ChangeNotifier {
   bool _isMoving = false;
+  bool get isMoving => _isMoving;
   LudoGameState _gameState = LudoGameState.throwDice;
   int _diceResult = 1;
   bool _diceStarted = false;
@@ -760,15 +761,19 @@ class LudoProvider extends ChangeNotifier {
   void move(LudoPlayerType type, int index, int step) async {
     if (_isMoving) return;
     _isMoving = true;
+    // notifyListeners();
     _gameState = LudoGameState.moving;
     LudoPlayer currentPlayer = player(type);
     currentPlayer.highlightAllPawns(false);
     for (int i = currentPlayer.pawns[index].step; i <= step; i++) {
       currentPlayer.movePawn(index, i);
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 320));
+      gameDoc.update({
+        '${type.toString().split('.').last}PawnPosition$index': step,
+      });
       notifyListeners();
     }
-    if (checkToKill(type, index, step, currentPlayer.path)) {
+    if (await checkToKill(type, index, step, currentPlayer.path)) {
       _gameState = LudoGameState.throwDice;
       _isMoving = false;
       notifyListeners();
@@ -780,36 +785,102 @@ class LudoProvider extends ChangeNotifier {
     _isMoving = false;
     notifyListeners();
   }
-
-  bool checkToKill(LudoPlayerType type, int index, int step, List<List<double>> path) {
+  Future<bool> checkToKill(LudoPlayerType type, int index, int step, List<List<double>> path) async{
     bool killSomeone = false;
 
-    for (int i = 0; i < 4; i++) {
-      var opponentTypes = LudoPlayerType.values.where((t) => t != type);
-      for (var opponentType in opponentTypes) {
+    for (var opponentType in LudoPlayerType.values.where((t) => t != type)) {
+      for (int i = 0; i < 4; i++) {
         var opponentPawn = player(opponentType).pawns[i];
 
-        if (opponentPawn.step > 0 &&
-            !LudoPath.safeArea
-                .map((e) => e.toString())
-                .contains(player(opponentType).path[opponentPawn.step].toString())) {
-          if (player(opponentType).path[opponentPawn.step].toString() ==
-              path[step].toString()) {
-            killSomeone = true;
-            opponentPawn.step = 0; // Send pawn back to start
-            gameDoc.update({
-              'players.${opponentType.toString()}': players[opponentType.index]
-                  .pawns
-                  .map((pawn) => pawn.step)
-                  .toList(),
-            });
-            notifyListeners();
+        if (opponentPawn.step > 0) {
+          bool isInSafeArea = LudoPath.safeArea
+              .map((e) => e.toString())
+              .contains(player(opponentType).path[opponentPawn.step].toString());
+
+          if (!isInSafeArea) {
+            if (player(opponentType).path[opponentPawn.step].toString() == path[step].toString()) {
+              killSomeone = true;
+
+              // Reset the opponent's pawn to the initial position
+              // await _movePawnBackToInitial(opponentType, i, opponentPawn.step);
+              // opponentPawn.step = 0;
+              Future.microtask(() async {
+                for (int j = opponentPawn.step; j >= 0; j--) {
+                  await Future.delayed(const Duration(milliseconds: 25));  // Reduce the delay for faster movement
+                  opponentPawn.step = j;
+                  FirebaseFirestore.instance.collection('ludo').doc("1").update({
+                    '${opponentType.toString().split('.').last}PawnPosition$i': opponentPawn.step,
+                  });
+                  notifyListeners();
+                }
+              });
+
+              // gameDoc.update({
+              //               'players.${opponentType.toString()}': players[opponentType.index]
+              //                   .pawns
+              //                   .map((pawn) => pawn.step)
+              //                   .toList(),
+              //             });
+              notifyListeners();
+
+              print('Pawn of $opponentType at index $i was killed by player $type at step $step.');
+              print('Opponent pawn reset to step: ${opponentPawn.step}');
+            }
           }
         }
       }
     }
+
     return killSomeone;
   }
+  Future<void> _movePawnBackToInitial(LudoPlayerType opponentType, int pawnIndex, int currentStep) async {
+    var opponentPlayer = player(opponentType);
+
+    // Move the pawn backward step by step to the initial position
+    for (int i = currentStep; i >= 0; i--) {
+      opponentPlayer.pawns[pawnIndex].step = i;
+
+      // Update Firebase with the current step of the opponent's pawn
+      await FirebaseFirestore.instance.collection('ludo').doc("1").update({
+        '${opponentType.toString().split('.').last}PawnPosition$pawnIndex': i,
+      });
+
+      // Wait a short time before moving to the next step
+      // await Future.delayed(const Duration(milliseconds: 2));
+
+      notifyListeners();
+    }
+  }
+
+  // bool checkToKill(LudoPlayerType type, int index, int step, List<List<double>> path) {
+  //   bool killSomeone = false;
+  //
+  //   for (int i = 0; i < 4; i++) {
+  //     var opponentTypes = LudoPlayerType.values.where((t) => t != type);
+  //     for (var opponentType in opponentTypes) {
+  //       var opponentPawn = player(opponentType).pawns[i];
+  //
+  //       if (opponentPawn.step > 0 &&
+  //           !LudoPath.safeArea
+  //               .map((e) => e.toString())
+  //               .contains(player(opponentType).path[opponentPawn.step].toString())) {
+  //         if (player(opponentType).path[opponentPawn.step].toString() ==
+  //             path[step].toString()) {
+  //           killSomeone = true;
+  //           opponentPawn.step = 0; // Send pawn back to start
+  //           gameDoc.update({
+  //             'players.${opponentType.toString()}': players[opponentType.index]
+  //                 .pawns
+  //                 .map((pawn) => pawn.step)
+  //                 .toList(),
+  //           });
+  //           notifyListeners();
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return killSomeone;
+  // }
 
   void validateWin(LudoPlayerType color) {
     if (winners.contains(color)) return;

@@ -40,6 +40,10 @@ class LudoPath {
     [13, 8],
     [6, 13],
     [1, 6],
+    [4, 4], // Additional safe spot
+    [9, 9], // Additional safe spot
+    [11, 11], // Additional safe spot
+    [7, 7],
   ];
   static const List<List<double>> greenHomePath = [
     [2.6, 1.3],

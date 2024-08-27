@@ -115,7 +115,7 @@ class DiceWidget extends StatelessWidget {
       repeat: true,
       child: InkWell(
         onTap: () {
-          if (!ludoProvider.diceStarted) {
+          if (!ludoProvider.diceStarted ) {
             ludoProvider.throwDice();
           }
         },

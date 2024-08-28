@@ -947,7 +947,7 @@ class LudoSupremeState extends State<LudoSupreme>
                         return const TournamentBottomsheet();
                       },
                     );
-
+                    final firebaseViewModel = Provider.of<FirebaseViewModel>(context, listen: false);
                     FirebaseFirestore fireStore = FirebaseFirestore.instance;
                     CollectionReference ludoCollection = fireStore.collection('ludo');
 
@@ -963,8 +963,7 @@ class LudoSupremeState extends State<LudoSupreme>
                           "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}"}',
                           "2": '',
                           "3": '',
-                          "4": '',
-                          "cardImage": ""
+                          "4": ''
                         };
                         await ludoCollection.doc(documentId.toString()).set(jsonData);
                         isAdded = true; // Data is added, stop the loop
@@ -997,9 +996,9 @@ class LudoSupremeState extends State<LudoSupreme>
                     }
 
                     if (isAdded) {
-                      print("hellow");
+                      print("hellowAman");
                       // Optionally, set the document ID in your FirebaseViewModel
-                      Provider.of<FirebaseViewModel>(context, listen: false).setTable(documentId);
+                      firebaseViewModel.setTable(documentId);
                     }
 
                     // FirebaseFirestore firestore = FirebaseFirestore.instance;

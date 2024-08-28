@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileUpdateViewModel()),
         ChangeNotifierProvider(create: (_) => HelpViewModel()),
-        ChangeNotifierProvider(create: (_) => LudoProvider(FirebaseViewModel())),
+        ChangeNotifierProvider(create: (_) => LudoProvider()),
         ChangeNotifierProvider(create: (_) => AboutViewModel()),
         ChangeNotifierProvider(create: (_) => AddBankDetailsViewModel()),
         ChangeNotifierProvider(create: (_) => ViewBankDetailViewModel()),

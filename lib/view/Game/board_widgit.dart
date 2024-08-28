@@ -402,6 +402,15 @@ class BoardWidget extends StatelessWidget {
             ),
           ),
           child: Consumer<LudoProvider>(builder: (context, value, child) {
+            // List<Map<String, dynamic>> scores = value.players.map((player) {
+            //   int totalSteps = player.pawns.fold(0, (sum, pawn) {
+            //     return sum + (pawn.step - (pawn.initialStep ?? 0));
+            //   });
+            //   return {
+            //      // Assuming player has an id property
+            //     'score': totalSteps,
+            //   };
+            // }).toList();
             return GridView.builder(
               padding: const EdgeInsets.only(top: 50),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -473,6 +482,7 @@ class BoardWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+
                         Text(
                           "Score",
                           style: TextStyle(
@@ -610,7 +620,7 @@ class BoardWidget extends StatelessWidget {
                   alignment: Alignment.center,
                   children: [
                     ...playersPawn,
-                    ...winners(context, value.winners.cast<LudoPlayer>()),
+                    // ...winners(context, value.winners.cast<LudoPlayer>()),
                     // turnIndicator(context, value.currentPlayer.type,
                     //     value.currentPlayer.color, value.gameState),
                   ],

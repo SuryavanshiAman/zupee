@@ -26,7 +26,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   static const maxSeconds = 300; // 5 minutes = 300 seconds
   int _remainingSeconds = maxSeconds;
   Timer? _timer;
-
+FirebaseViewModel firebaseViewModel=FirebaseViewModel();
   @override
   void initState() {
     super.initState();
@@ -64,30 +64,22 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   String key = '';
   @override
   Widget build(BuildContext context) {
+final documentID=Provider.of<FirebaseViewModel>(context);
+final docId=documentID.table.toString();
     CollectionReference ludoCollection = FirebaseFirestore.instance.collection('ludo');
-    String argument = ModalRoute.of(context)!.settings.arguments.toString();
     // print("amanArg$argument");
     return SafeArea(
       child: Scaffold(
         body:Consumer<LudoProvider>(
             builder: (context, provider, child) {
+              print('docIDAagyi:$docId');
               return StreamBuilder(
                 // Replace '1' with the specific document ID you want to listen to
-                stream: ludoCollection.doc("1").snapshots(),
+                stream: ludoCollection.doc(docId).snapshots(),
                 builder: (context, snapshot) {
-                  // if (snapshot.connectionState == ConnectionState.active) {
-                  //   if (snapshot.hasError) {
-                  //     return Text('Something went wrong');
-                  //   }
-                  // } else {
-                  //   return CircularProgressIndicator();
-                  // }
-                  // if (snapshot.hasError) {
-                  //   return Text(snapshot.hasError.toString());
-                  // }
-                  //
+
                   if (!snapshot.hasData || !snapshot.data!.exists) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   // Fetch the data and display it
@@ -179,10 +171,10 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                   image: const DecorationImage(
                       image: AssetImage(Assets.ludoLabelSection),
                       fit: BoxFit.fill)),
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const Icon(Icons.watch_later_outlined,color: white,size: 19,),
+                  Icon(Icons.watch_later_outlined,color: white,size: 19,),
                   // Text(timerText.toString(),
                   //     style: const TextStyle(
                   //         color: Colors.white,
@@ -234,7 +226,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                           fit: BoxFit.fill)),
                   child:  Text(
                       player2Data['name'] ?? 'No Name',
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
                           fontSize: 12))),
@@ -421,7 +413,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                           image: AssetImage(Assets.ludoLabelSection),
                           fit: BoxFit.fill)),
                   child:  Text(player3Data['name'] ?? 'No Name',
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
                           fontSize: 12))),
@@ -452,7 +444,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                           fit: BoxFit.fill)),
                   child:  Text(
                       player4Data['name'] ?? 'No Name',
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
                           fontSize: 12))),

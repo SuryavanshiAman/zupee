@@ -646,13 +646,18 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get_utils/get_utils.dart';
+import 'package:provider/provider.dart';
 import 'ludo_constant.dart';
 import 'ludo_player.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 
 class LudoProvider extends ChangeNotifier {
   bool _isMoving = false;
+  bool _stopDice=false;
   bool get isMoving => _isMoving;
+  bool get stopDice => _stopDice;
+
   LudoGameState _gameState = LudoGameState.throwDice;
   int _diceResult = 1;
   bool _diceStarted = false;
@@ -664,17 +669,19 @@ class LudoProvider extends ChangeNotifier {
     LudoPlayer(LudoPlayerType.green),
     LudoPlayer(LudoPlayerType.yellow),
   ];
-  FirebaseViewModel firebaseViewModel = FirebaseViewModel();
-  final List<LudoPlayerType> winners = [];
-  late final DocumentReference<Map<String, dynamic>> gameDoc;
 
-  LudoProvider(this.firebaseViewModel) {
-    gameDoc = FirebaseFirestore.instance.collection('ludo').doc("1");
-    _listenToGameUpdates();
-  }
+  final List<LudoPlayerType> winners = [];
+  DocumentReference<Map<String, dynamic>>? gameDoc;
+
+  // LudoProvider() {
+  //   gameDoc = FirebaseFirestore.instance.collection('ludo').doc();
+  //   _listenToGameUpdates();
+  // }
+
+
 
   void _listenToGameUpdates() {
-    gameDoc.snapshots().listen((snapshot) {
+    gameDoc!.snapshots().listen((snapshot) {
       if (snapshot.exists) {
         var data = snapshot.data();
         if (data != null) {
@@ -710,20 +717,32 @@ class LudoProvider extends ChangeNotifier {
   LudoPlayer player(LudoPlayerType type) =>
       players.firstWhere((element) => element.type == type);
 
-  void throwDice() async {
+  void throwDice(context) async {
     _diceStarted = true;
+    _stopDice=true;
     notifyListeners();
+    final firebaseViewModel = Provider.of<FirebaseViewModel>(context, listen: false).table.toString();
+    if(gameDoc == null){
+      gameDoc = FirebaseFirestore.instance.collection('ludo').doc(firebaseViewModel);
+    }else{
+      print("skdkdkd");
+    }
+    _listenToGameUpdates();
+
+    print("Firehaimai${firebaseViewModel}");
 
     _diceResult = Random().nextInt(6) + 1;
 
-    await gameDoc.update({
+     gameDoc!.update({
       'diceResult': _diceResult,
       'currentTurn': _currentTurn.index,
       'gameState': LudoGameState.pickPawn.index,
     });
+     Future.delayed(const Duration(milliseconds: 500),(){
+       _diceStarted = false;
+       notifyListeners();
+     });
 
-    _diceStarted = false;
-    notifyListeners();
 
     if (_diceResult != 6) {
       if (currentPlayer.pawnInsideCount == 4) {
@@ -758,9 +777,10 @@ class LudoProvider extends ChangeNotifier {
     }
   }
 
-  void move(LudoPlayerType type, int index, int step) async {
+  void move(context,LudoPlayerType type, int index, int step) async {
     if (_isMoving) return;
     _isMoving = true;
+    _stopDice=false;
     // notifyListeners();
     _gameState = LudoGameState.moving;
     LudoPlayer currentPlayer = player(type);
@@ -768,12 +788,12 @@ class LudoProvider extends ChangeNotifier {
     for (int i = currentPlayer.pawns[index].step; i <= step; i++) {
       currentPlayer.movePawn(index, i);
       await Future.delayed(const Duration(milliseconds: 320));
-      gameDoc.update({
-        '${type.toString().split('.').last}PawnPosition$index': step,
-      });
+      // gameDoc!.update({
+      //   '${type.toString().split('.').last}PawnPosition$index': step,
+      // });
       notifyListeners();
     }
-    if (await checkToKill(type, index, step, currentPlayer.path)) {
+    if (await checkToKill(context,type, index, step, currentPlayer.path)) {
       _gameState = LudoGameState.throwDice;
       _isMoving = false;
       notifyListeners();
@@ -785,9 +805,9 @@ class LudoProvider extends ChangeNotifier {
     _isMoving = false;
     notifyListeners();
   }
-  Future<bool> checkToKill(LudoPlayerType type, int index, int step, List<List<double>> path) async{
+  Future<bool> checkToKill(context,LudoPlayerType type, int index, int step, List<List<double>> path) async{
     bool killSomeone = false;
-
+    final firebaseViewModel = Provider.of<FirebaseViewModel>(context, listen: false).table.toString();
     for (var opponentType in LudoPlayerType.values.where((t) => t != type)) {
       for (int i = 0; i < 4; i++) {
         var opponentPawn = player(opponentType).pawns[i];
@@ -808,7 +828,7 @@ class LudoProvider extends ChangeNotifier {
                 for (int j = opponentPawn.step; j >= 0; j--) {
                   await Future.delayed(const Duration(milliseconds: 25));  // Reduce the delay for faster movement
                   opponentPawn.step = j;
-                  FirebaseFirestore.instance.collection('ludo').doc("1").update({
+                  FirebaseFirestore.instance.collection('ludo').doc(firebaseViewModel).update({
                     '${opponentType.toString().split('.').last}PawnPosition$i': opponentPawn.step,
                   });
                   notifyListeners();
@@ -921,7 +941,7 @@ class LudoProvider extends ChangeNotifier {
     if (winners.contains(_currentTurn)) return nextTurn();
     _gameState = LudoGameState.throwDice;
 
-    await gameDoc.update({
+    await gameDoc!.update({
       'currentTurn': _currentTurn.index,
       'gameState': _gameState.index,
     });
@@ -934,4 +954,3 @@ class LudoProvider extends ChangeNotifier {
     super.dispose();
   }
 }
-

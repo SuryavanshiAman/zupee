@@ -257,7 +257,7 @@ class _PawnWidgetState extends State<PawnWidget> {
                   int nextStep = widget.step == -1 ? 1 : widget.step + provider.diceResult;
 
                   // Send move to provider
-                  provider.move(widget.type, widget.index, nextStep);
+                  provider.move(context,widget.type, widget.index, nextStep);
 
                   // Send the pawn movement to Firestore
                   await _sendPawnMovement(nextStep);

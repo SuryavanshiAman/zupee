@@ -353,21 +353,48 @@
 //         },
 //       );
 // }
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/view/Game/ludo_provider.dart';
+import 'package:zupee/view_model/firebase_view_model.dart';
+import 'package:zupee/view_model/timer_view_model.dart';
 
 import 'ludo_constant.dart';
 import 'ludo_player.dart';
 import 'pawn_widgit.dart';
+class PlayerData {
+  final String name;
+  final int score;
 
+  PlayerData({required this.name, required this.score});
+  factory PlayerData.fromJson(Map<String, dynamic> json) {
+    return PlayerData(
+      name: json['name'],
+      score: json['score'],
+    );
+  }
+  // Convert PlayerData object to a Map
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'score': score,
+  };
+}
 ///Widget for the board
-class BoardWidget extends StatelessWidget {
-  const BoardWidget({super.key});
+class BoardWidget extends StatefulWidget {
+  final List<String> playerData;
+  const BoardWidget({super.key,required this.playerData});
 
+  @override
+  State<BoardWidget> createState() => _BoardWidgetState();
+}
+
+class _BoardWidgetState extends State<BoardWidget> {
   ///Return board size
   double ludoBoard(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -386,9 +413,17 @@ class BoardWidget extends StatelessWidget {
   double boxStepSize(BuildContext context) {
     return ludoBoard(context) / 15;
   }
+  TimerProvider timerProvider=TimerProvider();
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
+  final firebaseData=Provider.of<FirebaseViewModel>(context);
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -402,15 +437,7 @@ class BoardWidget extends StatelessWidget {
             ),
           ),
           child: Consumer<LudoProvider>(builder: (context, value, child) {
-            // List<Map<String, dynamic>> scores = value.players.map((player) {
-            //   int totalSteps = player.pawns.fold(0, (sum, pawn) {
-            //     return sum + (pawn.step - (pawn.initialStep ?? 0));
-            //   });
-            //   return {
-            //      // Assuming player has an id property
-            //     'score': totalSteps,
-            //   };
-            // }).toList();
+
             return GridView.builder(
               padding: const EdgeInsets.only(top: 50),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -421,37 +448,6 @@ class BoardWidget extends StatelessWidget {
               ),
               shrinkWrap: true,
               itemCount: value.players.length,
-              // itemBuilder: (context, itemIndex) {
-              //   var player = value.players[itemIndex];
-              //   int totalSteps = player.pawns.fold(0, (sum, pawn) {
-              //     return sum + (pawn.step - (pawn.initialStep ?? 0));
-              //   });
-              //   return Container(
-              //     padding: const EdgeInsets.only(top: 10),
-              //     alignment: Alignment.center,
-              //     decoration: const BoxDecoration(
-              //       shape: BoxShape.circle,
-              //       color: white,
-              //     ),
-              //     child: Column(
-              //       crossAxisAlignment: CrossAxisAlignment.center,
-              //       children: [
-              //         const Text("Score",
-              //             style: TextStyle(
-              //                 fontWeight: FontWeight.w600,
-              //                 fontSize: 16,
-              //                 color: tertiary)),
-              //         Text(
-              //           "$totalSteps",
-              //           style: const TextStyle(
-              //               fontWeight: FontWeight.w600,
-              //               fontSize: 18,
-              //               color: tertiary),
-              //         ),
-              //       ],
-              //     ),
-              //   );
-              // },
                 itemBuilder: (context, itemIndex) {
                   // Sort players so that Yellow is displayed in index 2
                   List<LudoPlayer> sortedPlayers = List.from(value.players);
@@ -471,7 +467,19 @@ class BoardWidget extends StatelessWidget {
                   int totalSteps = player.pawns.fold(0, (sum, pawn) {
                     return sum + (pawn.step - (pawn.initialStep ?? 0));
                   });
+                  List<PlayerData> playerDataList = [];
 
+                  for (int i = 0; i < value.players.length; i++) {
+                    var player = value.players[i];
+                    int totalSteps = player.pawns.fold(0, (sum, pawn) {
+                      return sum + (pawn.step - (pawn.initialStep ?? 0));
+                    });
+
+                    playerDataList.add(PlayerData(name: widget.playerData[i], score: totalSteps));
+                  }
+                  final jsonData = jsonEncode(playerDataList.map((e) => e.toJson()).toList());
+                  value.setPlayerDataFromJson(playerDataList.map((e) => e.toJson()).toList());
+                  print('Player Data JSON: $jsonData');
                   return Container(
                     padding: const EdgeInsets.only(top: 10),
                     alignment: Alignment.center,
@@ -483,7 +491,7 @@ class BoardWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
 
-                        Text(
+                        const Text(
                           "Score",
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -631,113 +639,26 @@ class BoardWidget extends StatelessWidget {
         ),
       ],
     );
+
   }
 
-  ///This is for the turn indicator widget
-  // Widget turnIndicator(
-  //     BuildContext context, LudoPlayerType turn, Color color,
-  //     LudoGameState stage) {
-  //   int x = 0;
-  //   int y = 0;
+  // timerProvider.timerText=="0"?
+  // Future<void> sendPlayerData(LudoProvider value, List<String> playerData) async {
+  // List<PlayerData> playerDataList = [];
   //
-  //   switch (turn) {
-  //     case LudoPlayerType.blue:
-  //       x = 1;
-  //       y = 1;
-  //       break;
-  //     case LudoPlayerType.red:
-  //       x = 1;
-  //       y = 0;
-  //       break;
-  //     case LudoPlayerType.green:
-  //       x = 0;
-  //       y = 0;
-  //       break;
-  //     case LudoPlayerType.yellow:
-  //       x = 0;
-  //       y = 1;
-  //       break;
-  //   }
-  //   String stageText = "Roll the dice";
-  //   switch (stage) {
-  //     case LudoGameState.throwDice:
-  //       stageText = "Roll the dice";
-  //       break;
-  //     case LudoGameState.moving:
-  //       stageText = "Pawn is moving...";
-  //       break;
-  //     case LudoGameState.pickPawn:
-  //       stageText = "Pick a pawn";
-  //       break;
-  //     case LudoGameState.finish:
-  //       stageText = "Game is over";
-  //       break;
-  //   }
-  //   return Positioned(
-  //     top: y == 0 ? 0 : null,
-  //     left: x == 0 ? 0 : null,
-  //     right: x == 1 ? 0 : null,
-  //     bottom: y == 1 ? 0 : null,
-  //     width: ludoBoard(context) * .4,
-  //     height: ludoBoard(context) * .4,
-  //     child: IgnorePointer(
-  //       child: Padding(
-  //         padding: EdgeInsets.all(boxStepSize(context)),
-  //         child: Container(
-  //           alignment: Alignment.center,
-  //           clipBehavior: Clip.antiAlias,
-  //           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
-  //           child: RichText(
-  //             textAlign: TextAlign.center,
-  //             text: TextSpan(
-  //               style: TextStyle(fontSize: 8, color: color),
-  //               children: [
-  //                 TextSpan(
-  //                     text: "Your turn!\n",
-  //                     style: const TextStyle(
-  //                         fontSize: 12, fontWeight: FontWeight.bold)),
-  //                 TextSpan(text: stageText),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
+  // for (int i = 0; i < value.players.length; i++) {
+  // var player = value.players[i];
+  // int totalSteps = player.pawns.fold(0, (sum, pawn) {
+  // return sum + (pawn.step - (pawn.initialStep ?? 0));
+  // });
+  //
+  // playerDataList.add(PlayerData(name: playerData[i], score: totalSteps));
+  // }
+  //
+  // String jsonData = jsonEncode(playerDataList.map((e) => e.toJson()).toList());
+  // print('Player Data JSON: $jsonData');
+  // FirebaseFirestore.instance.collection('ludo').doc('1').set({'playerData': jsonData});
+  //
   // }
 
-  ///This function checks which player has won the game and returns a list of widgets.
-  List<Widget> winners(BuildContext context, List<LudoPlayer> winners) {
-    List<Widget> winnerList = [];
-    for (int i = 0; i < winners.length; i++) {
-      var player = winners[i];
-      winnerList.add(Positioned(
-        top: player.type == LudoPlayerType.green || player.type == LudoPlayerType.yellow
-            ? boxStepSize(context) * 8
-            : boxStepSize(context) * 1.5,
-        left: player.type == LudoPlayerType.red || player.type == LudoPlayerType.green
-            ? boxStepSize(context) * 1.5
-            : boxStepSize(context) * 8,
-        child: IgnorePointer(
-          child: Container(
-            alignment: Alignment.center,
-            width: boxStepSize(context) * 3,
-            height: boxStepSize(context) * 3,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: player.color,
-                width: 4,
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: Text(
-              "Won!",
-              style: TextStyle(color: player.color),
-            ),
-          ),
-        ),
-      ));
-    }
-    return winnerList;
-  }
 }

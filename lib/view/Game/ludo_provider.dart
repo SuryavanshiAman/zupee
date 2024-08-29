@@ -646,8 +646,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
+import 'board_widgit.dart';
 import 'ludo_constant.dart';
 import 'ludo_player.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
@@ -669,16 +669,17 @@ class LudoProvider extends ChangeNotifier {
     LudoPlayer(LudoPlayerType.green),
     LudoPlayer(LudoPlayerType.yellow),
   ];
+  List<dynamic> _playerDataList = [];
 
+  List<dynamic> get playerDataList => _playerDataList;
+
+  // Setter method to set player data from JSON
+  void setPlayerDataFromJson(dynamic jsonData) {
+    _playerDataList=List.from(jsonData);
+      notifyListeners();
+  }
   final List<LudoPlayerType> winners = [];
   DocumentReference<Map<String, dynamic>>? gameDoc;
-
-  // LudoProvider() {
-  //   gameDoc = FirebaseFirestore.instance.collection('ludo').doc();
-  //   _listenToGameUpdates();
-  // }
-
-
 
   void _listenToGameUpdates() {
     gameDoc!.snapshots().listen((snapshot) {
@@ -788,9 +789,7 @@ class LudoProvider extends ChangeNotifier {
     for (int i = currentPlayer.pawns[index].step; i <= step; i++) {
       currentPlayer.movePawn(index, i);
       await Future.delayed(const Duration(milliseconds: 320));
-      // gameDoc!.update({
-      //   '${type.toString().split('.').last}PawnPosition$index': step,
-      // });
+
       notifyListeners();
     }
     if (await checkToKill(context,type, index, step, currentPlayer.path)) {
@@ -821,9 +820,6 @@ class LudoProvider extends ChangeNotifier {
             if (player(opponentType).path[opponentPawn.step].toString() == path[step].toString()) {
               killSomeone = true;
 
-              // Reset the opponent's pawn to the initial position
-              // await _movePawnBackToInitial(opponentType, i, opponentPawn.step);
-              // opponentPawn.step = 0;
               Future.microtask(() async {
                 for (int j = opponentPawn.step; j >= 0; j--) {
                   await Future.delayed(const Duration(milliseconds: 25));  // Reduce the delay for faster movement
@@ -835,12 +831,6 @@ class LudoProvider extends ChangeNotifier {
                 }
               });
 
-              // gameDoc.update({
-              //               'players.${opponentType.toString()}': players[opponentType.index]
-              //                   .pawns
-              //                   .map((pawn) => pawn.step)
-              //                   .toList(),
-              //             });
               notifyListeners();
 
               print('Pawn of $opponentType at index $i was killed by player $type at step $step.');
@@ -853,54 +843,6 @@ class LudoProvider extends ChangeNotifier {
 
     return killSomeone;
   }
-  Future<void> _movePawnBackToInitial(LudoPlayerType opponentType, int pawnIndex, int currentStep) async {
-    var opponentPlayer = player(opponentType);
-
-    // Move the pawn backward step by step to the initial position
-    for (int i = currentStep; i >= 0; i--) {
-      opponentPlayer.pawns[pawnIndex].step = i;
-
-      // Update Firebase with the current step of the opponent's pawn
-      await FirebaseFirestore.instance.collection('ludo').doc("1").update({
-        '${opponentType.toString().split('.').last}PawnPosition$pawnIndex': i,
-      });
-
-      // Wait a short time before moving to the next step
-      // await Future.delayed(const Duration(milliseconds: 2));
-
-      notifyListeners();
-    }
-  }
-
-  // bool checkToKill(LudoPlayerType type, int index, int step, List<List<double>> path) {
-  //   bool killSomeone = false;
-  //
-  //   for (int i = 0; i < 4; i++) {
-  //     var opponentTypes = LudoPlayerType.values.where((t) => t != type);
-  //     for (var opponentType in opponentTypes) {
-  //       var opponentPawn = player(opponentType).pawns[i];
-  //
-  //       if (opponentPawn.step > 0 &&
-  //           !LudoPath.safeArea
-  //               .map((e) => e.toString())
-  //               .contains(player(opponentType).path[opponentPawn.step].toString())) {
-  //         if (player(opponentType).path[opponentPawn.step].toString() ==
-  //             path[step].toString()) {
-  //           killSomeone = true;
-  //           opponentPawn.step = 0; // Send pawn back to start
-  //           gameDoc.update({
-  //             'players.${opponentType.toString()}': players[opponentType.index]
-  //                 .pawns
-  //                 .map((pawn) => pawn.step)
-  //                 .toList(),
-  //           });
-  //           notifyListeners();
-  //         }
-  //       }
-  //     }
-  //   }
-  //   return killSomeone;
-  // }
 
   void validateWin(LudoPlayerType color) {
     if (winners.contains(color)) return;

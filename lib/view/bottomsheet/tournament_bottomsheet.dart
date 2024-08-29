@@ -6,8 +6,8 @@ import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/time_page.dart';
 
 class TournamentBottomsheet extends StatefulWidget {
-
-  const TournamentBottomsheet({super.key});
+final String ?futureTime;
+  const TournamentBottomsheet({super.key,required this.futureTime});
 
   @override
   State<TournamentBottomsheet> createState() => _TournamentBottomsheetState();
@@ -61,6 +61,7 @@ class _TournamentBottomsheetState extends State<TournamentBottomsheet> {
                   BorderRadius.all(Radius.circular(35)),
                 ),
                 child:  CountdownTimer(
+                  futureTime: widget.futureTime,
                   onTimerTick: (int value) {
                   }, fontWeight: FontWeight.w600, fontSize: 24, color: white,
                 ),

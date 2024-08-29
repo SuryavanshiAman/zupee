@@ -13,6 +13,8 @@ import 'package:zupee/view/Game/winner_screen.dart';
 import 'package:zupee/view_model/about_view_model.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
+import 'package:zupee/view_model/timer_view_model.dart';
+import 'package:zupee/view_model/tournament_view_moedl.dart';
 import 'package:zupee/view_model/transaction_history_view_model.dart';
 
 import 'frzi.dart';
@@ -22,7 +24,7 @@ import 'view_model/add_bank_details_view_model.dart';
 import 'view_model/auth_view_model.dart';
 import 'view_model/deposit_view_model.dart';
 import 'view_model/help_view_model.dart';
-import 'view_model/medecine_view_model.dart';
+import 'view_model/contest_category_view_model.dart';
 import 'view_model/profile_update_view_model.dart';
 import 'view_model/update_language_view_model.dart';
 import 'view_model/user_view_model.dart';
@@ -56,10 +58,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ViewBankDetailViewModel()),
         ChangeNotifierProvider(create: (_) => UpdateLanguageViewModel()),
         ChangeNotifierProvider(create: (_) => DepositViewModel()),
-        ChangeNotifierProvider(create: (_) => MedicineViewModel()),
+        ChangeNotifierProvider(create: (_) => ContestCategoryViewModel()),
         ChangeNotifierProvider(create: (_) => FirebaseViewModel()),
         ChangeNotifierProvider(create: (_) => WithdrawViewModel()),
         ChangeNotifierProvider(create: (_) => TransactionHistoryViewModel()),
+        ChangeNotifierProvider(create: (_) => TimerProvider()),
+        ChangeNotifierProvider(create: (_) => TournamentViewModel()),
       ],
       child: GetMaterialApp(
         title: AppConstants.appName,

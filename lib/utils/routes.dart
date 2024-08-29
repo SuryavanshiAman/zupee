@@ -24,6 +24,7 @@ import 'package:zupee/view/wallet/wallet_page.dart';
 import 'package:zupee/view/wallet/withdraw_page.dart';
 
 import '../view/Game/timer_page.dart';
+import '../view/Game/winner_screen.dart';
 import '../view/account/about/about_page.dart';
 import '../view/account/help_suppoort/help_page.dart';
 import '../view/account/kyc/aadhar_card_details_page.dart';
@@ -82,7 +83,7 @@ class Routers {
       case RoutesName.about:
         return (context) =>  const About();
       case RoutesName.responsibleGamingScreen:
-        return (context) =>   ResponsibleGamingScreen ();
+        return (context) =>   const ResponsibleGamingScreen ();
       case RoutesName.lossManagementScreen:
         return (context) =>   const LossManagementScreen();
       case RoutesName.timerScreen:
@@ -97,6 +98,8 @@ class Routers {
         return (context) =>   const HtmlViewerScreen();
       case RoutesName.bankDetailsScreen:
         return (context) =>   const BankDetailsScreen();
+      case RoutesName.winnerScreen:
+        return (context) =>   const WinnerScreen();
       default:
         return (context) => Scaffold(
               body: Center(

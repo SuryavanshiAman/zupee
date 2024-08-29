@@ -9,8 +9,10 @@ import 'package:zupee/main.dart';
 import 'package:zupee/view/Game/dice_widgit.dart';
 import 'package:zupee/view/Game/ludo_constant.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
+import 'package:zupee/view_model/timer_view_model.dart';
 
 import '../../res/app_colors.dart';
+import '../../utils/routes_name.dart';
 import 'board_widgit.dart';
 import 'ludo_provider.dart';
 
@@ -27,11 +29,11 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   int _remainingSeconds = maxSeconds;
   Timer? _timer;
 FirebaseViewModel firebaseViewModel=FirebaseViewModel();
+TimerProvider timerProvider=TimerProvider();
   @override
   void initState() {
     super.initState();
-    // firestore = FirebaseFirestore.instance;
-    // ludoCollection = firestore.collection('ludo');
+    timerProvider.startTimer();
     startTimer();
   }
   void startTimer() {
@@ -39,6 +41,7 @@ FirebaseViewModel firebaseViewModel=FirebaseViewModel();
       if (_remainingSeconds > 0) {
         setState(() {
           _remainingSeconds--;
+          _remainingSeconds==0?Navigator.pushReplacementNamed(context, RoutesName.winnerScreen):null;
         });
       } else {
         _timer?.cancel();
@@ -67,7 +70,6 @@ FirebaseViewModel firebaseViewModel=FirebaseViewModel();
 final documentID=Provider.of<FirebaseViewModel>(context);
 final docId=documentID.table.toString();
     CollectionReference ludoCollection = FirebaseFirestore.instance.collection('ludo');
-    // print("amanArg$argument");
     return SafeArea(
       child: Scaffold(
         body:Consumer<LudoProvider>(
@@ -77,16 +79,13 @@ final docId=documentID.table.toString();
                 // Replace '1' with the specific document ID you want to listen to
                 stream: ludoCollection.doc(docId).snapshots(),
                 builder: (context, snapshot) {
-
                   if (!snapshot.hasData || !snapshot.data!.exists) {
                     return const Center(child: CircularProgressIndicator());
                   }
-
                   // Fetch the data and display it
                   Map<String, dynamic> data = snapshot.data!.data() as Map<
                       String,
                       dynamic>;
-
                   return _buildDynamicContent(context, data);
                 },
               );
@@ -101,7 +100,7 @@ final docId=documentID.table.toString();
     Map<String, dynamic> player2Data = data['2'].isNotEmpty ? json.decode(data['2']) : {};
     Map<String, dynamic> player3Data = data['3'].isNotEmpty ? json.decode(data['3']) : {};
     Map<String, dynamic> player4Data = data['4'].isNotEmpty ? json.decode(data['4']) : {};
-
+    final List<String> playerData = [player1Data['name'].toString(), player2Data.toString(), player2Data.toString(), player2Data.toString()];
     // Build the dynamic content using the parsed data
     return Container(
       height: height,
@@ -171,15 +170,15 @@ final docId=documentID.table.toString();
                   image: const DecorationImage(
                       image: AssetImage(Assets.ludoLabelSection),
                       fit: BoxFit.fill)),
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Icon(Icons.watch_later_outlined,color: white,size: 19,),
-                  // Text(timerText.toString(),
-                  //     style: const TextStyle(
-                  //         color: Colors.white,
-                  //         fontWeight: FontWeight.w600,
-                  //         fontSize: 20)),
+                  const Icon(Icons.watch_later_outlined,color: white,size: 19,),
+                  Text(timerProvider.timerText.toString(),
+                      style: const TextStyle(
+                          color: green,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20)),
                 ],
               )),
           Row(
@@ -272,132 +271,18 @@ final docId=documentID.table.toString();
                 //     )),
                 const Spacer(),
                 opponentsOneTurn(),
-                // Container(
-                //     alignment: Alignment.center,
-                //     height: height * 0.08,
-                //     width: width * 0.19,
-                //     decoration: const BoxDecoration(
-                //         image: DecorationImage(
-                //             image: AssetImage(Assets.ludoDiceSectionTwo),
-                //             fit: BoxFit.fill)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.only(right: 8.0),
-                //       child: Image(
-                //         image: const AssetImage(
-                //           Assets.ludoDice,
-                //         ),
-                //         height: height * 0.06,
-                //         width: width * 0.17,
-                //       ),
-                //     )),
-                // Container(
-                //     height: height * 0.07,
-                //     width: width * 0.15,
-                //     decoration: const BoxDecoration(
-                //         image: DecorationImage(
-                //             image: AssetImage(Assets.ludoProfileSection))),
-                //     child: Image(
-                //       image: const AssetImage(
-                //         Assets.ludoUser,
-                //       ),
-                //       height: height * 0.03,
-                //       width: width * 0.23,
-                //       fit: BoxFit.fill,
-                //     )),
               ],
             ),
           ),
-          const BoardWidget(),
-          // Center(
-          //   child: Container(
-          //     width: width,
-          //     height: height * 0.5,
-          //     decoration: const BoxDecoration(
-          //         image: DecorationImage(
-          //             image: AssetImage(Assets.ludoLudoBoard),
-          //             fit: BoxFit.cover)),
-          //     child: Padding(
-          //       padding: const EdgeInsets.all(8.0),
-          //       child: Container(
-          //         decoration: const BoxDecoration(
-          //             image: DecorationImage(
-          //                 image: AssetImage(Assets.ludoBoardTwo))),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+           BoardWidget(playerData: playerData),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 opponentsTwoTurn(),
-                // Container(
-                //     height: height * 0.07,
-                //     width: width * 0.15,
-                //     decoration: const BoxDecoration(
-                //         image: DecorationImage(
-                //             image: AssetImage(Assets.ludoProfileSection))),
-                //     child: Image(
-                //       image: const AssetImage(
-                //         Assets.ludoUser,
-                //       ),
-                //       height: height * 0.03,
-                //       width: width * 0.23,
-                //       fit: BoxFit.fill,
-                //     )),
-                // Container(
-                //     alignment: Alignment.center,
-                //     height: height * 0.08,
-                //     width: width * 0.19,
-                //     decoration: const BoxDecoration(
-                //         image: DecorationImage(
-                //             image: AssetImage(Assets.ludoDiceSectionOne),
-                //             fit: BoxFit.fill)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.only(left: 8.0),
-                //       child: Image(
-                //         image: const AssetImage(
-                //           Assets.ludoDice,
-                //         ),
-                //         height: height * 0.06,
-                //         width: width * 0.17,
-                //       ),
-                //     )),
                 const Spacer(),
                 opponentsThreeTurn(),
-                // Container(
-                //     alignment: Alignment.center,
-                //     height: height * 0.08,
-                //     width: width * 0.19,
-                //     decoration: const BoxDecoration(
-                //         image: DecorationImage(
-                //             image: AssetImage(Assets.ludoDiceSectionTwo),
-                //             fit: BoxFit.fill)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.only(right: 8.0),
-                //       child: Image(
-                //         image: const AssetImage(
-                //           Assets.ludoDice,
-                //         ),
-                //         height: height * 0.06,
-                //         width: width * 0.17,
-                //       ),
-                //     )),
-                // Container(
-                //     height: height * 0.07,
-                //     width: width * 0.15,
-                //     decoration: const BoxDecoration(
-                //         image: DecorationImage(
-                //             image: AssetImage(Assets.ludoProfileSection))),
-                //     child: Image(
-                //       image: const AssetImage(
-                //         Assets.ludoUser,
-                //       ),
-                //       height: height * 0.03,
-                //       width: width * 0.23,
-                //       fit: BoxFit.fill,
-                //     )),
               ],
             ),
           ),

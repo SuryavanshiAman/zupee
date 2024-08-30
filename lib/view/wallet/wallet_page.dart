@@ -37,7 +37,7 @@ class _WalletScreenState extends State<WalletScreen> {
           ],
         ),
       ),
-      body: Column(
+      body: profileViewModel!=null?Column(
         children: [
           SizedBox(
             height: height * 0.03,
@@ -312,7 +312,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 )),
           )
         ],
-      ),
+      ):Center(child: CircularProgressIndicator()),
     );
   }
 

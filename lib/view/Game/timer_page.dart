@@ -22,21 +22,19 @@ class _TimerScreenState extends State<TimerScreen> {
   void initState() {
     super.initState();
  WidgetsBinding.instance.addPostFrameCallback((_){
- String argument = ModalRoute.of(context,)!.settings.arguments.toString();
- print(":timeArg$argument");
- _startTimer(argument);
+ _startTimer();
  });
 
   }
 
-  void _startTimer(argument) {
+  void _startTimer() {
 
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_seconds == 0) {
           _timer?.cancel();
-          Navigator.pushNamed(context, RoutesName.ludoHomeScreen,arguments: argument);
+          Navigator.pushReplacementNamed(context, RoutesName.ludoHomeScreen);
         } else {
           _seconds--;
 

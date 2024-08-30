@@ -11,7 +11,9 @@ import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/Game/ludo_game_home_page.dart';
 import 'package:zupee/view/Game/winner_screen.dart';
 import 'package:zupee/view_model/about_view_model.dart';
+import 'package:zupee/view_model/confirm_payment_view_model.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
+import 'package:zupee/view_model/join_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 import 'package:zupee/view_model/timer_view_model.dart';
 import 'package:zupee/view_model/tournament_view_moedl.dart';
@@ -64,6 +66,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TransactionHistoryViewModel()),
         ChangeNotifierProvider(create: (_) => TimerProvider()),
         ChangeNotifierProvider(create: (_) => TournamentViewModel()),
+        ChangeNotifierProvider(create: (_) => ConfirmPaymentViewModel()),
+        ChangeNotifierProvider(create: (_) => JoinViewModel()),
       ],
       child: GetMaterialApp(
         title: AppConstants.appName,

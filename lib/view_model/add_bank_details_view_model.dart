@@ -1,8 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:zupee/repo/add_bank_details_repo.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view_model/user_view_model.dart';
+import 'package:zupee/view_model/view_bank_details_view_model.dart';
 
 
 class AddBankDetailsViewModel with ChangeNotifier {
@@ -33,7 +38,9 @@ class AddBankDetailsViewModel with ChangeNotifier {
     _addBankDetailsRepo.addBankDetailsApi(data).then((value) {
 
       if (value['status'] == "200") {
-        Utils.flushBarSuccessMessage(value['message'],context,red);
+        Provider.of<ViewBankDetailViewModel>(context,listen: false).viewBankDetailsApi(context);
+        Navigator.pushReplacementNamed(context, RoutesName.bottomNevBar, arguments: {"index": 0});
+        Utils.flushBarSuccessMessage(value['message'],context,white);
       } else {
         setLoading(false);
         Utils.showErrorToast(value['message']);

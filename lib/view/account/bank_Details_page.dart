@@ -103,8 +103,25 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                   "Enter Bank Details:-".tr,
                   style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                 ),
+                CustomTextField(
+                  controller: bankName,
+                  label: "Enter Bank Name".tr,
+                  hintColor: labelColor,
+                  height: 70,
+                  width: width * 0.8,
+                  contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                  filled: true,
+                  borderSide: const BorderSide(color: tertiary, width: 2),
+                  borderSideFocus: const BorderSide(color: blue),
+                  fillColor: lightBlue,
+                  fieldRadius: const BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      topLeft: Radius.circular(10)),
+                  prefix: const Icon(Icons.account_balance_outlined),
+                ),
                 SizedBox(
-                  height: height * 0.02,
+                  height: height * 0.01,
                 ),
                 CustomTextField(
                   controller: acHolder,
@@ -149,13 +166,17 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                   height: height * 0.01,
                 ),
                 CustomTextField(
-                  controller: bankName,
-                  label: "Enter Bank Name".tr,
+                  controller: iFSC,
+                  onChanged: (value) {
+                    validateIFSC(value.toUpperCase());
+                  },
+                  label: "Enter iFSC Code".tr,
                   hintColor: labelColor,
                   height: 70,
                   width: width * 0.8,
+                  maxLength: 11,
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                   filled: true,
                   borderSide: const BorderSide(color: tertiary, width: 2),
                   borderSideFocus: const BorderSide(color: blue),
@@ -163,7 +184,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                   fieldRadius: const BorderRadius.only(
                       topRight: Radius.circular(10),
                       topLeft: Radius.circular(10)),
-                  prefix: const Icon(Icons.account_balance_outlined),
+                  prefix: const Icon(Icons.password),
                 ),
                 SizedBox(
                   height: height * 0.01,
@@ -185,30 +206,10 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       topLeft: Radius.circular(10)),
                   prefix: const Icon(Icons.account_balance_outlined),
                 ),
-                SizedBox(
-                  height: height * 0.01,
-                ),
-                CustomTextField(
-                  controller: iFSC,
-                  onChanged: (value) {
-                    validateIFSC(value.toUpperCase());
-                  },
-                  label: "Enter iFSC Code".tr,
-                  hintColor: labelColor,
-                  height: 70,
-                  width: width * 0.8,
-                  maxLength: 11,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-                  filled: true,
-                  borderSide: const BorderSide(color: tertiary, width: 2),
-                  borderSideFocus: const BorderSide(color: blue),
-                  fillColor: lightBlue,
-                  fieldRadius: const BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      topLeft: Radius.circular(10)),
-                  prefix: const Icon(Icons.password),
-                ),
+                // SizedBox(
+                //   height: height * 0.01,
+                // ),
+                //
                 const SizedBox(
                   height: 20,
                 ),

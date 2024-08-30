@@ -187,7 +187,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      "Min-₹1,Max-₹20,000",
+                      "Min-₹300,Max-₹20,000",
                       style: TextStyle(
                           color: red,
                           fontSize: 14,

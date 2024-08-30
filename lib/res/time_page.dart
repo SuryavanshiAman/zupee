@@ -101,7 +101,7 @@ class CountdownTimer extends StatefulWidget {
   final Color color;
   final String? futureTime;
 
-  CountdownTimer({
+  const CountdownTimer({
     super.key,
     required this.onTimerTick,
     required this.fontWeight,
@@ -117,14 +117,13 @@ class CountdownTimer extends StatefulWidget {
 class CountdownTimerState extends State<CountdownTimer> {
   late Stream<DateTime> _clockStream;
   DateTime? _futureTime;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _futureTime = DateTime.tryParse(widget.futureTime.toString());
-    if (_futureTime == null) {
-    }
-
+    print("_futureTime:$_futureTime");
     _clockStream = clockStream();
   }
 
@@ -134,6 +133,7 @@ class CountdownTimerState extends State<CountdownTimer> {
 
   @override
   void dispose() {
+    _timer?.cancel(); // Cancel the timer if it's running
     super.dispose();
   }
 
@@ -147,13 +147,18 @@ class CountdownTimerState extends State<CountdownTimer> {
         } else {
           DateTime currentTime = snapshot.data!;
           int differenceInSeconds = _futureTime!.difference(currentTime).inSeconds;
-          // if (differenceInSeconds <= 0) {
-          //   differenceInSeconds = 0;
-          // }
+          print("AmanTime:$_futureTime");
+          print("AmanCurrentTime:$currentTime");
+          // Check if the countdown has ended
+          if (differenceInSeconds <= 0) {
+            print("differenceInSeconds:$differenceInSeconds");
+            differenceInSeconds = 0; // Prevent negative countdown
+            widget.onTimerTick(differenceInSeconds); // Notify when the timer hits zero
+            _timer?.cancel(); // Stop the timer
+          } else {
+            widget.onTimerTick(differenceInSeconds);
+          }
 
-          widget.onTimerTick(differenceInSeconds);
-
-          int hours = differenceInSeconds ~/ 3600;
           int minutes = (differenceInSeconds % 3600) ~/ 60;
           int seconds = differenceInSeconds % 60;
 

@@ -21,5 +21,7 @@ class ApiUrl{
   static const String transactionHistoryApi = "${baseUrl}transaction_history?userid=";
   static const String contestCategoriesApi = "${baseUrl}contestcategories";
   static const String tournamentsApi = "${baseUrl}tournaments?category_id=";
+  static const String joinTournamentApi = "${baseUrl}echekjoin-tournament";
+  static const String joinApi = "${baseUrl}join-tournament";
   static const String medicineApi = "https://sleekcare.apponrent.co.in/api/medication_completed_details";
 }

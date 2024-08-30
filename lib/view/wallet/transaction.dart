@@ -74,6 +74,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final transaction = Provider.of<TransactionHistoryViewModel>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primary,
@@ -108,7 +109,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         setState(() {
                           selectedIndex = index;
                         });
-
+                        transaction.transactionHistoryApi(
+                            context, selectedIndex);
                         // _onItemTapped(index);
                         // print("selectedIndices$selectedIndices");
                       },
@@ -139,122 +141,255 @@ class _TransactionScreenState extends State<TransactionScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(18.0),
-              child: ChangeNotifierProvider<TransactionHistoryViewModel>(
-                create: (BuildContext context) => transactionHistoryViewModel,
-                child:Consumer<TransactionHistoryViewModel>(
-                  builder: (context, resultValue, _) {
-                    switch (resultValue.transactionHistoryList.status) {
-                      case Status.LOADING:
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      case Status.ERROR:
-                        return Container();
-                      case Status.COMPLETED:
-                        final transaction =
-                            resultValue.transactionHistoryList.data!.data;
-                        if (transaction != null && transaction.isNotEmpty) {
-                          return ListView.builder(
-                              itemCount: transaction.length,
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    height: height * 0.14,
-                                    decoration: const BoxDecoration(
-                                        color: white,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10))),
-                                    child: Row(
-                                      // crossAxisAlignment: CrossAxisAlignment.start,
-                                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Image.asset(
-                                          Assets.imagesCashback,
-                                          scale: 3,
-                                        ),
-                                        SizedBox(
-                                          width: width * 0.04,
-                                        ),
-                                         Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(transaction[index].type.toString(),
-                                                style: const TextStyle(
-                                                    color: black,
-                                                    fontWeight: FontWeight.w600)),
-                                            Text(transaction[index].description.toString().toUpperCase(),
-                                                style: const TextStyle(
-                                                    // color: red,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize:8 )),
-                                            // Container(
-                                            //   alignment: Alignment.center,
-                                            //   height: height*0.022,
-                                            //   width: width * 0.16,
-                                            //   decoration: const BoxDecoration(
-                                            //     borderRadius:
-                                            //     BorderRadius.all(Radius.circular(5)),
-                                            //     color: green,
-                                            //   ),
-                                            //   child: const Text("ACTIVE",style: TextStyle(fontSize: 10,color: white),),
-                                            // )
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                         Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text("+₹${transaction[index].amount.toString()}",
-                                                style: const TextStyle(
-                                                    color: black,
-                                                    fontWeight: FontWeight.w600)),
-                                             Text(
-                                                DateFormat("dd/MM/,HH:mm")
-                                                    .format(DateTime.parse(
-                                                  transaction[index].datetime.toString(),
-                                                )),
-                                                // "16 JUL,17:53",
-                                                style: TextStyle(
-                                                    color: labelColor,
-                                                    fontWeight: FontWeight.w500)),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          width: width * 0.03,
-                                        ),
-                                        const Icon(
-                                          (Icons.arrow_forward_ios_sharp),
-                                          size: 15,
-                                        )
-                                      ],
-                                    ),
+              child: Consumer<TransactionHistoryViewModel>(
+                builder: (context, resultValue, _) {
+                  switch (resultValue.transactionHistoryList.status) {
+                    // case Status.LOADING:
+                    //   return const Center(
+                    //     child: CircularProgressIndicator(),
+                    //   );
+                    case Status.ERROR:
+                      return Container();
+                    case Status.COMPLETED:
+                      final transaction =
+                          resultValue.transactionHistoryList.data!.data;
+                      if (transaction != null && transaction.isNotEmpty) {
+                        return ListView.builder(
+                            itemCount: transaction.length,
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  height: height * 0.14,
+                                  decoration: const BoxDecoration(
+                                      color: white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: Row(
+                                    // crossAxisAlignment: CrossAxisAlignment.start,
+                                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Image.asset(
+                                        Assets.imagesCashback,
+                                        scale: 3,
+                                      ),
+                                      SizedBox(
+                                        width: width * 0.04,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                              transaction[index]
+                                                  .type
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  color: black,
+                                                  fontWeight: FontWeight.w600)),
+                                          Text(
+                                              transaction[index]
+                                                  .description
+                                                  .toString()
+                                                  .toUpperCase(),
+                                              style: const TextStyle(
+                                                  // color: red,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 8)),
+                                          // Container(
+                                          //   alignment: Alignment.center,
+                                          //   height: height*0.022,
+                                          //   width: width * 0.16,
+                                          //   decoration: const BoxDecoration(
+                                          //     borderRadius:
+                                          //     BorderRadius.all(Radius.circular(5)),
+                                          //     color: green,
+                                          //   ),
+                                          //   child: const Text("ACTIVE",style: TextStyle(fontSize: 10,color: white),),
+                                          // )
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                              "+₹${transaction[index].amount.toString()}",
+                                              style: const TextStyle(
+                                                  color: black,
+                                                  fontWeight: FontWeight.w600)),
+                                          Text(
+                                              DateFormat("dd/MM/,HH:mm")
+                                                  .format(DateTime.parse(
+                                                transaction[index]
+                                                    .datetime
+                                                    .toString(),
+                                              )),
+                                              // "16 JUL,17:53",
+                                              style: const TextStyle(
+                                                  color: labelColor,
+                                                  fontWeight: FontWeight.w500)),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: width * 0.03,
+                                      ),
+                                      const Icon(
+                                        (Icons.arrow_forward_ios_sharp),
+                                        size: 15,
+                                      )
+                                    ],
                                   ),
-                                );
-                              });
-                        } else {
-                          return const Center(
-                            child: Text(
-                              "No Transaction History Found!",
-                              style: TextStyle(color: Colors.black, fontSize: 16),
-                            ),
-                          );
-                        }
-                      default:
-                        return Container();
-                    }
-                  },
-                ),
+                                ),
+                              );
+                            });
+                      } else {
+                        return const Center(
+                          child: Text(
+                            "No Transaction History Found!",
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                        );
+                      }
+                    default:
+                      return const Center(
+                        child: Text(
+                          "No Transaction History Found!",
+                          style: TextStyle(color: Colors.black, fontSize: 16),
+                        ),
+                      );
+                  }
+                },
               ),
+              // child: ChangeNotifierProvider<TransactionHistoryViewModel>(
+              //   create: (BuildContext context) => transactionHistoryViewModel,
+              //   child:Consumer<TransactionHistoryViewModel>(
+              //     builder: (context, resultValue, _) {
+              //       switch (resultValue.transactionHistoryList.status) {
+              //         case Status.LOADING:
+              //           return const Center(
+              //             child: CircularProgressIndicator(),
+              //           );
+              //         case Status.ERROR:
+              //           return Container();
+              //         case Status.COMPLETED:
+              //           final transaction =
+              //               resultValue.transactionHistoryList.data!.data;
+              //           if (transaction != null && transaction.isNotEmpty) {
+              //             return ListView.builder(
+              //                 itemCount: transaction.length,
+              //                 scrollDirection: Axis.vertical,
+              //                 shrinkWrap: true,
+              //                 itemBuilder: (BuildContext context, int index) {
+              //                   return Padding(
+              //                     padding: const EdgeInsets.all(8.0),
+              //                     child: Container(
+              //                       padding: const EdgeInsets.all(8),
+              //                       height: height * 0.14,
+              //                       decoration: const BoxDecoration(
+              //                           color: white,
+              //                           borderRadius: BorderRadius.all(
+              //                               Radius.circular(10))),
+              //                       child: Row(
+              //                         // crossAxisAlignment: CrossAxisAlignment.start,
+              //                         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                         children: [
+              //                           Image.asset(
+              //                             Assets.imagesCashback,
+              //                             scale: 3,
+              //                           ),
+              //                           SizedBox(
+              //                             width: width * 0.04,
+              //                           ),
+              //                            Column(
+              //                             crossAxisAlignment:
+              //                                 CrossAxisAlignment.start,
+              //                             mainAxisAlignment:
+              //                                 MainAxisAlignment.spaceEvenly,
+              //                             children: [
+              //                               Text(transaction[index].type.toString(),
+              //                                   style: const TextStyle(
+              //                                       color: black,
+              //                                       fontWeight: FontWeight.w600)),
+              //                               Text(transaction[index].description.toString().toUpperCase(),
+              //                                   style: const TextStyle(
+              //                                       // color: red,
+              //                                       fontWeight: FontWeight.w600,
+              //                                       fontSize:8 )),
+              //                               // Container(
+              //                               //   alignment: Alignment.center,
+              //                               //   height: height*0.022,
+              //                               //   width: width * 0.16,
+              //                               //   decoration: const BoxDecoration(
+              //                               //     borderRadius:
+              //                               //     BorderRadius.all(Radius.circular(5)),
+              //                               //     color: green,
+              //                               //   ),
+              //                               //   child: const Text("ACTIVE",style: TextStyle(fontSize: 10,color: white),),
+              //                               // )
+              //                             ],
+              //                           ),
+              //                           const Spacer(),
+              //                            Column(
+              //                             crossAxisAlignment:
+              //                                 CrossAxisAlignment.end,
+              //                             mainAxisAlignment:
+              //                                 MainAxisAlignment.spaceEvenly,
+              //                             children: [
+              //                               Text("+₹${transaction[index].amount.toString()}",
+              //                                   style: const TextStyle(
+              //                                       color: black,
+              //                                       fontWeight: FontWeight.w600)),
+              //                                Text(
+              //                                   DateFormat("dd/MM/,HH:mm")
+              //                                       .format(DateTime.parse(
+              //                                     transaction[index].datetime.toString(),
+              //                                   )),
+              //                                   // "16 JUL,17:53",
+              //                                   style: TextStyle(
+              //                                       color: labelColor,
+              //                                       fontWeight: FontWeight.w500)),
+              //                             ],
+              //                           ),
+              //                           SizedBox(
+              //                             width: width * 0.03,
+              //                           ),
+              //                           const Icon(
+              //                             (Icons.arrow_forward_ios_sharp),
+              //                             size: 15,
+              //                           )
+              //                         ],
+              //                       ),
+              //                     ),
+              //                   );
+              //                 });
+              //           } else {
+              //             return const Center(
+              //               child: Text(
+              //                 "No Transaction History Found!",
+              //                 style: TextStyle(color: Colors.black, fontSize: 16),
+              //               ),
+              //             );
+              //           }
+              //         default:
+              //           return Center(
+              //             child: Text(
+              //               "No Transaction History Found!",
+              //               style: TextStyle(color: Colors.black, fontSize: 16),
+              //             ),
+              //           );
+              //       }
+              //     },
+              //   ),
+              // ),
             ),
           ],
         ),

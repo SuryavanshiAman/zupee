@@ -26,9 +26,10 @@ class ProfileUpdateViewModel with ChangeNotifier {
     String? userId = await userViewModel.getUser();
     Map data = {
       "userid":userId,
-      "username":name,
+      "name":name,
       "image": image,
     };
+    print("ProfileUpdateData:$data");
     _profileUpdateRepo.profileUpdateApi(data).then((value) {
       if (value['status'] == "200") {
         setLoading(false);

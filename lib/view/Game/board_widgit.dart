@@ -354,9 +354,8 @@
 //       );
 // }
 import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
@@ -381,7 +380,7 @@ class PlayerData {
   }
   // Convert PlayerData object to a Map
   Map<String, dynamic> toJson() => {
-    'name': name,
+    'data': name,
     'score': score,
   };
 }
@@ -423,7 +422,23 @@ class _BoardWidgetState extends State<BoardWidget> {
 
   @override
   Widget build(BuildContext context) {
-  final firebaseData=Provider.of<FirebaseViewModel>(context);
+  final ludoProvider=Provider.of<LudoProvider>(context);
+    List<PlayerData> playerDataList = [];
+
+    for (int i = 0; i < ludoProvider.players.length; i++) {
+      var player = ludoProvider.players[i];
+      int totalSteps = player.pawns.fold(0, (sum, pawn) {
+        return sum + (pawn.step - (pawn.initialStep ?? 0));
+      });
+      playerDataList.add(PlayerData(name: widget.playerData[i], score: totalSteps));
+    }
+
+    // Defer the update until after the frame is rendered
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      final jsonData =jsonEncode(playerDataList.map((e) => e.toJson()).toList().toString());
+      ludoProvider.setPlayerDataFromJson(playerDataList.map((e) => e.toJson()).toList());
+      print('Player Data JSON: $jsonData');
+    });
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -467,19 +482,19 @@ class _BoardWidgetState extends State<BoardWidget> {
                   int totalSteps = player.pawns.fold(0, (sum, pawn) {
                     return sum + (pawn.step - (pawn.initialStep ?? 0));
                   });
-                  List<PlayerData> playerDataList = [];
-
-                  for (int i = 0; i < value.players.length; i++) {
-                    var player = value.players[i];
-                    int totalSteps = player.pawns.fold(0, (sum, pawn) {
-                      return sum + (pawn.step - (pawn.initialStep ?? 0));
-                    });
-
-                    playerDataList.add(PlayerData(name: widget.playerData[i], score: totalSteps));
-                  }
-                  final jsonData = jsonEncode(playerDataList.map((e) => e.toJson()).toList());
-                  value.setPlayerDataFromJson(playerDataList.map((e) => e.toJson()).toList());
-                  print('Player Data JSON: $jsonData');
+                  // List<PlayerData> playerDataList = [];
+                  //
+                  // for (int i = 0; i < value.players.length; i++) {
+                  //   var player = value.players[i];
+                  //   int totalSteps = player.pawns.fold(0, (sum, pawn) {
+                  //     return sum + (pawn.step - (pawn.initialStep ?? 0));
+                  //   });
+                  //
+                  //   playerDataList.add(PlayerData(name: widget.playerData[i], score: totalSteps));
+                  // }
+                  // final jsonData = jsonEncode(playerDataList.map((e) => e.toJson()).toList());
+                  // // value.setPlayerDataFromJson(playerDataList.map((e) => e.toJson()).toList());
+                  // print('Player Data JSON: $jsonData');
                   return Container(
                     padding: const EdgeInsets.only(top: 10),
                     alignment: Alignment.center,

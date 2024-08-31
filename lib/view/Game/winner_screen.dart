@@ -126,294 +126,294 @@ class _WinnerScreenState extends State<WinnerScreen> {
                           SizedBox(
                             height: height * 0.005,
                           ),
-                          // Consumer<LudoProvider>(
-                          //   builder: (context, ludoProvider, child) {
-                          //     return ListView.builder(
-                          //       shrinkWrap: true,
-                          //       physics: const NeverScrollableScrollPhysics(),
-                          //       itemCount: 2,
-                          //       itemBuilder: (context, index) {
-                          //         var player =
-                          //             ludoProvider.playerDataList[index];
-                          //
-                          //         return Container(
-                          //           padding: const EdgeInsets.all(3),
-                          //           height: height * 0.055,
-                          //           width: width * 0.8,
-                          //           decoration: BoxDecoration(
-                          //               border:
-                          //                   Border.all(color: white, width: 1),
-                          //               color: blue,
-                          //               borderRadius: BorderRadius.circular(8)),
-                          //           child: Row(
-                          //             children: [
-                          //               Stack(
-                          //                 children: [
-                          //                   Padding(
-                          //                     padding: const EdgeInsets.only(
-                          //                         left: 25.0, top: 9),
-                          //                     child: Container(
-                          //                         alignment: Alignment.center,
-                          //                         width: width * 0.12,
-                          //                         height: height * 0.025,
-                          //                         decoration:
-                          //                             const BoxDecoration(
-                          //                                 // shape: BoxShape.circle,
-                          //                                 image: DecorationImage(
-                          //                                     image: AssetImage(
-                          //                                         Assets
-                          //                                             .imagesFirsrt),
-                          //                                     fit:
-                          //                                         BoxFit.fill)),
-                          //                         child:  Text("${index + 1}${index == 0 ? 'st' : 'nd'}",
-                          //                             style: const TextStyle(
-                          //                                 color: cream,
-                          //                                 fontWeight:
-                          //                                     FontWeight.w600,
-                          //                                 fontSize: 13))),
-                          //                   ),
-                          //                   Container(
-                          //                       decoration: const BoxDecoration(
-                          //                           shape: BoxShape.circle,
-                          //                           image: DecorationImage(
-                          //                               image: AssetImage(Assets
-                          //                                   .ludoProfileSection))),
-                          //                       child: Image.asset(
-                          //                         Assets.ludoUser,
-                          //                       )),
-                          //                 ],
-                          //               ),
-                          //               SizedBox(
-                          //                 width: width * 0.03,
-                          //               ),
-                          //               Text("+91${maskNumber(number)}",
-                          //                   style: const TextStyle(
-                          //                       color: white,
-                          //                       fontWeight: FontWeight.w600,
-                          //                       fontSize: 13)),
-                          //               SizedBox(
-                          //                 width: width * 0.04,
-                          //               ),
-                          //               Text(player['score'].toString(),
-                          //                   style: const TextStyle(
-                          //                       color: white,
-                          //                       fontWeight: FontWeight.w600,
-                          //                       fontSize: 16)),
-                          //               SizedBox(
-                          //                 width: width * 0.1,
-                          //               ),
-                          //               const Text("₹1.7",
-                          //                   style: TextStyle(
-                          //                       color: white,
-                          //                       fontWeight: FontWeight.w600,
-                          //                       fontSize: 16)),
-                          //             ],
+                          Consumer<LudoProvider>(
+                            builder: (context, ludoProvider, child) {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: 2,
+                                itemBuilder: (context, index) {
+                                  var player =
+                                      ludoProvider.playerDataList[index];
+
+                                  return Container(
+                                    padding: const EdgeInsets.all(3),
+                                    height: height * 0.055,
+                                    width: width * 0.8,
+                                    decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: white, width: 1),
+                                        color: blue,
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Row(
+                                      children: [
+                                        Stack(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 25.0, top: 9),
+                                              child: Container(
+                                                  alignment: Alignment.center,
+                                                  width: width * 0.12,
+                                                  height: height * 0.025,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                          // shape: BoxShape.circle,
+                                                          image: DecorationImage(
+                                                              image: AssetImage(
+                                                                  Assets
+                                                                      .imagesFirsrt),
+                                                              fit:
+                                                                  BoxFit.fill)),
+                                                  child:  Text("${index + 1}${index == 0 ? 'st' : 'nd'}",
+                                                      style: const TextStyle(
+                                                          color: cream,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 13))),
+                                            ),
+                                            Container(
+                                                decoration: const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                        image: AssetImage(Assets
+                                                            .ludoProfileSection))),
+                                                child: Image.asset(
+                                                  Assets.ludoUser,
+                                                )),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width: width * 0.03,
+                                        ),
+                                        Text("+91${maskNumber(number)}",
+                                            style: const TextStyle(
+                                                color: white,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 13)),
+                                        SizedBox(
+                                          width: width * 0.04,
+                                        ),
+                                        Text(player['score'].toString(),
+                                            style: const TextStyle(
+                                                color: white,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16)),
+                                        SizedBox(
+                                          width: width * 0.1,
+                                        ),
+                                        const Text("₹1.7",
+                                            style: TextStyle(
+                                                color: white,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16)),
+                                      ],
+                                    ),
+                                  );
+                                  //   Container(
+                                  //   padding: const EdgeInsets.all(3),
+                                  //   // margin: const EdgeInsets.symmetric(vertical: 4),
+                                  //   height: MediaQuery.of(context).size.height * 0.055,
+                                  //   width: MediaQuery.of(context).size.width * 0.8,
+                                  //   decoration: BoxDecoration(
+                                  //     border: Border.all(color: Colors.white, width: 1),
+                                  //     color: index == 0 ? blue : Color(0xff1e2283).withOpacity(0.5),
+                                  //     borderRadius: BorderRadius.circular(8),
+                                  //   ),
+                                  //   child: Row(
+                                  //     children: [
+                                  //       Stack(
+                                  //         children: [
+                                  //           Padding(
+                                  //             padding: const EdgeInsets.only(left: 25.0, top: 9),
+                                  //             child: Container(
+                                  //               alignment: Alignment.center,
+                                  //               width:width * 0.12,
+                                  //               height: height * 0.025,
+                                  //               decoration: BoxDecoration(
+                                  //                 image: DecorationImage(
+                                  //                   image: AssetImage( Assets.imagesFirsrt),
+                                  //                   fit: BoxFit.fill,
+                                  //                 ),
+                                  //               ),
+                                  //               child: Text(
+                                  //                 "${index + 1}${index == 0 ? 'st' : 'nd'}",
+                                  //                 style: const TextStyle(color: cream, fontWeight: FontWeight.w600, fontSize: 13),
+                                  //               ),
+                                  //             ),
+                                  //           ),
+                                  //           Container(
+                                  //             decoration: BoxDecoration(
+                                  //               shape: BoxShape.circle,
+                                  //               image: DecorationImage(image: AssetImage(Assets.ludoProfileSection)),
+                                  //             ),
+                                  //             child: Image.asset(Assets.ludoUser),
+                                  //           ),
+                                  //         ],
+                                  //       ),
+                                  //       SizedBox(width: width * 0.03),
+                                  //       Text(
+                                  //         "+91${maskNumber(number)}",
+                                  //         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13),
+                                  //       ),
+                                  //       SizedBox(width: width * 0.09),
+                                  //       Text(
+                                  //         player['score'].toString(),
+                                  //         style: const TextStyle(color: white, fontWeight: FontWeight.w600, fontSize: 16),
+                                  //       ),
+                                  //       SizedBox(width: width * 0.1),
+                                  //       const Text(
+                                  //         "₹1.7",
+                                  //         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // );
+                                },
+                              );
+                            },
+                          ),
+                          // Container(
+                          //   padding: const EdgeInsets.all(3),
+                          //   height: height * 0.055,
+                          //   width: width * 0.8,
+                          //   decoration: BoxDecoration(
+                          //       border: Border.all(color: white, width: 1),
+                          //       color: blue,
+                          //       borderRadius: BorderRadius.circular(8)),
+                          //   child: Row(
+                          //     children: [
+                          //       Stack(
+                          //         children: [
+                          //           Padding(
+                          //             padding: const EdgeInsets.only(
+                          //                 left: 25.0, top: 9),
+                          //             child: Container(
+                          //                 alignment: Alignment.center,
+                          //                 width: width * 0.12,
+                          //                 height: height * 0.025,
+                          //                 decoration: const BoxDecoration(
+                          //                     // shape: BoxShape.circle,
+                          //                     image: DecorationImage(
+                          //                         image: AssetImage(
+                          //                             Assets.imagesFirsrt),
+                          //                         fit: BoxFit.fill)),
+                          //                 child: const Text("1st",
+                          //                     style: TextStyle(
+                          //                         color: cream,
+                          //                         fontWeight: FontWeight.w600,
+                          //                         fontSize: 13))),
                           //           ),
-                          //         );
-                          //         //   Container(
-                          //         //   padding: const EdgeInsets.all(3),
-                          //         //   // margin: const EdgeInsets.symmetric(vertical: 4),
-                          //         //   height: MediaQuery.of(context).size.height * 0.055,
-                          //         //   width: MediaQuery.of(context).size.width * 0.8,
-                          //         //   decoration: BoxDecoration(
-                          //         //     border: Border.all(color: Colors.white, width: 1),
-                          //         //     color: index == 0 ? blue : Color(0xff1e2283).withOpacity(0.5),
-                          //         //     borderRadius: BorderRadius.circular(8),
-                          //         //   ),
-                          //         //   child: Row(
-                          //         //     children: [
-                          //         //       Stack(
-                          //         //         children: [
-                          //         //           Padding(
-                          //         //             padding: const EdgeInsets.only(left: 25.0, top: 9),
-                          //         //             child: Container(
-                          //         //               alignment: Alignment.center,
-                          //         //               width:width * 0.12,
-                          //         //               height: height * 0.025,
-                          //         //               decoration: BoxDecoration(
-                          //         //                 image: DecorationImage(
-                          //         //                   image: AssetImage( Assets.imagesFirsrt),
-                          //         //                   fit: BoxFit.fill,
-                          //         //                 ),
-                          //         //               ),
-                          //         //               child: Text(
-                          //         //                 "${index + 1}${index == 0 ? 'st' : 'nd'}",
-                          //         //                 style: const TextStyle(color: cream, fontWeight: FontWeight.w600, fontSize: 13),
-                          //         //               ),
-                          //         //             ),
-                          //         //           ),
-                          //         //           Container(
-                          //         //             decoration: BoxDecoration(
-                          //         //               shape: BoxShape.circle,
-                          //         //               image: DecorationImage(image: AssetImage(Assets.ludoProfileSection)),
-                          //         //             ),
-                          //         //             child: Image.asset(Assets.ludoUser),
-                          //         //           ),
-                          //         //         ],
-                          //         //       ),
-                          //         //       SizedBox(width: width * 0.03),
-                          //         //       Text(
-                          //         //         "+91${maskNumber(number)}",
-                          //         //         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13),
-                          //         //       ),
-                          //         //       SizedBox(width: width * 0.09),
-                          //         //       Text(
-                          //         //         player['score'].toString(),
-                          //         //         style: const TextStyle(color: white, fontWeight: FontWeight.w600, fontSize: 16),
-                          //         //       ),
-                          //         //       SizedBox(width: width * 0.1),
-                          //         //       const Text(
-                          //         //         "₹1.7",
-                          //         //         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),
-                          //         //       ),
-                          //         //     ],
-                          //         //   ),
-                          //         // );
-                          //       },
-                          //     );
-                          //   },
+                          //           Container(
+                          //               decoration: const BoxDecoration(
+                          //                   shape: BoxShape.circle,
+                          //                   image: DecorationImage(
+                          //                       image: AssetImage(Assets
+                          //                           .ludoProfileSection))),
+                          //               child: Image.asset(
+                          //                 Assets.ludoUser,
+                          //               )),
+                          //         ],
+                          //       ),
+                          //       SizedBox(
+                          //         width: width * 0.03,
+                          //       ),
+                          //       Text("+91${maskNumber(number)}",
+                          //           style: const TextStyle(
+                          //               color: white,
+                          //               fontWeight: FontWeight.w600,
+                          //               fontSize: 13)),
+                          //       SizedBox(
+                          //         width: width * 0.04,
+                          //       ),
+                          //       const Text("273",
+                          //           style: TextStyle(
+                          //               color: white,
+                          //               fontWeight: FontWeight.w600,
+                          //               fontSize: 16)),
+                          //       SizedBox(
+                          //         width: width * 0.1,
+                          //       ),
+                          //       const Text("₹1.7",
+                          //           style: TextStyle(
+                          //               color: white,
+                          //               fontWeight: FontWeight.w600,
+                          //               fontSize: 16)),
+                          //     ],
+                          //   ),
                           // ),
-                          Container(
-                            padding: const EdgeInsets.all(3),
-                            height: height * 0.055,
-                            width: width * 0.8,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: white, width: 1),
-                                color: blue,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Row(
-                              children: [
-                                Stack(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 25.0, top: 9),
-                                      child: Container(
-                                          alignment: Alignment.center,
-                                          width: width * 0.12,
-                                          height: height * 0.025,
-                                          decoration: const BoxDecoration(
-                                              // shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                  image: AssetImage(
-                                                      Assets.imagesFirsrt),
-                                                  fit: BoxFit.fill)),
-                                          child: const Text("1st",
-                                              style: TextStyle(
-                                                  color: cream,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 13))),
-                                    ),
-                                    Container(
-                                        decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                                image: AssetImage(Assets
-                                                    .ludoProfileSection))),
-                                        child: Image.asset(
-                                          Assets.ludoUser,
-                                        )),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: width * 0.03,
-                                ),
-                                Text("+91${maskNumber(number)}",
-                                    style: const TextStyle(
-                                        color: white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13)),
-                                SizedBox(
-                                  width: width * 0.04,
-                                ),
-                                const Text("273",
-                                    style: TextStyle(
-                                        color: white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16)),
-                                SizedBox(
-                                  width: width * 0.1,
-                                ),
-                                const Text("₹1.7",
-                                    style: TextStyle(
-                                        color: white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16)),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: height * 0.01,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(3),
-                            height: height * 0.055,
-                            width: width * 0.8,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: white, width: 1),
-                                color: const Color(0xff1e2283).withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Row(
-                              children: [
-                                Stack(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 25.0, top: 9),
-                                      child: Container(
-                                          alignment: Alignment.center,
-                                          width: width * 0.12,
-                                          height: height * 0.025,
-                                          decoration: const BoxDecoration(
-                                              // shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                  image: AssetImage(
-                                                      Assets.imagesFirsrt),
-                                                  fit: BoxFit.fill)),
-                                          child: const Text("2nd",
-                                              style: TextStyle(
-                                                  color: cream,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 13))),
-                                    ),
-                                    Container(
-                                        decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                                image: AssetImage(Assets
-                                                    .ludoProfileSection))),
-                                        child: Image.asset(
-                                          Assets.ludoUser,
-                                        )),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: width * 0.03,
-                                ),
-                                Text("+91${maskNumber(number)}",
-                                    style: const TextStyle(
-                                        color: white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13)),
-                                SizedBox(
-                                  width: width * 0.04,
-                                ),
-                                const Text("273",
-                                    style: TextStyle(
-                                        color: white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16)),
-                                SizedBox(
-                                  width: width * 0.1,
-                                ),
-                                const Text("₹1.7",
-                                    style: TextStyle(
-                                        color: white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16)),
-                              ],
-                            ),
-                          ),
+                          // SizedBox(
+                          //   height: height * 0.01,
+                          // ),
+                          // Container(
+                          //   padding: const EdgeInsets.all(3),
+                          //   height: height * 0.055,
+                          //   width: width * 0.8,
+                          //   decoration: BoxDecoration(
+                          //       border: Border.all(color: white, width: 1),
+                          //       color: const Color(0xff1e2283).withOpacity(0.5),
+                          //       borderRadius: BorderRadius.circular(8)),
+                          //   child: Row(
+                          //     children: [
+                          //       Stack(
+                          //         children: [
+                          //           Padding(
+                          //             padding: const EdgeInsets.only(
+                          //                 left: 25.0, top: 9),
+                          //             child: Container(
+                          //                 alignment: Alignment.center,
+                          //                 width: width * 0.12,
+                          //                 height: height * 0.025,
+                          //                 decoration: const BoxDecoration(
+                          //                     // shape: BoxShape.circle,
+                          //                     image: DecorationImage(
+                          //                         image: AssetImage(
+                          //                             Assets.imagesFirsrt),
+                          //                         fit: BoxFit.fill)),
+                          //                 child: const Text("2nd",
+                          //                     style: TextStyle(
+                          //                         color: cream,
+                          //                         fontWeight: FontWeight.w600,
+                          //                         fontSize: 13))),
+                          //           ),
+                          //           Container(
+                          //               decoration: const BoxDecoration(
+                          //                   shape: BoxShape.circle,
+                          //                   image: DecorationImage(
+                          //                       image: AssetImage(Assets
+                          //                           .ludoProfileSection))),
+                          //               child: Image.asset(
+                          //                 Assets.ludoUser,
+                          //               )),
+                          //         ],
+                          //       ),
+                          //       SizedBox(
+                          //         width: width * 0.03,
+                          //       ),
+                          //       Text("+91${maskNumber(number)}",
+                          //           style: const TextStyle(
+                          //               color: white,
+                          //               fontWeight: FontWeight.w600,
+                          //               fontSize: 13)),
+                          //       SizedBox(
+                          //         width: width * 0.04,
+                          //       ),
+                          //       const Text("273",
+                          //           style: TextStyle(
+                          //               color: white,
+                          //               fontWeight: FontWeight.w600,
+                          //               fontSize: 16)),
+                          //       SizedBox(
+                          //         width: width * 0.1,
+                          //       ),
+                          //       const Text("₹1.7",
+                          //           style: TextStyle(
+                          //               color: white,
+                          //               fontWeight: FontWeight.w600,
+                          //               fontSize: 16)),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

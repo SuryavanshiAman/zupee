@@ -368,25 +368,30 @@ import 'ludo_constant.dart';
 import 'ludo_player.dart';
 import 'pawn_widgit.dart';
 class PlayerData {
-  final String name;
-  final int score;
+  final Map<String, dynamic>  name;
+  final String score;
 
-  PlayerData({required this.name, required this.score});
+  PlayerData({
+    required this.name,
+    required this.score,
+  });
+
   factory PlayerData.fromJson(Map<String, dynamic> json) {
     return PlayerData(
       name: json['name'],
       score: json['score'],
     );
   }
-  // Convert PlayerData object to a Map
+
   Map<String, dynamic> toJson() => {
-    'data': name,
+    'name': name,
     'score': score,
   };
 }
+
 ///Widget for the board
 class BoardWidget extends StatefulWidget {
-  final List<String> playerData;
+  final List<Map<String,dynamic>> playerData;
   const BoardWidget({super.key,required this.playerData});
 
   @override
@@ -423,6 +428,7 @@ class _BoardWidgetState extends State<BoardWidget> {
   @override
   Widget build(BuildContext context) {
   final ludoProvider=Provider.of<LudoProvider>(context);
+
     List<PlayerData> playerDataList = [];
 
     for (int i = 0; i < ludoProvider.players.length; i++) {
@@ -430,13 +436,13 @@ class _BoardWidgetState extends State<BoardWidget> {
       int totalSteps = player.pawns.fold(0, (sum, pawn) {
         return sum + (pawn.step - (pawn.initialStep ?? 0));
       });
-      playerDataList.add(PlayerData(name: widget.playerData[i], score: totalSteps));
+      playerDataList.add(PlayerData(name: widget.playerData[i], score: totalSteps.toString()));
     }
 
     // Defer the update until after the frame is rendered
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      final jsonData =jsonEncode(playerDataList.map((e) => e.toJson()).toList().toString());
-      ludoProvider.setPlayerDataFromJson(playerDataList.map((e) => e.toJson()).toList());
+      final jsonData =jsonEncode(playerDataList.map((e) => e.toJson()).toList());
+      ludoProvider.setPlayerDataFromJson(playerDataList.map((e) =>e.toJson()).toList());
       print('Player Data JSON: $jsonData');
     });
     return Stack(

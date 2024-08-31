@@ -647,7 +647,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-import 'board_widgit.dart';
 import 'ludo_constant.dart';
 import 'ludo_player.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
@@ -857,7 +856,17 @@ class LudoProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+  void resetPawns() {
 
+    for (var player in players) {
+      for (var pawn in player.pawns) {
+        pawn.step = 0; // Reset to the initial position
+        // Optionally, update Firestore as well if needed
+        // await updatePawnPositionInFirestore(player.type, pawn.index, -1);
+      }
+    }
+    notifyListeners(); // Notify listeners to rebuild the UI
+  }
   void nextTurn() async {
     if (_diceResult == 6) {
       _gameState = LudoGameState.throwDice;

@@ -11,6 +11,8 @@ import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/time_page.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view/Game/ludo_player.dart';
+import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view/bottomsheet/tournament_bottomsheet.dart';
 import 'package:zupee/view_model/confirm_payment_view_model.dart';
 import 'package:zupee/view_model/contest_category_view_model.dart';
@@ -206,7 +208,7 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                                             child: Container(
                                                 height: height * 0.045,
                                                 padding:
-                                                     EdgeInsets.all(9),
+                                                     const EdgeInsets.all(9),
                                                 decoration: BoxDecoration(
                                                     color: selectedIndices==index
                                                         ? secondary
@@ -1148,6 +1150,8 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
     final profile =
         Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
     final confirmPayment =Provider.of<ConfirmPaymentViewModel>(context,listen: false).confirmPaymentResponse;
+    final ludoProvider =Provider.of<LudoProvider>(context,listen: false);
+
     final join =Provider.of<JoinViewModel>(context,listen: false);
     showModalBottomSheet(
       isScrollControlled: true,
@@ -1263,19 +1267,19 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text('₹${confirmPayment?.deductions?.bonus??"0"}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                               color: labelColor)),
-                                      SizedBox(height: 8),
+                                      const SizedBox(height: 8),
                                       Text(' ₹${confirmPayment?.deductions?.cashback??"0"}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                               color: labelColor)),
-                                      SizedBox(height: 8),
+                                      const SizedBox(height: 8),
                                       Text('₹${confirmPayment?.deductions?.depositWinning??"0"}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                               color: labelColor)),
@@ -1346,7 +1350,6 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                 child: CustomContainer(
 
                   onTap: () async {
-                    int documentId = 1;
                     final firebaseViewModel =
                     Provider.of<FirebaseViewModel>(context, listen: false);
                     setState(() {
@@ -1354,66 +1357,9 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                       nextPage = false;
                       time = true;
                       Navigator.pop(context);
+
                     });
-                    // final firebaseViewModel =
-                    // Provider.of<FirebaseViewModel>(context, listen: false);
-                    FirebaseFirestore fireStore = FirebaseFirestore.instance;
-                    CollectionReference ludoCollection =
-                    fireStore.collection('ludo');
-                    bool isAdded = false;
-                    while (!isAdded) {
-                      DocumentSnapshot documentSnapshot =
-                      await ludoCollection.doc(documentId.toString()).get();
-
-                      if (!documentSnapshot.exists) {
-                        // If the document does not exist, create a new document and add the data
-                        print("Creating new document with ID $documentId");
-                        Map<String, dynamic> jsonData = {
-                          "1":
-                          '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}"}',
-                          "2": '',
-                          "3": '',
-                          "4": ''
-                        };
-                        await ludoCollection
-                            .doc(documentId.toString())
-                            .set(jsonData);
-                        isAdded = true; // Data is added, stop the loop
-                      } else {
-                        // Document exists, check for available spaces
-                        print(
-                            "Document $documentId exists, checking for available spaces");
-                        Map<String, dynamic>? existingData =
-                        documentSnapshot.data() as Map<String, dynamic>?;
-                        for (int i = 1; i <= 4; i++) {
-                          String fieldKey = i.toString();
-                          print(
-                              "Checking field $fieldKey in document $documentId");
-                          if (existingData != null &&
-                              (existingData[fieldKey] == '' ||
-                                  existingData[fieldKey] == null)) {
-                            print(
-                                "Empty spot found at $fieldKey in document $documentId, updating...");
-                            await ludoCollection
-                                .doc(documentId.toString())
-                                .update({
-                              fieldKey:
-                              '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}"}'
-                            });
-                            isAdded = true; // Data is added, stop the loop
-                            break; // Exit the loop after updating the first empty spot
-                          }
-                        }
-
-                        if (!isAdded) {
-                          documentId += 1;
-                        }
-                      }
-                    }
-                    if (isAdded) {
-                      print("hellowAman");
-                      firebaseViewModel.setTable(documentId);
-                    }
+                    ludoProvider.resetPawns();
                     join.joinApi(tournamentID.toString(), firebaseViewModel.table.toString(), context);
                     showModalBottomSheet(
                       elevation: 5,

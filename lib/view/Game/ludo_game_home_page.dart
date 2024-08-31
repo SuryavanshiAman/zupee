@@ -100,7 +100,7 @@ final docId=documentID.table.toString();
     Map<String, dynamic> player2Data = data['2'].isNotEmpty ? json.decode(data['2']) : {};
     Map<String, dynamic> player3Data = data['3'].isNotEmpty ? json.decode(data['3']) : {};
     Map<String, dynamic> player4Data = data['4'].isNotEmpty ? json.decode(data['4']) : {};
-    final List<String> playerData = [player1Data['name'].toString(), player2Data.toString(), player2Data.toString(), player2Data.toString()];
+    final List<Map<String, dynamic> > playerData = [player1Data, player2Data, player3Data, player3Data];
     // Build the dynamic content using the parsed data
     return Container(
       height: height,

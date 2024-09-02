@@ -123,6 +123,7 @@ import 'ludo_constant.dart';
 import 'ludo_provider.dart';
 
 class PawnWidget extends StatefulWidget {
+
   final int index;
   final LudoPlayerType type;
   int step;

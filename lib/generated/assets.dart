@@ -13,6 +13,7 @@ class Assets {
   static const String diceGreenpawn = 'assets/dice/greenpawn.png';
   static const String diceRedPawn = 'assets/dice/red_pawn.webp';
   static const String diceYellowPawn = 'assets/dice/yellow_pawn.webp';
+  static const String fontDigital7 = 'assets/font/digital-7.ttf';
   static const String gifIcons8Hourglass = 'assets/gif/icons8-hourglass.gif';
   static const String iconAccount = 'assets/icon/account.png';
   static const String iconAccountTwo = 'assets/icon/account_two.png';

@@ -1359,7 +1359,7 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                       Navigator.pop(context);
 
                     });
-                    ludoProvider.resetPawns();
+                    ludoProvider.resetPawns(context);
                     join.joinApi(tournamentID.toString(), firebaseViewModel.table.toString(), context);
                     showModalBottomSheet(
                       elevation: 5,

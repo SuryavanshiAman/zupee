@@ -236,7 +236,7 @@ final docId=documentID.table.toString();
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                userDiceDesign(),
+                userDiceDesign(playerData),
                 // Container(
                 //     height: height * 0.07,
                 //     width: width * 0.15,
@@ -270,7 +270,7 @@ final docId=documentID.table.toString();
                 //       ),
                 //     )),
                 const Spacer(),
-                opponentsOneTurn(),
+                opponentsOneTurn(playerData),
               ],
             ),
           ),
@@ -280,9 +280,9 @@ final docId=documentID.table.toString();
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                opponentsTwoTurn(),
+                opponentsTwoTurn(playerData),
                 const Spacer(),
-                opponentsThreeTurn(),
+                opponentsThreeTurn(playerData),
               ],
             ),
           ),
@@ -339,7 +339,7 @@ final docId=documentID.table.toString();
       ),
     );
   }
-  Widget userDiceDesign() {
+  Widget userDiceDesign(List<Map<String, dynamic>> playerData) {
     return Consumer<LudoProvider>(
       builder: (context, value, child) => Padding(
         padding: const EdgeInsets.only(bottom:0, left:  0),
@@ -360,7 +360,7 @@ final docId=documentID.table.toString();
               width: width * 0.23,
               fit: BoxFit.fill,
             )),
-          value.currentPlayer.type ==LudoPlayerType.blue?const DiceWidget():
+          value.currentPlayer.type ==LudoPlayerType.blue? DiceWidget(playerData: playerData):
           Container(
               alignment: Alignment.center,
               height: height * 0.08,
@@ -386,13 +386,13 @@ final docId=documentID.table.toString();
   }
 
   // bool isUserTurn = true;
-  Widget opponentsOneTurn() {
+  Widget opponentsOneTurn(List<Map<String, dynamic>> playerData) {
     return Consumer<LudoProvider>(
       builder: (context, value, child) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            value.currentPlayer.type ==LudoPlayerType.red?const DiceWidget():
+            value.currentPlayer.type ==LudoPlayerType.red? DiceWidget(playerData: playerData):
             Container(
                 alignment: Alignment.center,
                 height: height * 0.08,
@@ -430,7 +430,7 @@ final docId=documentID.table.toString();
       },
     );
   }
-  Widget opponentsTwoTurn() {
+  Widget opponentsTwoTurn(List<Map<String, dynamic>> playerData) {
     return Consumer<LudoProvider>(
       builder: (context, value, child) {
         return Row(
@@ -450,7 +450,7 @@ final docId=documentID.table.toString();
                   width: width * 0.23,
                   fit: BoxFit.fill,
                 )),
-            value.currentPlayer.type ==LudoPlayerType.yellow?const DiceWidget():
+            value.currentPlayer.type ==LudoPlayerType.yellow? DiceWidget(playerData: playerData):
 
             Container(
                 alignment: Alignment.center,
@@ -476,13 +476,13 @@ final docId=documentID.table.toString();
       },
     );
   }
-  Widget opponentsThreeTurn() {
+  Widget opponentsThreeTurn(List<Map<String, dynamic>> playerData) {
     return Consumer<LudoProvider>(
       builder: (context, value, child) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            value.currentPlayer.type ==LudoPlayerType.green?const DiceWidget():
+            value.currentPlayer.type ==LudoPlayerType.green? DiceWidget(playerData: playerData):
             Container(
                 alignment: Alignment.center,
                 height: height * 0.08,

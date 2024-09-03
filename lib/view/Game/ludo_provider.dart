@@ -1,4 +1,5 @@
 
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,7 +19,7 @@ class LudoProvider extends ChangeNotifier {
   int _diceResult = 1;
   bool _diceStarted = false;
   LudoPlayerType _currentTurn = LudoPlayerType.yellow;
-
+  DocumentReference<Map<String, dynamic>>? gameDoc;
   final List<LudoPlayer> players = [
     LudoPlayer(LudoPlayerType.blue),
     LudoPlayer(LudoPlayerType.red),
@@ -35,7 +36,7 @@ class LudoProvider extends ChangeNotifier {
 
   // Other existing properties and methods
 
-  void setTopFourPlayers(List<PlayerData> playerDataList) {
+  void setTopFourPlayers(List<PlayerData> playerDataList) async {
     // Sort the player data by score in descending order
     playerDataList.sort((a, b) => int.parse(b.score).compareTo(int.parse(a.score)));
 
@@ -44,7 +45,18 @@ class LudoProvider extends ChangeNotifier {
     secondPlace = playerDataList.length > 1 ? playerDataList[1] : null;
     thirdPlace = playerDataList.length > 2 ? playerDataList[2] : null;
     fourthPlace = playerDataList.length > 3 ? playerDataList[3] : null;
+    if (gameDoc != null) {
+      Map<String, dynamic> topPlayersData = {
+        'firstPlace': firstPlace?.toJson(),
+        'secondPlace': secondPlace?.toJson(),
+        'thirdPlace': thirdPlace?.toJson(),
+        'fourthPlace': fourthPlace?.toJson(),
+      };
 
+      await gameDoc!.update({
+    'topPlayers': topPlayersData,
+    });
+  }
     notifyListeners();
   }
   // Setter method to set player data from JSON
@@ -53,8 +65,38 @@ class LudoProvider extends ChangeNotifier {
       notifyListeners();
   }
   final List<LudoPlayerType> winners = [];
-  DocumentReference<Map<String, dynamic>>? gameDoc;
 
+// whiteSaus(){
+//   List<PlayerData> playerDataList = [];
+//   for (int i = 0; i < players.length; i++) {
+//     var player = players[i];
+//     int totalSteps = player.pawns.fold(0, (sum, pawn) {
+//       return sum + (pawn.step - (pawn.initialStep ?? 0));
+//     });
+//     playerDataList.add(PlayerData(name: widget.playerData[i], score: totalSteps.toString()));
+//   }
+//
+// // Sort the player data by score in descending order
+//   playerDataList.sort((a, b) => int.parse(b.score).compareTo(int.parse(a.score)));
+//
+// // Get the highest, second highest, third highest, and fourth highest scores
+//   PlayerData? firstPlace = playerDataList.isNotEmpty ? playerDataList[0] : null;
+//   PlayerData? secondPlace = playerDataList.length > 1 ? playerDataList[1] : null;
+//   PlayerData? thirdPlace = playerDataList.length > 2 ? playerDataList[2] : null;
+//   PlayerData? fourthPlace = playerDataList.length > 3 ? playerDataList[3] : null;
+//
+//   // SchedulerBinding.instance.addPostFrameCallback((_) {
+//     final jsonData = jsonEncode(playerDataList.map((e) => e.toJson()).toList());
+//    setPlayerDataFromJson(playerDataList.map((e) => e.toJson()).toList());
+//  setTopFourPlayers(playerDataList);
+//     print('Player Data JSON: $jsonData');
+//
+//     print('First Place: ${firstPlace?.name['name']} with score ${firstPlace?.score}');
+//     print('Second Place: ${secondPlace?.name['name']} with score ${secondPlace?.score}');
+//     print('Third Place: ${thirdPlace?.name['name']} with score ${thirdPlace?.score}');
+//     print('Fourth Place: ${fourthPlace?.name['name']} with score ${fourthPlace?.score}');
+//   // });
+// }
   void _listenToGameUpdates() {
     gameDoc!.snapshots().listen((snapshot) {
       if (snapshot.exists) {
@@ -239,40 +281,15 @@ class LudoProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-  // void determineRankings() {
-  //   // Create a list of maps, each containing the player type and their corresponding score
-  //   List<Map<String, dynamic>> playerScores = players.map((player) {
-  //     return {
-  //       'type': player.type,
-  //       'score': player.pawns.where((pawn) => pawn.step == player.path.length - 1).length, // Assuming score is based on pawns reaching the end
-  //     };
-  //   }).toList();
-  //
-  //   // Sort the list by scores in descending order
-  //   playerScores.sort((a, b) => b['score'].compareTo(a['score']));
-  //
-  //   // Display or use the rankings
-  //   for (int i = 0; i < playerScores.length; i++) {
-  //     LudoPlayerType playerType = playerScores[i]['type'];
-  //     int score = playerScores[i]['score'];
-  //     int rank = i + 1; // Rank starts from 1
-  //
-  //     print('Rank $rank: Player ${playerType.toString().split('.').last} with score $score');
-  //     // Perform any other operations based on the rank
-  //   }
-  //
-  //   // Notify listeners if needed
-  //   notifyListeners();
-  // }
-  void resetPawns(context) async {
-    final firebaseViewModel = Provider.of<FirebaseViewModel>(context, listen: false).table.toString();
 
+  void resetPawns(context, firebaseViewModel) async {
+   print(" firebaseViewModel$firebaseViewModel");
     for (var player in players) {
       for (var i = 0; i < player.pawns.length; i++) {
         player.pawns[i].step = 0; // Reset to the initial position
         _currentTurn=LudoPlayerType.yellow;
         // Update Firestore with the reset position
-        await FirebaseFirestore.instance.collection('ludo').doc(firebaseViewModel).update({
+        await FirebaseFirestore.instance.collection('ludo').doc(firebaseViewModel.toString()).update({
           '${player.type.toString().split('.').last}PawnPosition$i': 0,
         });
       }

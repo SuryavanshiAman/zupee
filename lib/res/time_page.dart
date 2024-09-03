@@ -147,11 +147,11 @@ class CountdownTimerState extends State<CountdownTimer> {
         } else {
           DateTime currentTime = snapshot.data!;
           int differenceInSeconds = _futureTime!.difference(currentTime).inSeconds;
-          print("AmanTime:$_futureTime");
-          print("AmanCurrentTime:$currentTime");
+          // print("AmanTime:$_futureTime");
+          // print("AmanCurrentTime:$currentTime");
           // Check if the countdown has ended
           if (differenceInSeconds <= 0) {
-            print("differenceInSeconds:$differenceInSeconds");
+            // print("differenceInSeconds:$differenceInSeconds");
             differenceInSeconds = 0; // Prevent negative countdown
             widget.onTimerTick(differenceInSeconds); // Notify when the timer hits zero
             _timer?.cancel(); // Stop the timer

@@ -149,30 +149,16 @@ class _BoardWidgetState extends State<BoardWidget> {
                     if (b.type == LudoPlayerType.yellow) return -1;
                     return 0; // Maintain the order for other players
                   });
-
                   // Ensure Yellow is displayed at index 2
                   var player = sortedPlayers[itemIndex == 2
                       ? sortedPlayers.indexWhere((p) => p.type == LudoPlayerType.yellow)
                       : itemIndex > 2
                       ? itemIndex - 1
                       : itemIndex];
-
+                  // //
                   int totalSteps = player.pawns.fold(0, (sum, pawn) {
                     return sum + (pawn.step - (pawn.initialStep ?? 0));
                   });
-                  // List<PlayerData> playerDataList = [];
-                  //
-                  // for (int i = 0; i < value.players.length; i++) {
-                  //   var player = value.players[i];
-                  //   int totalSteps = player.pawns.fold(0, (sum, pawn) {
-                  //     return sum + (pawn.step - (pawn.initialStep ?? 0));
-                  //   });
-                  //
-                  //   playerDataList.add(PlayerData(name: widget.playerData[i], score: totalSteps));
-                  // }
-                  // final jsonData = jsonEncode(playerDataList.map((e) => e.toJson()).toList());
-                  // // value.setPlayerDataFromJson(playerDataList.map((e) => e.toJson()).toList());
-                  // print('Player Data JSON: $jsonData');
                   return Container(
                     padding: const EdgeInsets.only(top: 10),
                     alignment: Alignment.center,

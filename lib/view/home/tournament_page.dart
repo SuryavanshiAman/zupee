@@ -411,10 +411,10 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                   Consumer<TournamentViewModel>(
                     builder: (context, tournamentValue, _) {
                       switch (tournamentValue.tournamentList.status) {
-                      // case Status.LOADING:
-                      //   return const Center(
-                      //     child: CircularProgressIndicator(),
-                      //   );
+                      case Status.LOADING:
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
                         case Status.ERROR:
                           return Container();
                         case Status.COMPLETED:
@@ -667,7 +667,7 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                           } else {
                             return const Center(
                               child: Text(
-                                "No Tournament Found!",
+                                "No  Found!",
                                 style:
                                 TextStyle(color: Colors.black, fontSize: 16),
                               ),
@@ -1359,7 +1359,7 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                       Navigator.pop(context);
 
                     });
-                    ludoProvider.resetPawns(context);
+
                     join.joinApi(tournamentID.toString(), firebaseViewModel.table.toString(), context);
                     showModalBottomSheet(
                       elevation: 5,

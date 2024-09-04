@@ -74,20 +74,6 @@ class _BoardWidgetState extends State<BoardWidget> {
   @override
   Widget build(BuildContext context) {
   final ludoProvider=Provider.of<LudoProvider>(context);
-    // List<PlayerData> playerDataList = [];
-    // for (int i = 0; i < ludoProvider.players.length; i++) {
-    //   var player = ludoProvider.players[i];
-    //   int totalSteps = player.pawns.fold(0, (sum, pawn) {
-    //     return sum + (pawn.step - (pawn.initialStep ?? 0));
-    //   });
-    //   playerDataList.add(PlayerData(name: widget.playerData[i], score: totalSteps.toString()));
-    // }
-    // // Defer the update until after the frame is rendered
-    // SchedulerBinding.instance.addPostFrameCallback((_) {
-    //   final jsonData =jsonEncode(playerDataList.map((e) => e.toJson()).toList());
-    //   ludoProvider.setPlayerDataFromJson(playerDataList.map((e) =>e.toJson()).toList());
-    //   print('Player Data JSON: $jsonData');
-    // });
   List<PlayerData> playerDataList = [];
   for (int i = 0; i < ludoProvider.players.length; i++) {
     var player = ludoProvider.players[i];
@@ -320,24 +306,5 @@ class _BoardWidgetState extends State<BoardWidget> {
     );
 
   }
-
-  // timerProvider.timerText=="0"?
-  // Future<void> sendPlayerData(LudoProvider value, List<String> playerData) async {
-  // List<PlayerData> playerDataList = [];
-  //
-  // for (int i = 0; i < value.players.length; i++) {
-  // var player = value.players[i];
-  // int totalSteps = player.pawns.fold(0, (sum, pawn) {
-  // return sum + (pawn.step - (pawn.initialStep ?? 0));
-  // });
-  //
-  // playerDataList.add(PlayerData(name: playerData[i], score: totalSteps));
-  // }
-  //
-  // String jsonData = jsonEncode(playerDataList.map((e) => e.toJson()).toList());
-  // print('Player Data JSON: $jsonData');
-  // FirebaseFirestore.instance.collection('ludo').doc('1').set({'playerData': jsonData});
-  //
-  // }
 
 }

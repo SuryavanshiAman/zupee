@@ -102,7 +102,7 @@ class JoinViewModel with ChangeNotifier {
     }).onError((error, stackTrace) {
       setLoading(false);
       if (kDebugMode) {
-        print('registerError: $error');
+        print('joinApi: $error');
       }
     });
   }

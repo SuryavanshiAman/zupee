@@ -16,18 +16,18 @@ class TournamentViewModel with ChangeNotifier {
     tournamentList = response;
     notifyListeners();
   }
-  // List<Data>_tournament=[];
-  // List<Data> get tournament =>_tournament;
-  // setTournamentData(  List<Data> response){
-  //   _tournament = response;
-  //   notifyListeners();
-  // }
+  List<Data>_tournament=[];
+  List<Data> get tournament =>_tournament;
+  setTournamentData(  List<Data> response){
+    _tournament = response;
+    notifyListeners();
+  }
   Future<void>tournamentApi(BuildContext context,dynamic data ) async {
 
     setTournamentList(ApiResponse.loading());
     _tournamentRepo.tournamentApi(data).then((value) {
       if (value.status == "200") {
-        // setTournamentData(value.data!);
+        setTournamentData(value.data!);
         setTournamentList(ApiResponse.completed(value));
       } else {
         setTournamentList(ApiResponse.completed(value));

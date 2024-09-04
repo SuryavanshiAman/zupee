@@ -9,6 +9,8 @@ import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
+
+import '../../view_model/tournament_view_moedl.dart';
 class TrapeziumClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -39,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // bool _showImage = true;
 
   bool _showTitle = true;
-
+  // TournamentViewModel tournamentViewModel = TournamentViewModel();
   @override
   void initState() {
     super.initState();
@@ -47,6 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final profileViewModel= Provider.of<ProfileViewModel>(context,listen: false);
       profileViewModel.getProfileApi(context);
       _scrollController.addListener(_handleScroll);
+      // tournamentViewModel.tournamentApi(context, 0.toString());
+
     });
 
   }

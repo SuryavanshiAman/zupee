@@ -23,7 +23,7 @@ class AuthRepository {
   Future<dynamic> otpApi(dynamic phone) async {
     try {
       dynamic response =
-      await _apiServices.getGetApiResponse("${ApiUrl.sendOtp}mobile=$phone&digit=6&mode=test");
+      await _apiServices.getGetApiResponse("${ApiUrl.sendOtp}mobile=$phone&digit=6&mode=live");
       return response;
     } catch (e) {
       if (kDebugMode) {

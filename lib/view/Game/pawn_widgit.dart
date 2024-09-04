@@ -35,6 +35,8 @@ class _PawnWidgetState extends State<PawnWidget> {
   @override
   void initState() {
     super.initState();
+    final firebaseViewModel =Provider.of<FirebaseViewModel>(context,listen: false);
+    print("PawnWidget${firebaseViewModel.table}");
     gameDoc = FirebaseFirestore.instance.collection('ludo').doc(firebaseViewModel.table.toString());
     _fetchPawnAsset(); // Fetch the pawn asset on initialization
     _listenForPawnChanges(); // Listen for pawn position updates
@@ -52,7 +54,6 @@ class _PawnWidgetState extends State<PawnWidget> {
     final snapshot = await gameDoc.get();
     if (snapshot.exists) {
       final data = snapshot.data();
-      print(" get firebase-->  $data");
       if (mounted) {
         setState(() {
           switch (widget.type) {
@@ -76,9 +77,18 @@ class _PawnWidgetState extends State<PawnWidget> {
 
   // Function to send pawn movement data to Firestore
   Future<void> _sendPawnMovement(int nextStep) async {
-    await gameDoc.update({
-      '${widget.type.toString().split('.').last}PawnPosition${widget.index}': nextStep,
-    });
+    try {
+      await gameDoc.update({
+        '${widget.type.toString().split('.').last}PawnPosition${widget.index}': nextStep,
+      });
+      print("Pawn position updated successfully.");
+    } catch (e) {
+      print("Error updating pawn position: $e");
+    }
+    // print("jaraha hau data ");
+    // await gameDoc.update({
+    //   '${widget.type.toString().split('.').last}AmanPawnPosition${widget.index}': nextStep,
+    // });
   }
 
   // Listen for pawn position changes
@@ -137,19 +147,13 @@ class _PawnWidgetState extends State<PawnWidget> {
           Consumer<LudoProvider>(
             builder: (context, provider, child) => GestureDetector(
               onTap: () async {
-                // if (step == -1) {
-                //   provider.move(type, index, (step + 1) + 1);
-                // } else {
-                //   provider.move(type, index, (step + 1) + provider.diceResult);
-                // }
-                // context.read<LudoProvider>().move(type, index, step);
+
                 if (provider.diceResult > 0) {
                   print("hello");
                   int nextStep = widget.step == -1 ? 1 : widget.step + provider.diceResult;
 
                   // Send move to provider
                   provider.move(context,widget.type, widget.index, nextStep);
-
                   // Send the pawn movement to Firestore
                   await _sendPawnMovement(nextStep);
                 }

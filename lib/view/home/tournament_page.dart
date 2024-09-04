@@ -60,7 +60,7 @@ class LudoSupremeState extends State<LudoSupreme>
     _scrollController.addListener(_handleScroll);
     contestCategoryViewModel.contestCategoryApi(context);
     tournamentViewModel.tournamentApi(context, selectedIndices.toString());
-     time = false;
+    time = false;
   }
 
   Duration myDuration = const Duration(days: 5);
@@ -108,23 +108,27 @@ class LudoSupremeState extends State<LudoSupreme>
       setState(() {
         if (_seconds == 0) {
           _timer?.cancel();
-          Navigator.pushNamed(context, RoutesName.timerScreen,);
+          Navigator.pushNamed(
+            context,
+            RoutesName.timerScreen,
+          );
         } else {
           _seconds--;
         }
       });
     });
   }
-String ?futureTime;
+
+  String? futureTime;
 
   bool _isExpanded = false;
   int selectedIndices = 0;
-  String tournamentID="0";
+  String tournamentID = "0";
   @override
   Widget build(BuildContext context) {
-final tournament =Provider.of<TournamentViewModel>(context);
-final confirmPayment =Provider.of<ConfirmPaymentViewModel>(context);
-final profileViewModel =Provider.of<ProfileViewModel>(context);
+    final tournament = Provider.of<TournamentViewModel>(context);
+    final confirmPayment = Provider.of<ConfirmPaymentViewModel>(context);
+    final profileViewModel = Provider.of<ProfileViewModel>(context);
     List<FirstList> list = [
       FirstList("All"),
       FirstList("QUICK"),
@@ -186,8 +190,9 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                                     return InkWell(
                                       onTap: () {
                                         setState(() {
-                                          selectedIndices=index;
-                                          tournament.tournamentApi(context, selectedIndices.toString());
+                                          selectedIndices = index;
+                                          tournament.tournamentApi(context,
+                                              selectedIndices.toString());
                                           // if (selectedIndices.contains(index)) {
                                           //   selectedIndices.remove(index);
                                           // } else {
@@ -208,11 +213,12 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                                             child: Container(
                                                 height: height * 0.045,
                                                 padding:
-                                                     const EdgeInsets.all(9),
+                                                    const EdgeInsets.all(9),
                                                 decoration: BoxDecoration(
-                                                    color: selectedIndices==index
-                                                        ? secondary
-                                                        : white,
+                                                    color:
+                                                        selectedIndices == index
+                                                            ? secondary
+                                                            : white,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10)),
@@ -302,7 +308,7 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                     )
                   : Container(),
               InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pushNamed(context, RoutesName.walletScreen);
                 },
                 child: Container(
@@ -311,9 +317,10 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                   width: width * 0.25,
                   decoration: BoxDecoration(
                       color: _showTitle ? Colors.white : tertiary,
-                      borderRadius: const BorderRadius.all(Radius.circular(25))),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(25))),
                   child: Text(
-                    "₹${profileViewModel.profileResponse?.data?.wallet??""}",
+                    "₹${profileViewModel.profileResponse?.data?.wallet ?? ""}",
                     style: TextStyle(
                         color: _showTitle ? tertiary : Colors.white,
                         fontSize: 16,
@@ -384,7 +391,7 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                                   BorderRadius.all(Radius.circular(35)),
                             ),
                             child: CountdownTimer(
-                              futureTime:futureTime,
+                              futureTime: futureTime,
                               onTimerTick: (int value) {
                                 // _updateTimerValue(value, context);
                               },
@@ -408,559 +415,768 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                       ),
                     )
                   : Container(),
-                  Consumer<TournamentViewModel>(
-                    builder: (context, tournamentValue, _) {
-                      switch (tournamentValue.tournamentList.status) {
-                      case Status.LOADING:
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                        case Status.ERROR:
-                          return Container();
-                        case Status.COMPLETED:
-                          final tournament =
-                              tournamentValue.tournamentList.data!.data;
-                          if (tournament != null && tournament.isNotEmpty) {
-
-                            return ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: tournament.length,
-                                itemBuilder: (context, index) {
-                                  futureTime=tournament[index].tournamentStarttime.toString();
-                                  return Padding(
-                                    padding: const EdgeInsets.all(0.0),
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(15)),
-                                      elevation: 5,
-                                      child: InkWell(
-                                        onTap: () {
-                                          confirmPaymentBottomSheet(context);
-                                          confirmPayment.confirmPaymentApi(context, tournament[index].id.toString());
-                                          tournamentID=tournament[index].id.toString();
-                                        },
-                                        child: Container(
-                                          height: height * 0.18,
-                                          decoration: const BoxDecoration(
-                                              color: white,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15))),
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                height: height * 0.04,
-                                                width: width,
-                                                padding:
-                                                const EdgeInsets.all(8.0),
-                                                decoration: const BoxDecoration(
-                                                    color: lightBlue,
-                                                    borderRadius:
-                                                    BorderRadius.only(
-                                                        topRight:
-                                                        Radius.circular(
-                                                            10),
-                                                        topLeft:
-                                                        Radius.circular(
-                                                            10))),
-                                                child: Row(
-                                                  mainAxisAlignment:
+              Consumer<TournamentViewModel>(
+                builder: (context, tournamentValue, _) {
+                  switch (tournamentValue.tournamentList.status) {
+                    case Status.LOADING:
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    case Status.ERROR:
+                      return Container();
+                    case Status.COMPLETED:
+                      final tournament =
+                          tournamentValue.tournamentList.data!.data;
+                      if (tournament != null && tournament.isNotEmpty) {
+                        return ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: tournament.length,
+                            itemBuilder: (context, index) {
+                              futureTime = tournament[index]
+                                  .tournamentStarttime
+                                  .toString();
+                              return Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  elevation: 5,
+                                  child: InkWell(
+                                    onTap: () {
+                                      confirmPaymentBottomSheet(context);
+                                      confirmPayment.confirmPaymentApi(context,
+                                          tournament[index].id.toString());
+                                      tournamentID =
+                                          tournament[index].id.toString();
+                                    },
+                                    child: Container(
+                                      height: height * 0.18,
+                                      decoration: const BoxDecoration(
+                                          color: white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15))),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            height: height * 0.04,
+                                            width: width,
+                                            padding: const EdgeInsets.all(8.0),
+                                            decoration: const BoxDecoration(
+                                                color: lightBlue,
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(10),
+                                                    topLeft:
+                                                        Radius.circular(10))),
+                                            child: Row(
+                                              mainAxisAlignment:
                                                   MainAxisAlignment.start,
-                                                  children: [
-                                                    const Icon(
-                                                      Icons.people_outline,
-                                                      color: Colors.black,
-                                                      size: 18,
-                                                    ),
-                                                    SizedBox(
-                                                      width: width * 0.01,
-                                                    ),
-                                                    Text(
-                                                        "${tournament[index].playerNo}+",
-                                                        style: const TextStyle(
-                                                            fontSize: 11,
-                                                            fontWeight:
+                                              children: [
+                                                const Icon(
+                                                  Icons.people_outline,
+                                                  color: Colors.black,
+                                                  size: 18,
+                                                ),
+                                                SizedBox(
+                                                  width: width * 0.01,
+                                                ),
+                                                Text(
+                                                    "${tournament[index].playerNo}+",
+                                                    style: const TextStyle(
+                                                        fontSize: 11,
+                                                        fontWeight:
                                                             FontWeight.w600,
-                                                            color: Colors.black)),
-                                                    SizedBox(
-                                                      width: width * 0.16,
-                                                    ),
-                                                    Text(
-                                                        tournament[index]
-                                                            .contestName!
-                                                            .tr,
+                                                        color: Colors.black)),
+                                                SizedBox(
+                                                  width: width * 0.16,
+                                                ),
+                                                Text(
+                                                    tournament[index]
+                                                        .contestName!
+                                                        .tr,
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: black,
+                                                        fontWeight:
+                                                            FontWeight.w500))
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: height * 0.03,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: width * 0.04,
+                                                right: width * 0.07),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text("PRIZE POOL".tr,
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: labelColor,
+                                                        fontWeight:
+                                                            FontWeight.w500
+                                                        // fontWeight: FontWeight.bold
+                                                        )),
+                                                Text("ENTRY".tr,
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: labelColor,
+                                                        fontWeight:
+                                                            FontWeight.w500))
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  height: height * 0.05,
+                                                  width: width * 0.3,
+                                                  decoration: BoxDecoration(
+                                                      color: lightBlue,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20)),
+                                                  child: Center(
+                                                    child: Text(
+                                                        "₹${tournament[index].winPrize.toString()}",
                                                         style: const TextStyle(
-                                                            fontSize: 12,
+                                                            fontSize: 16,
                                                             color: black,
                                                             fontWeight:
-                                                            FontWeight.w500))
-                                                  ],
+                                                                FontWeight
+                                                                    .w600)),
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: height * 0.03,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: width * 0.04,
-                                                    right: width * 0.07),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                                  children: [
-                                                    Text("PRIZE POOL".tr,
-                                                        style: const TextStyle(
-                                                            fontSize: 12,
-                                                            color: labelColor,
-                                                            fontWeight:
-                                                            FontWeight.w500
-                                                          // fontWeight: FontWeight.bold
-                                                        )),
-                                                    Text("ENTRY".tr,
-                                                        style: const TextStyle(
-                                                            fontSize: 12,
-                                                            color: labelColor,
-                                                            fontWeight:
-                                                            FontWeight.w500))
-                                                  ],
+                                                InkWell(
+                                                  onTap: () {},
+                                                  child: Container(
+                                                    height: height * 0.02,
+                                                    width: width * 0.2,
+                                                    decoration: BoxDecoration(
+                                                        color: lightBlue,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20)),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        const Icon(
+                                                          Icons
+                                                              .watch_later_outlined,
+                                                          color: red,
+                                                          size: 12,
+                                                        ),
+                                                        CountdownTimer(
+                                                          futureTime: tournament[
+                                                                  index]
+                                                              .tournamentStarttime
+                                                              .toString(),
+                                                          onTimerTick:
+                                                              (int value) {},
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 10,
+                                                          color: red,
+                                                        ),
+                                                        // Text('${minutes}m',
+                                                        //     style: const TextStyle(
+                                                        //       fontSize: 12,
+                                                        //       color: red,
+                                                        //     )),
+                                                        // Text('${seconds}s',
+                                                        //     style: const TextStyle(
+                                                        //       fontSize: 12,
+                                                        //       color: red,
+                                                        //     )),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                Stack(
+                                                  alignment: Alignment.center,
                                                   children: [
-                                                    Container(
+                                                    Shimmer.fromColors(
+                                                      baseColor: secondary,
+                                                      highlightColor:
+                                                          Colors.grey[100]!,
+                                                      child: Container(
+                                                        height: height * 0.05,
+                                                        width: width * 0.3,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          color: Colors
+                                                              .blue, // Replace with your secondary color
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          25)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    CustomContainer(
+                                                      onTap: () {
+                                                        Navigator.pushNamed(
+                                                            context,
+                                                            RoutesName
+                                                                .ludoSupreme);
+                                                      },
                                                       height: height * 0.05,
-                                                      width: width * 0.3,
+                                                      widths: width * 0.3,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    25)),
+                                                      ),
+                                                      child: Text(
+                                                        "₹${tournament[index].amount.toString()}",
+                                                        style: const TextStyle(
+                                                          color:
+                                                              tertiary, // Replace with your tertiary color
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            });
+                      } else {
+                        return const Center(
+                          child: Text(
+                            "No  Found!",
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                        );
+                      }
+                    default:
+                      return const Center(
+                        child: Text(
+                          "No Tournament Found!",
+                          style: TextStyle(color: Colors.black, fontSize: 16),
+                        ),
+                      );
+                  }
+                },
+              ),
+              // ListView.builder(
+              //     physics: const NeverScrollableScrollPhysics(),
+              //     shrinkWrap: true,
+              //     itemCount: tournament.tournament.length,
+              //     itemBuilder: (context, index) {
+              //       futureTime = tournament
+              //           .tournament[index].tournamentStarttime
+              //           .toString();
+              //       return Padding(
+              //         padding: const EdgeInsets.all(0.0),
+              //         child: Card(
+              //           shape: RoundedRectangleBorder(
+              //               borderRadius: BorderRadius.circular(15)),
+              //           elevation: 5,
+              //           child: InkWell(
+              //             onTap: () {
+              //               confirmPaymentBottomSheet(context);
+              //               confirmPayment.confirmPaymentApi(context,
+              //                   tournament.tournament[index].id.toString());
+              //               tournamentID =
+              //                   tournament.tournament[index].id.toString();
+              //             },
+              //             child: Container(
+              //               height: height * 0.18,
+              //               decoration: const BoxDecoration(
+              //                   color: white,
+              //                   borderRadius:
+              //                       BorderRadius.all(Radius.circular(15))),
+              //               child: Column(
+              //                 children: [
+              //                   Container(
+              //                     height: height * 0.04,
+              //                     width: width,
+              //                     padding: const EdgeInsets.all(8.0),
+              //                     decoration: const BoxDecoration(
+              //                         color: lightBlue,
+              //                         borderRadius: BorderRadius.only(
+              //                             topRight: Radius.circular(10),
+              //                             topLeft: Radius.circular(10))),
+              //                     child: Row(
+              //                       mainAxisAlignment: MainAxisAlignment.start,
+              //                       children: [
+              //                         const Icon(
+              //                           Icons.people_outline,
+              //                           color: Colors.black,
+              //                           size: 18,
+              //                         ),
+              //                         SizedBox(
+              //                           width: width * 0.01,
+              //                         ),
+              //                         Text(
+              //                             "${tournament.tournament[index].playerNo}+",
+              //                             style: const TextStyle(
+              //                                 fontSize: 11,
+              //                                 fontWeight: FontWeight.w600,
+              //                                 color: Colors.black)),
+              //                         SizedBox(
+              //                           width: width * 0.16,
+              //                         ),
+              //                         Text(
+              //                             tournament.tournament[index]
+              //                                 .contestName!.tr,
+              //                             style: const TextStyle(
+              //                                 fontSize: 12,
+              //                                 color: black,
+              //                                 fontWeight: FontWeight.w500))
+              //                       ],
+              //                     ),
+              //                   ),
+              //                   SizedBox(
+              //                     height: height * 0.03,
+              //                   ),
+              //                   Padding(
+              //                     padding: EdgeInsets.only(
+              //                         left: width * 0.04, right: width * 0.07),
+              //                     child: Row(
+              //                       mainAxisAlignment:
+              //                           MainAxisAlignment.spaceBetween,
+              //                       children: [
+              //                         Text("PRIZE POOL".tr,
+              //                             style: const TextStyle(
+              //                                 fontSize: 12,
+              //                                 color: labelColor,
+              //                                 fontWeight: FontWeight.w500
+              //                                 // fontWeight: FontWeight.bold
+              //                                 )),
+              //                         Text("ENTRY".tr,
+              //                             style: const TextStyle(
+              //                                 fontSize: 12,
+              //                                 color: labelColor,
+              //                                 fontWeight: FontWeight.w500))
+              //                       ],
+              //                     ),
+              //                   ),
+              //                   Padding(
+              //                     padding: const EdgeInsets.all(8.0),
+              //                     child: Row(
+              //                       mainAxisAlignment:
+              //                           MainAxisAlignment.spaceBetween,
+              //                       children: [
+              //                         Container(
+              //                           height: height * 0.05,
+              //                           width: width * 0.3,
+              //                           decoration: BoxDecoration(
+              //                               color: lightBlue,
+              //                               borderRadius:
+              //                                   BorderRadius.circular(20)),
+              //                           child: Center(
+              //                             child: Text(
+              //                                 "₹${tournament.tournament[index].winPrize.toString()}",
+              //                                 style: const TextStyle(
+              //                                     fontSize: 16,
+              //                                     color: black,
+              //                                     fontWeight: FontWeight.w600)),
+              //                           ),
+              //                         ),
+              //                         InkWell(
+              //                           onTap: () {},
+              //                           child: Container(
+              //                             height: height * 0.02,
+              //                             width: width * 0.2,
+              //                             decoration: BoxDecoration(
+              //                                 color: lightBlue,
+              //                                 borderRadius:
+              //                                     BorderRadius.circular(20)),
+              //                             child: Row(
+              //                               mainAxisAlignment:
+              //                                   MainAxisAlignment.spaceEvenly,
+              //                               children: [
+              //                                 const Icon(
+              //                                   Icons.watch_later_outlined,
+              //                                   color: red,
+              //                                   size: 12,
+              //                                 ),
+              //                                 CountdownTimer(
+              //                                   futureTime: tournament
+              //                                       .tournament[index]
+              //                                       .tournamentStarttime
+              //                                       .toString(),
+              //                                   onTimerTick: (int value) {},
+              //                                   fontWeight: FontWeight.w500,
+              //                                   fontSize: 10,
+              //                                   color: red,
+              //                                 ),
+              //                                 // Text('${minutes}m',
+              //                                 //     style: const TextStyle(
+              //                                 //       fontSize: 12,
+              //                                 //       color: red,
+              //                                 //     )),
+              //                                 // Text('${seconds}s',
+              //                                 //     style: const TextStyle(
+              //                                 //       fontSize: 12,
+              //                                 //       color: red,
+              //                                 //     )),
+              //                               ],
+              //                             ),
+              //                           ),
+              //                         ),
+              //                         Stack(
+              //                           alignment: Alignment.center,
+              //                           children: [
+              //                             Shimmer.fromColors(
+              //                               baseColor: secondary,
+              //                               highlightColor: Colors.grey[100]!,
+              //                               child: Container(
+              //                                 height: height * 0.05,
+              //                                 width: width * 0.3,
+              //                                 decoration: const BoxDecoration(
+              //                                   color: Colors
+              //                                       .blue, // Replace with your secondary color
+              //                                   borderRadius: BorderRadius.all(
+              //                                       Radius.circular(25)),
+              //                                 ),
+              //                               ),
+              //                             ),
+              //                             CustomContainer(
+              //                               onTap: () {
+              //                                 Navigator.pushNamed(context,
+              //                                     RoutesName.ludoSupreme);
+              //                               },
+              //                               height: height * 0.05,
+              //                               widths: width * 0.3,
+              //                               alignment: Alignment.center,
+              //                               decoration: const BoxDecoration(
+              //                                 borderRadius: BorderRadius.all(
+              //                                     Radius.circular(25)),
+              //                               ),
+              //                               child: Text(
+              //                                 "₹${tournament.tournament[index].amount.toString()}",
+              //                                 style: const TextStyle(
+              //                                   color:
+              //                                       tertiary, // Replace with your tertiary color
+              //                                   fontWeight: FontWeight.w600,
+              //                                   fontSize: 16,
+              //                                 ),
+              //                               ),
+              //                             ),
+              //                           ],
+              //                         ),
+              //                       ],
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       );
+              //     }),
+              ChangeNotifierProvider<TournamentViewModel>(
+                create: (BuildContext context) => tournamentViewModel,
+                child: Consumer<TournamentViewModel>(
+                  builder: (context, tournamentValue, _) {
+                    switch (tournamentValue.tournamentList.status) {
+                      // case Status.LOADING:
+                      //   return const Center(
+                      //     child: CircularProgressIndicator(),
+                      //   );
+                      case Status.ERROR:
+                        return Container();
+                      case Status.COMPLETED:
+                        final tournament =
+                            tournamentValue.tournamentList.data!.data;
+                        if (tournament != null && tournament.isNotEmpty) {
+
+                          return ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: tournament.length,
+                              itemBuilder: (context, index) {
+                                futureTime=tournament[index].tournamentStarttime.toString();
+                                return Padding(
+                                  padding: const EdgeInsets.all(0.0),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    elevation: 5,
+                                    child: InkWell(
+                                      onTap: () {
+                                        confirmPaymentBottomSheet(context);
+                                        confirmPaymentBottomSheet(context);
+                                        confirmPayment.confirmPaymentApi(context,
+                                            tournament[index].id.toString());
+                                        tournamentID =
+                                            tournament[index].id.toString();
+                                      },
+                                      child: Container(
+                                        height: height * 0.18,
+                                        decoration: const BoxDecoration(
+                                            color: white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15))),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              height: height * 0.04,
+                                              width: width,
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              decoration: const BoxDecoration(
+                                                  color: lightBlue,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10))),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  const Icon(
+                                                    Icons.people_outline,
+                                                    color: Colors.black,
+                                                    size: 18,
+                                                  ),
+                                                  SizedBox(
+                                                    width: width * 0.01,
+                                                  ),
+                                                  Text(
+                                                      "${tournament[index].playerNo}+",
+                                                      style: const TextStyle(
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: Colors.black)),
+                                                  SizedBox(
+                                                    width: width * 0.16,
+                                                  ),
+                                                  Text(
+                                                      tournament[index]
+                                                          .contestName!
+                                                          .tr,
+                                                      style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: black,
+                                                          fontWeight:
+                                                              FontWeight.w500))
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: height * 0.03,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: width * 0.04,
+                                                  right: width * 0.07),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text("PRIZE POOL".tr,
+                                                      style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: labelColor,
+                                                          fontWeight:
+                                                              FontWeight.w500
+                                                          // fontWeight: FontWeight.bold
+                                                          )),
+                                                  Text("ENTRY".tr,
+                                                      style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: labelColor,
+                                                          fontWeight:
+                                                              FontWeight.w500))
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    height: height * 0.05,
+                                                    width: width * 0.3,
+                                                    decoration: BoxDecoration(
+                                                        color: lightBlue,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20)),
+                                                    child: Center(
+                                                      child: Text(
+                                                          "₹${tournament[index].winPrize.toString()}",
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              color: black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600)),
+                                                    ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {},
+                                                    child: Container(
+                                                      height: height * 0.02,
+                                                      width: width * 0.2,
                                                       decoration: BoxDecoration(
                                                           color: lightBlue,
                                                           borderRadius:
-                                                          BorderRadius
-                                                              .circular(20)),
-                                                      child: Center(
-                                                        child: Text(
-                                                            "₹${tournament[index].winPrize.toString()}",
-                                                            style: const TextStyle(
-                                                                fontSize: 16,
-                                                                color: black,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .w600)),
-                                                      ),
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {},
-                                                      child: Container(
-                                                        height: height * 0.02,
-                                                        width: width * 0.2,
-                                                        decoration: BoxDecoration(
-                                                            color: lightBlue,
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                20)),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                          children: [
-                                                            const Icon(
-                                                              Icons
-                                                                  .watch_later_outlined,
-                                                              color: red,
-                                                              size: 12,
-                                                            ),
-                                                            CountdownTimer(
-                                                              futureTime:tournament[index].tournamentStarttime.toString(),
-                                                              onTimerTick:
-                                                                  (int value) {},
-                                                              fontWeight:
-                                                              FontWeight.w500,
-                                                              fontSize: 10,
-                                                              color: red,
-                                                            ),
-                                                            // Text('${minutes}m',
-                                                            //     style: const TextStyle(
-                                                            //       fontSize: 12,
-                                                            //       color: red,
-                                                            //     )),
-                                                            // Text('${seconds}s',
-                                                            //     style: const TextStyle(
-                                                            //       fontSize: 12,
-                                                            //       color: red,
-                                                            //     )),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Stack(
-                                                      alignment: Alignment.center,
-                                                      children: [
-                                                        Shimmer.fromColors(
-                                                          baseColor: secondary,
-                                                          highlightColor:
-                                                          Colors.grey[100]!,
-                                                          child: Container(
-                                                            height: height * 0.05,
-                                                            width: width * 0.3,
-                                                            decoration:
-                                                            const BoxDecoration(
-                                                              color: Colors
-                                                                  .blue, // Replace with your secondary color
-                                                              borderRadius:
                                                               BorderRadius
-                                                                  .all(Radius
                                                                   .circular(
-                                                                  25)),
-                                                            ),
+                                                                      20)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: [
+                                                          const Icon(
+                                                            Icons
+                                                                .watch_later_outlined,
+                                                            color: red,
+                                                            size: 12,
                                                           ),
-                                                        ),
-                                                        CustomContainer(
-                                                          onTap: () {
-                                                            Navigator.pushNamed(
-                                                                context,
-                                                                RoutesName
-                                                                    .ludoSupreme);
-                                                          },
-                                                          height: height * 0.05,
-                                                          widths: width * 0.3,
-                                                          alignment:
-                                                          Alignment.center,
-                                                          decoration:
-                                                          const BoxDecoration(
-                                                            borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius
-                                                                    .circular(
-                                                                    25)),
+                                                          CountdownTimer(
+                                                            futureTime:tournament[index].tournamentStarttime.toString(),
+                                                            onTimerTick:
+                                                                (int value) {},
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize: 10,
+                                                            color: red,
                                                           ),
-                                                          child: Text(
-                                                            "₹${tournament[index].amount.toString()}",
-                                                            style:
-                                                            const TextStyle(
-                                                              color:
-                                                              tertiary, // Replace with your tertiary color
-                                                              fontWeight:
-                                                              FontWeight.w600,
-                                                              fontSize: 16,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
+                                                          // Text('${minutes}m',
+                                                          //     style: const TextStyle(
+                                                          //       fontSize: 12,
+                                                          //       color: red,
+                                                          //     )),
+                                                          // Text('${seconds}s',
+                                                          //     style: const TextStyle(
+                                                          //       fontSize: 12,
+                                                          //       color: red,
+                                                          //     )),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                  Stack(
+                                                    alignment: Alignment.center,
+                                                    children: [
+                                                      Shimmer.fromColors(
+                                                        baseColor: secondary,
+                                                        highlightColor:
+                                                            Colors.grey[100]!,
+                                                        child: Container(
+                                                          height: height * 0.05,
+                                                          width: width * 0.3,
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            color: Colors
+                                                                .blue, // Replace with your secondary color
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            25)),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      CustomContainer(
+                                                        onTap: () {
+                                                          Navigator.pushNamed(
+                                                              context,
+                                                              RoutesName
+                                                                  .ludoSupreme);
+                                                        },
+                                                        height: height * 0.05,
+                                                        widths: width * 0.3,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          25)),
+                                                        ),
+                                                        child: Text(
+                                                          "₹${tournament[index].amount.toString()}",
+                                                          style:
+                                                              const TextStyle(
+                                                            color:
+                                                                tertiary, // Replace with your tertiary color
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  );
-                                });
-                          } else {
-                            return const Center(
-                              child: Text(
-                                "No  Found!",
-                                style:
-                                TextStyle(color: Colors.black, fontSize: 16),
-                              ),
-                            );
-                          }
-                        default:
+                                  ),
+                                );
+                              });
+                        } else {
                           return const Center(
                             child: Text(
                               "No Tournament Found!",
                               style:
-                              TextStyle(color: Colors.black, fontSize: 16),
+                                  TextStyle(color: Colors.black, fontSize: 16),
                             ),
                           );
-                      }
-                    },
-                  ),
-              // ChangeNotifierProvider<TournamentViewModel>(
-              //   create: (BuildContext context) => tournamentViewModel,
-              //   child: Consumer<TournamentViewModel>(
-              //     builder: (context, tournamentValue, _) {
-              //       switch (tournamentValue.tournamentList.status) {
-              //         // case Status.LOADING:
-              //         //   return const Center(
-              //         //     child: CircularProgressIndicator(),
-              //         //   );
-              //         case Status.ERROR:
-              //           return Container();
-              //         case Status.COMPLETED:
-              //           final tournament =
-              //               tournamentValue.tournamentList.data!.data;
-              //           if (tournament != null && tournament.isNotEmpty) {
-              //
-              //             return ListView.builder(
-              //                 physics: const NeverScrollableScrollPhysics(),
-              //                 shrinkWrap: true,
-              //                 itemCount: tournament.length,
-              //                 itemBuilder: (context, index) {
-              //                   futureTime=tournament[index].tournamentStarttime.toString();
-              //                   return Padding(
-              //                     padding: const EdgeInsets.all(0.0),
-              //                     child: Card(
-              //                       shape: RoundedRectangleBorder(
-              //                           borderRadius:
-              //                               BorderRadius.circular(15)),
-              //                       elevation: 5,
-              //                       child: InkWell(
-              //                         onTap: () {
-              //                           confirmPaymentBottomSheet(context);
-              //                         },
-              //                         child: Container(
-              //                           height: height * 0.18,
-              //                           decoration: const BoxDecoration(
-              //                               color: white,
-              //                               borderRadius: BorderRadius.all(
-              //                                   Radius.circular(15))),
-              //                           child: Column(
-              //                             children: [
-              //                               Container(
-              //                                 height: height * 0.04,
-              //                                 width: width,
-              //                                 padding:
-              //                                     const EdgeInsets.all(8.0),
-              //                                 decoration: const BoxDecoration(
-              //                                     color: lightBlue,
-              //                                     borderRadius:
-              //                                         BorderRadius.only(
-              //                                             topRight:
-              //                                                 Radius.circular(
-              //                                                     10),
-              //                                             topLeft:
-              //                                                 Radius.circular(
-              //                                                     10))),
-              //                                 child: Row(
-              //                                   mainAxisAlignment:
-              //                                       MainAxisAlignment.start,
-              //                                   children: [
-              //                                     const Icon(
-              //                                       Icons.people_outline,
-              //                                       color: Colors.black,
-              //                                       size: 18,
-              //                                     ),
-              //                                     SizedBox(
-              //                                       width: width * 0.01,
-              //                                     ),
-              //                                     Text(
-              //                                         "${tournament[index].playerNo}+",
-              //                                         style: const TextStyle(
-              //                                             fontSize: 11,
-              //                                             fontWeight:
-              //                                                 FontWeight.w600,
-              //                                             color: Colors.black)),
-              //                                     SizedBox(
-              //                                       width: width * 0.16,
-              //                                     ),
-              //                                     Text(
-              //                                         tournament[index]
-              //                                             .contestName!
-              //                                             .tr,
-              //                                         style: const TextStyle(
-              //                                             fontSize: 12,
-              //                                             color: black,
-              //                                             fontWeight:
-              //                                                 FontWeight.w500))
-              //                                   ],
-              //                                 ),
-              //                               ),
-              //                               SizedBox(
-              //                                 height: height * 0.03,
-              //                               ),
-              //                               Padding(
-              //                                 padding: EdgeInsets.only(
-              //                                     left: width * 0.04,
-              //                                     right: width * 0.07),
-              //                                 child: Row(
-              //                                   mainAxisAlignment:
-              //                                       MainAxisAlignment
-              //                                           .spaceBetween,
-              //                                   children: [
-              //                                     Text("PRIZE POOL".tr,
-              //                                         style: const TextStyle(
-              //                                             fontSize: 12,
-              //                                             color: labelColor,
-              //                                             fontWeight:
-              //                                                 FontWeight.w500
-              //                                             // fontWeight: FontWeight.bold
-              //                                             )),
-              //                                     Text("ENTRY".tr,
-              //                                         style: const TextStyle(
-              //                                             fontSize: 12,
-              //                                             color: labelColor,
-              //                                             fontWeight:
-              //                                                 FontWeight.w500))
-              //                                   ],
-              //                                 ),
-              //                               ),
-              //                               Padding(
-              //                                 padding:
-              //                                     const EdgeInsets.all(8.0),
-              //                                 child: Row(
-              //                                   mainAxisAlignment:
-              //                                       MainAxisAlignment
-              //                                           .spaceBetween,
-              //                                   children: [
-              //                                     Container(
-              //                                       height: height * 0.05,
-              //                                       width: width * 0.3,
-              //                                       decoration: BoxDecoration(
-              //                                           color: lightBlue,
-              //                                           borderRadius:
-              //                                               BorderRadius
-              //                                                   .circular(20)),
-              //                                       child: Center(
-              //                                         child: Text(
-              //                                             "₹${tournament[index].winPrize.toString()}",
-              //                                             style: const TextStyle(
-              //                                                 fontSize: 16,
-              //                                                 color: black,
-              //                                                 fontWeight:
-              //                                                     FontWeight
-              //                                                         .w600)),
-              //                                       ),
-              //                                     ),
-              //                                     InkWell(
-              //                                       onTap: () {},
-              //                                       child: Container(
-              //                                         height: height * 0.02,
-              //                                         width: width * 0.2,
-              //                                         decoration: BoxDecoration(
-              //                                             color: lightBlue,
-              //                                             borderRadius:
-              //                                                 BorderRadius
-              //                                                     .circular(
-              //                                                         20)),
-              //                                         child: Row(
-              //                                           mainAxisAlignment:
-              //                                               MainAxisAlignment
-              //                                                   .spaceEvenly,
-              //                                           children: [
-              //                                             const Icon(
-              //                                               Icons
-              //                                                   .watch_later_outlined,
-              //                                               color: red,
-              //                                               size: 12,
-              //                                             ),
-              //                                             CountdownTimer(
-              //                                               futureTime:tournament[index].tournamentStarttime.toString(),
-              //                                               onTimerTick:
-              //                                                   (int value) {},
-              //                                               fontWeight:
-              //                                                   FontWeight.w500,
-              //                                               fontSize: 10,
-              //                                               color: red,
-              //                                             ),
-              //                                             // Text('${minutes}m',
-              //                                             //     style: const TextStyle(
-              //                                             //       fontSize: 12,
-              //                                             //       color: red,
-              //                                             //     )),
-              //                                             // Text('${seconds}s',
-              //                                             //     style: const TextStyle(
-              //                                             //       fontSize: 12,
-              //                                             //       color: red,
-              //                                             //     )),
-              //                                           ],
-              //                                         ),
-              //                                       ),
-              //                                     ),
-              //                                     Stack(
-              //                                       alignment: Alignment.center,
-              //                                       children: [
-              //                                         Shimmer.fromColors(
-              //                                           baseColor: secondary,
-              //                                           highlightColor:
-              //                                               Colors.grey[100]!,
-              //                                           child: Container(
-              //                                             height: height * 0.05,
-              //                                             width: width * 0.3,
-              //                                             decoration:
-              //                                                 const BoxDecoration(
-              //                                               color: Colors
-              //                                                   .blue, // Replace with your secondary color
-              //                                               borderRadius:
-              //                                                   BorderRadius
-              //                                                       .all(Radius
-              //                                                           .circular(
-              //                                                               25)),
-              //                                             ),
-              //                                           ),
-              //                                         ),
-              //                                         CustomContainer(
-              //                                           onTap: () {
-              //                                             Navigator.pushNamed(
-              //                                                 context,
-              //                                                 RoutesName
-              //                                                     .ludoSupreme);
-              //                                           },
-              //                                           height: height * 0.05,
-              //                                           widths: width * 0.3,
-              //                                           alignment:
-              //                                               Alignment.center,
-              //                                           decoration:
-              //                                               const BoxDecoration(
-              //                                             borderRadius:
-              //                                                 BorderRadius.all(
-              //                                                     Radius
-              //                                                         .circular(
-              //                                                             25)),
-              //                                           ),
-              //                                           child: Text(
-              //                                             "₹${tournament[index].amount.toString()}",
-              //                                             style:
-              //                                                 const TextStyle(
-              //                                               color:
-              //                                                   tertiary, // Replace with your tertiary color
-              //                                               fontWeight:
-              //                                                   FontWeight.w600,
-              //                                               fontSize: 16,
-              //                                             ),
-              //                                           ),
-              //                                         ),
-              //                                       ],
-              //                                     ),
-              //                                   ],
-              //                                 ),
-              //                               ),
-              //                             ],
-              //                           ),
-              //                         ),
-              //                       ),
-              //                     ),
-              //                   );
-              //                 });
-              //           } else {
-              //             return const Center(
-              //               child: Text(
-              //                 "No Tournament Found!",
-              //                 style:
-              //                     TextStyle(color: Colors.black, fontSize: 16),
-              //               ),
-              //             );
-              //           }
-              //         default:
-              //           return const Center(
-              //             child: Text(
-              //               "No Tournament Found!",
-              //               style:
-              //               TextStyle(color: Colors.black, fontSize: 16),
-              //             ),
-              //           );
-              //       }
-              //     },
-              //   ),
-              // ),
+                        }
+                      default:
+                        return const Center(
+                          child: Text(
+                            "No Tournament Found!",
+                            style:
+                            TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                        );
+                    }
+                  },
+                ),
+              ),
               SizedBox(
                 height: height * 0.03,
               ),
@@ -971,160 +1187,431 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                       fontWeight: FontWeight.bold)),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: ListView.builder(
-                    // scrollDirection: Axis.vertical,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: addAmount.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          elevation: 5,
-                          child: Container(
-                            // padding: const EdgeInsets.all(8.0),
-                            height: height * 0.18,
-                            // width: width*0.5,
-                            decoration: const BoxDecoration(
-                                // color: Colors.red,
-                                color: white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: height * 0.04,
-                                  width: width,
-                                  padding: const EdgeInsets.all(8.0),
-                                  decoration: const BoxDecoration(
-                                      color: lightBlue,
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10))),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const Icon(
-                                        Icons.people_outline,
-                                        color: Colors.black,
-                                        size: 18,
-                                      ),
-                                      Text("2130+",
-                                          style: TextStyle(
-                                              fontSize: width * 0.03,
-                                              color: Colors.black)),
-                                      SizedBox(
-                                        width: width * 0.16,
-                                      ),
-                                      Text(listNew[index].title,
-                                          style: TextStyle(
-                                              fontSize: width * 0.03,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w400))
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: height * 0.03,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: width * 0.04, right: width * 0.07),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("PRIZE POOL".tr,
-                                          style: TextStyle(
-                                              fontSize: width * 0.03,
-                                              color: labelColor,
-                                              fontWeight: FontWeight.w400
-                                              // fontWeight: FontWeight.bold
-                                              )),
-                                      Text("ENTRY".tr,
-                                          style: TextStyle(
-                                              fontSize: width * 0.03,
-                                              color: labelColor,
-                                              fontWeight: FontWeight.w400))
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        height: height * 0.05,
-                                        width: width * 0.3,
-                                        decoration: BoxDecoration(
-                                            color: lightBlue,
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Center(
-                                          child: Text(
-                                              addAmount[index].title.toString(),
-                                              style: TextStyle(
-                                                  fontSize: width * 0.05,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold)),
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Container(
-                                          height: height * 0.02,
-                                          width: width * 0.2,
-                                          decoration: BoxDecoration(
-                                              color: lightBlue,
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              const Icon(
-                                                Icons.watch_later_outlined,
-                                                color: red,
-                                                size: 12,
+                child:Consumer<TournamentViewModel>(
+                  builder: (context, tournamentValue, _) {
+                    switch (tournamentValue.tournamentList.status) {
+                      // case Status.LOADING:
+                      //   return const Center(
+                      //     child: CircularProgressIndicator(),
+                      //   );
+                      case Status.ERROR:
+                        return Container();
+                      case Status.COMPLETED:
+                        final tournament =
+                            tournamentValue.tournamentList.data!.data;
+                        if (tournament != null && tournament.isNotEmpty) {
+                          return ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: tournament.length,
+                              itemBuilder: (context, index) {
+                                futureTime = tournament[index]
+                                    .tournamentStarttime
+                                    .toString();
+                                return Padding(
+                                  padding: const EdgeInsets.all(0.0),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15)),
+                                    elevation: 5,
+                                    child: InkWell(
+                                      onTap: () {
+                                        confirmPaymentBottomSheet(context);
+                                        confirmPayment.confirmPaymentApi(context,
+                                            tournament[index].id.toString());
+                                        tournamentID =
+                                            tournament[index].id.toString();
+                                      },
+                                      child: Container(
+                                        height: height * 0.18,
+                                        decoration: const BoxDecoration(
+                                            color: white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15))),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              height: height * 0.04,
+                                              width: width,
+                                              padding: const EdgeInsets.all(8.0),
+                                              decoration: const BoxDecoration(
+                                                  color: lightBlue,
+                                                  borderRadius: BorderRadius.only(
+                                                      topRight:
+                                                      Radius.circular(10),
+                                                      topLeft:
+                                                      Radius.circular(10))),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                                children: [
+                                                  const Icon(
+                                                    Icons.people_outline,
+                                                    color: Colors.black,
+                                                    size: 18,
+                                                  ),
+                                                  SizedBox(
+                                                    width: width * 0.01,
+                                                  ),
+                                                  Text(
+                                                      "${tournament[index].playerNo}+",
+                                                      style: const TextStyle(
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                          FontWeight.w600,
+                                                          color: Colors.black)),
+                                                  SizedBox(
+                                                    width: width * 0.16,
+                                                  ),
+                                                  Text(
+                                                      tournament[index]
+                                                          .contestName!
+                                                          .tr,
+                                                      style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: black,
+                                                          fontWeight:
+                                                          FontWeight.w500))
+                                                ],
                                               ),
-                                              CountdownTimer(
-                                                onTimerTick: (int value) {},
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 10,
-                                                color: red,
+                                            ),
+                                            SizedBox(
+                                              height: height * 0.03,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: width * 0.04,
+                                                  right: width * 0.07),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                                children: [
+                                                  Text("PRIZE POOL".tr,
+                                                      style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: labelColor,
+                                                          fontWeight:
+                                                          FontWeight.w500
+                                                        // fontWeight: FontWeight.bold
+                                                      )),
+                                                  Text("ENTRY".tr,
+                                                      style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: labelColor,
+                                                          fontWeight:
+                                                          FontWeight.w500))
+                                                ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    height: height * 0.05,
+                                                    width: width * 0.3,
+                                                    decoration: BoxDecoration(
+                                                        color: lightBlue,
+                                                        borderRadius:
+                                                        BorderRadius.circular(
+                                                            20)),
+                                                    child: Center(
+                                                      child: Text(
+                                                          "₹${tournament[index].winPrize.toString()}",
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              color: black,
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w600)),
+                                                    ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {},
+                                                    child: Container(
+                                                      height: height * 0.02,
+                                                      width: width * 0.2,
+                                                      decoration: BoxDecoration(
+                                                          color: lightBlue,
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(20)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                        children: [
+                                                          const Icon(
+                                                            Icons
+                                                                .watch_later_outlined,
+                                                            color: red,
+                                                            size: 12,
+                                                          ),
+                                                          CountdownTimer(
+                                                            futureTime: tournament[
+                                                            index]
+                                                                .tournamentStarttime
+                                                                .toString(),
+                                                            onTimerTick:
+                                                                (int value) {},
+                                                            fontWeight:
+                                                            FontWeight.w500,
+                                                            fontSize: 10,
+                                                            color: red,
+                                                          ),
+                                                          // Text('${minutes}m',
+                                                          //     style: const TextStyle(
+                                                          //       fontSize: 12,
+                                                          //       color: red,
+                                                          //     )),
+                                                          // Text('${seconds}s',
+                                                          //     style: const TextStyle(
+                                                          //       fontSize: 12,
+                                                          //       color: red,
+                                                          //     )),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Stack(
+                                                    alignment: Alignment.center,
+                                                    children: [
+                                                      Shimmer.fromColors(
+                                                        baseColor: secondary,
+                                                        highlightColor:
+                                                        Colors.grey[100]!,
+                                                        child: Container(
+                                                          height: height * 0.05,
+                                                          width: width * 0.3,
+                                                          decoration:
+                                                          const BoxDecoration(
+                                                            color: Colors
+                                                                .blue, // Replace with your secondary color
+                                                            borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius
+                                                                    .circular(
+                                                                    25)),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      CustomContainer(
+                                                        onTap: () {
+                                                          Navigator.pushNamed(
+                                                              context,
+                                                              RoutesName
+                                                                  .ludoSupreme);
+                                                        },
+                                                        height: height * 0.05,
+                                                        widths: width * 0.3,
+                                                        alignment:
+                                                        Alignment.center,
+                                                        decoration:
+                                                        const BoxDecoration(
+                                                          borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  25)),
+                                                        ),
+                                                        child: Text(
+                                                          "₹${tournament[index].amount.toString()}",
+                                                          style: const TextStyle(
+                                                            color:
+                                                            tertiary, // Replace with your tertiary color
+                                                            fontWeight:
+                                                            FontWeight.w600,
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      Container(
-                                        height: height * 0.05,
-                                        width: width * 0.3,
-                                        decoration: BoxDecoration(
-                                            color: Colors.yellow,
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Center(
-                                          child: Text(addAmount[index].titleOne,
-                                              style: TextStyle(
-                                                  fontSize: width * 0.05,
-                                                  color: tertiary,
-                                                  fontWeight: FontWeight.w500)),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                );
+                              });
+                        } else {
+                          return const Center(
+                            child: Text(
+                              "No  Found!",
+                              style: TextStyle(color: Colors.black, fontSize: 16),
                             ),
+                          );
+                        }
+                      default:
+                        return const Center(
+                          child: Text(
+                            "No Tournament Found!",
+                            style: TextStyle(color: Colors.black, fontSize: 16),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                    }
+                  },
+                ),
+                // ListView.builder(
+                //     // scrollDirection: Axis.vertical,
+                //     physics: const NeverScrollableScrollPhysics(),
+                //     shrinkWrap: true,
+                //     itemCount: addAmount.length,
+                //     itemBuilder: (context, index) {
+                //       return Padding(
+                //         padding: const EdgeInsets.all(8.0),
+                //         child: Card(
+                //           shape: RoundedRectangleBorder(
+                //               borderRadius: BorderRadius.circular(15)),
+                //           elevation: 5,
+                //           child: Container(
+                //             // padding: const EdgeInsets.all(8.0),
+                //             height: height * 0.18,
+                //             // width: width*0.5,
+                //             decoration: const BoxDecoration(
+                //                 // color: Colors.red,
+                //                 color: white,
+                //                 borderRadius:
+                //                     BorderRadius.all(Radius.circular(15))),
+                //             child: Column(
+                //               children: [
+                //                 Container(
+                //                   height: height * 0.04,
+                //                   width: width,
+                //                   padding: const EdgeInsets.all(8.0),
+                //                   decoration: const BoxDecoration(
+                //                       color: lightBlue,
+                //                       borderRadius: BorderRadius.only(
+                //                           topRight: Radius.circular(10),
+                //                           topLeft: Radius.circular(10))),
+                //                   child: Row(
+                //                     mainAxisAlignment: MainAxisAlignment.start,
+                //                     children: [
+                //                       const Icon(
+                //                         Icons.people_outline,
+                //                         color: Colors.black,
+                //                         size: 18,
+                //                       ),
+                //                       Text("2130+",
+                //                           style: TextStyle(
+                //                               fontSize: width * 0.03,
+                //                               color: Colors.black)),
+                //                       SizedBox(
+                //                         width: width * 0.16,
+                //                       ),
+                //                       Text(listNew[index].title,
+                //                           style: TextStyle(
+                //                               fontSize: width * 0.03,
+                //                               color: Colors.black,
+                //                               fontWeight: FontWeight.w400))
+                //                     ],
+                //                   ),
+                //                 ),
+                //                 SizedBox(
+                //                   height: height * 0.03,
+                //                 ),
+                //                 Padding(
+                //                   padding: EdgeInsets.only(
+                //                       left: width * 0.04, right: width * 0.07),
+                //                   child: Row(
+                //                     mainAxisAlignment:
+                //                         MainAxisAlignment.spaceBetween,
+                //                     children: [
+                //                       Text("PRIZE POOL".tr,
+                //                           style: TextStyle(
+                //                               fontSize: width * 0.03,
+                //                               color: labelColor,
+                //                               fontWeight: FontWeight.w400
+                //                               // fontWeight: FontWeight.bold
+                //                               )),
+                //                       Text("ENTRY".tr,
+                //                           style: TextStyle(
+                //                               fontSize: width * 0.03,
+                //                               color: labelColor,
+                //                               fontWeight: FontWeight.w400))
+                //                     ],
+                //                   ),
+                //                 ),
+                //                 Padding(
+                //                   padding: const EdgeInsets.all(8.0),
+                //                   child: Row(
+                //                     mainAxisAlignment:
+                //                         MainAxisAlignment.spaceBetween,
+                //                     children: [
+                //                       Container(
+                //                         height: height * 0.05,
+                //                         width: width * 0.3,
+                //                         decoration: BoxDecoration(
+                //                             color: lightBlue,
+                //                             borderRadius:
+                //                                 BorderRadius.circular(20)),
+                //                         child: Center(
+                //                           child: Text(
+                //                               addAmount[index].title.toString(),
+                //                               style: TextStyle(
+                //                                   fontSize: width * 0.05,
+                //                                   color: Colors.black,
+                //                                   fontWeight: FontWeight.bold)),
+                //                         ),
+                //                       ),
+                //                       InkWell(
+                //                         onTap: () {},
+                //                         child: Container(
+                //                           height: height * 0.02,
+                //                           width: width * 0.2,
+                //                           decoration: BoxDecoration(
+                //                               color: lightBlue,
+                //                               borderRadius:
+                //                                   BorderRadius.circular(20)),
+                //                           child: Row(
+                //                             mainAxisAlignment:
+                //                                 MainAxisAlignment.spaceEvenly,
+                //                             children: [
+                //                               const Icon(
+                //                                 Icons.watch_later_outlined,
+                //                                 color: red,
+                //                                 size: 12,
+                //                               ),
+                //                               CountdownTimer(
+                //                                 onTimerTick: (int value) {},
+                //                                 fontWeight: FontWeight.w500,
+                //                                 fontSize: 10,
+                //                                 color: red,
+                //                               ),
+                //                             ],
+                //                           ),
+                //                         ),
+                //                       ),
+                //                       Container(
+                //                         height: height * 0.05,
+                //                         width: width * 0.3,
+                //                         decoration: BoxDecoration(
+                //                             color: Colors.yellow,
+                //                             borderRadius:
+                //                                 BorderRadius.circular(20)),
+                //                         child: Center(
+                //                           child: Text(addAmount[index].titleOne,
+                //                               style: TextStyle(
+                //                                   fontSize: width * 0.05,
+                //                                   color: tertiary,
+                //                                   fontWeight: FontWeight.w500)),
+                //                         ),
+                //                       ),
+                //                     ],
+                //                   ),
+                //                 ),
+                //               ],
+                //             ),
+                //           ),
+                //         ),
+                //       );
+                //     }),
               ),
             ]),
           ))
@@ -1149,10 +1636,12 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
   void confirmPaymentBottomSheet(BuildContext context) async {
     final profile =
         Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
-    final confirmPayment =Provider.of<ConfirmPaymentViewModel>(context,listen: false).confirmPaymentResponse;
-    final ludoProvider =Provider.of<LudoProvider>(context,listen: false);
+    final confirmPayment =
+        Provider.of<ConfirmPaymentViewModel>(context, listen: false)
+            .confirmPaymentResponse;
+    final ludoProvider = Provider.of<LudoProvider>(context, listen: false);
 
-    final join =Provider.of<JoinViewModel>(context,listen: false);
+    final join = Provider.of<JoinViewModel>(context, listen: false);
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -1263,22 +1752,25 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                                 ),
                                 SizedBox(
                                   width: width * 0.2,
-                                  child:  Column(
+                                  child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text('₹${confirmPayment?.deductions?.bonus??"0"}',
+                                      Text(
+                                          '₹${confirmPayment?.deductions?.bonus ?? "0"}',
                                           style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                               color: labelColor)),
                                       const SizedBox(height: 8),
-                                      Text(' ₹${confirmPayment?.deductions?.cashback??"0"}',
+                                      Text(
+                                          ' ₹${confirmPayment?.deductions?.cashback ?? "0"}',
                                           style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                               color: labelColor)),
                                       const SizedBox(height: 8),
-                                      Text('₹${confirmPayment?.deductions?.depositWinning??"0"}',
+                                      Text(
+                                          '₹${confirmPayment?.deductions?.depositWinning ?? "0"}',
                                           style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
@@ -1348,19 +1840,18 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
               SizedBox(height: height * 0.03),
               Center(
                 child: CustomContainer(
-
                   onTap: () async {
                     final firebaseViewModel =
-                    Provider.of<FirebaseViewModel>(context, listen: false);
+                        Provider.of<FirebaseViewModel>(context, listen: false);
                     setState(() {
                       _startTimer();
                       nextPage = false;
                       time = true;
                       Navigator.pop(context);
-
                     });
 
-                    join.joinApi(tournamentID.toString(), firebaseViewModel.table.toString(), context);
+                    join.joinApi(tournamentID.toString(),
+                        firebaseViewModel.table.toString(), context);
                     showModalBottomSheet(
                       elevation: 5,
                       backgroundColor: primary,
@@ -1371,10 +1862,9 @@ final profileViewModel =Provider.of<ProfileViewModel>(context);
                               topRight: Radius.circular(35))),
                       context: context,
                       builder: (context) {
-                        return  TournamentBottomsheet(futureTime:futureTime);
+                        return TournamentBottomsheet(futureTime: futureTime);
                       },
                     );
-
                   },
                   alignment: Alignment.center,
                   height: height * 0.07,

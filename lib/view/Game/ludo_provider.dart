@@ -18,7 +18,7 @@ class LudoProvider extends ChangeNotifier {
   LudoGameState _gameState = LudoGameState.throwDice;
   int _diceResult = 1;
   bool _diceStarted = false;
-  LudoPlayerType _currentTurn = LudoPlayerType.yellow;
+  LudoPlayerType _currentTurn = LudoPlayerType.blue;
   DocumentReference<Map<String, dynamic>>? gameDoc;
   final List<LudoPlayer> players = [
     LudoPlayer(LudoPlayerType.blue),
@@ -53,9 +53,9 @@ class LudoProvider extends ChangeNotifier {
         'fourthPlace': fourthPlace?.toJson(),
       };
 
-      await gameDoc!.update({
-    'topPlayers': topPlayersData,
-    });
+    //   await gameDoc!.update({
+    // 'topPlayers': topPlayersData,
+    // });
   }
     notifyListeners();
   }
@@ -103,7 +103,7 @@ class LudoProvider extends ChangeNotifier {
         var data = snapshot.data();
         if (data != null) {
           _diceResult = data['diceResult'] ?? 1;
-          _currentTurn = LudoPlayerType.values[data['currentTurn'] ?? 3];
+          _currentTurn = LudoPlayerType.values[data['currentTurn'] ?? 0];
           _gameState = LudoGameState.values[data['gameState'] ?? 0];
 
           var playersData = data['players'];
@@ -242,7 +242,7 @@ class LudoProvider extends ChangeNotifier {
 
               Future.microtask(() async {
                 for (int j = opponentPawn.step; j >= 0; j--) {
-                  await Future.delayed(const Duration(milliseconds: 25));  // Reduce the delay for faster movement
+                  await Future.delayed(const Duration(milliseconds: 50));  // Reduce the delay for faster movement
                   opponentPawn.step = j;
                   FirebaseFirestore.instance.collection('ludo').doc(firebaseViewModel).update({
                     '${opponentType.toString().split('.').last}PawnPosition$i': opponentPawn.step,

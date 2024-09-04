@@ -237,38 +237,6 @@ final docId=documentID.table.toString();
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 userDiceDesign(playerData),
-                // Container(
-                //     height: height * 0.07,
-                //     width: width * 0.15,
-                //     decoration: const BoxDecoration(
-                //         image: DecorationImage(
-                //             image: AssetImage(Assets.ludoProfileSection))),
-                //     child: Image(
-                //       image: const AssetImage(
-                //         Assets.ludoUser,
-                //       ),
-                //       height: height * 0.03,
-                //       width: width * 0.23,
-                //       fit: BoxFit.fill,
-                //     )),
-                // Container(
-                //     alignment: Alignment.center,
-                //     height: height * 0.08,
-                //     width: width * 0.19,
-                //     decoration: const BoxDecoration(
-                //         image: DecorationImage(
-                //             image: AssetImage(Assets.ludoDiceSectionOne),
-                //             fit: BoxFit.fill)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.only(left: 8.0),
-                //       child: Image(
-                //         image: const AssetImage(
-                //           Assets.ludoDice,
-                //         ),
-                //         height: height * 0.06,
-                //         width: width * 0.17,
-                //       ),
-                //     )),
                 const Spacer(),
                 opponentsOneTurn(playerData),
               ],

@@ -98,7 +98,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
+import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view/Game/board_widgit.dart';
+import 'package:zupee/view_model/join_view_model.dart';
 import '../../generated/assets.dart';
 import 'ludo_provider.dart';
 import 'ludo_constant.dart';
@@ -110,7 +112,7 @@ class DiceWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ludoProvider = context.watch<LudoProvider>();
-
+final join=Provider.of<JoinViewModel>(context).fieldKey;
     return RippleAnimation(
       color: ludoProvider.gameState == LudoGameState.throwDice
           ? ludoProvider.currentPlayer.color
@@ -120,23 +122,31 @@ class DiceWidget extends StatelessWidget {
       repeat: true,
       child: InkWell(
         onTap: () {
-          if (!ludoProvider.diceStarted&&!ludoProvider.stopDice ) {
-            ludoProvider.throwDice(context);
-            List<PlayerData> playerDataList = [];
-            for (int i = 0; i < ludoProvider.players.length; i++) {
-              var player = ludoProvider.players[i];
-              int totalSteps = player.pawns.fold(0, (sum, pawn) {
-                return sum + (pawn.step - (pawn.initialStep ?? 0));
-              });
-              playerDataList.add(PlayerData(name: playerData[i], score: totalSteps.toString()));
+          print("AmanJoin${join}");
+          print("AmanludoProvider${ludoProvider.currentDiceIndex}");
+          if (join == ludoProvider.currentDiceIndex){
+            if (!ludoProvider.diceStarted&&!ludoProvider.stopDice ) {
+
+              ludoProvider.throwDice(context);
+              // List<PlayerData> playerDataList = [];
+              // for (int i = 0; i < ludoProvider.players.length; i++) {
+              //   var player = ludoProvider.players[i];
+              //   int totalSteps = player.pawns.fold(0, (sum, pawn) {
+              //     return sum + (pawn.step - (pawn.initialStep ?? 0));
+              //   });
+              //   playerDataList.add(PlayerData(name: playerData[i], score: totalSteps.toString()));
+              // }
+              // // Defer the update until after the frame is rendered
+              // SchedulerBinding.instance.addPostFrameCallback((_) {
+              //   final jsonData =jsonEncode(playerDataList.map((e) => e.toJson()).toList());
+              //   ludoProvider.setPlayerDataFromJson(playerDataList.map((e) =>e.toJson()).toList());
+              //   print('Player Data JSON: $jsonData');
+              // });
             }
-            // Defer the update until after the frame is rendered
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              final jsonData =jsonEncode(playerDataList.map((e) => e.toJson()).toList());
-              ludoProvider.setPlayerDataFromJson(playerDataList.map((e) =>e.toJson()).toList());
-              print('Player Data JSON: $jsonData');
-            });
+          }else{
+            Utils.showErrorToast("it's not your turn");
           }
+
         },
         child: Container(
           alignment: Alignment.center,

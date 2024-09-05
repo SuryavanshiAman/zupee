@@ -9,6 +9,7 @@ import 'package:zupee/main.dart';
 import 'package:zupee/view/Game/dice_widgit.dart';
 import 'package:zupee/view/Game/ludo_constant.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
+import 'package:zupee/view_model/join_view_model.dart';
 import 'package:zupee/view_model/timer_view_model.dart';
 
 import '../../res/app_colors.dart';
@@ -33,9 +34,12 @@ TimerProvider timerProvider=TimerProvider();
   @override
   void initState() {
     super.initState();
+    Provider.of<LudoProvider>(context,listen: false).listenToGameUpdates(context);
     timerProvider.startTimer();
     startTimer();
+    // checkForFourPlayers();
   }
+
   void startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
@@ -86,6 +90,7 @@ final docId=documentID.table.toString();
                   Map<String, dynamic> data = snapshot.data!.data() as Map<
                       String,
                       dynamic>;
+
                   return _buildDynamicContent(context, data);
                 },
               );
@@ -174,9 +179,11 @@ final docId=documentID.table.toString();
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   const Icon(Icons.watch_later_outlined,color: white,size: 19,),
-                  Text(timerProvider.timerText.toString(),
-                      style: const TextStyle(
+                  Text(
+                      timerProvider.timerText.toString(),
+                      style:  const TextStyle(
                           color: green,
+                          fontFamily:"digital",
                           fontWeight: FontWeight.w600,
                           fontSize: 20)),
                 ],

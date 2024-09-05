@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:zupee/repo/join_contest_repo.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/utils/toast.dart';
+import 'package:zupee/view/Game/ludo_constant.dart';
+import 'package:zupee/view/Game/ludo_player.dart';
 import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 import 'package:zupee/view_model/user_view_model.dart';
@@ -17,6 +19,15 @@ class JoinViewModel with ChangeNotifier {
   bool _loading = false;
   int documentId = 1;
   bool get loading => _loading;
+  int _fieldKey = 0;
+  int get fieldKey => _fieldKey;
+  setFieldKey(int value) {
+    if(value==0){
+      _fieldKey = value;
+    }else{
+    _fieldKey = value-1;}
+    notifyListeners();
+  }
 
   setLoading(bool value) {
     _loading = value;
@@ -25,7 +36,8 @@ class JoinViewModel with ChangeNotifier {
 
   ProfileViewModel profileViewModel = ProfileViewModel();
   Future<void> joinApi(dynamic tournamentID, dynamic tableId, context) async {
-    final profile = Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
+    final profile =
+        Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
     final ludoProvider = Provider.of<LudoProvider>(context, listen: false);
     final firebaseViewModel =
         Provider.of<FirebaseViewModel>(context, listen: false);
@@ -46,6 +58,8 @@ class JoinViewModel with ChangeNotifier {
         FirebaseFirestore fireStore = FirebaseFirestore.instance;
         CollectionReference ludoCollection = fireStore.collection('ludo');
         bool isAdded = false;
+        final playerColors = ludoProvider.players;
+        print("playerColor${playerColors[0].type}");
         while (!isAdded) {
           DocumentSnapshot documentSnapshot =
               await ludoCollection.doc(documentId.toString()).get();
@@ -55,12 +69,13 @@ class JoinViewModel with ChangeNotifier {
             print("Creating new document with ID $documentId");
             Map<String, dynamic> jsonData = {
               "1":
-                  '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}"}',
+                  '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}',
               "2": '',
               "3": '',
               "4": ''
             };
             await ludoCollection.doc(documentId.toString()).set(jsonData);
+            setFieldKey(int.parse(1.toString()));
             isAdded = true; // Data is added, stop the loop
           } else {
             // Document exists, check for available spaces
@@ -77,8 +92,9 @@ class JoinViewModel with ChangeNotifier {
                     "Empty spot found at $fieldKey in document $documentId, updating...");
                 await ludoCollection.doc(documentId.toString()).update({
                   fieldKey:
-                      '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}"}'
+                      '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i - 1].type}"}'
                 });
+                setFieldKey(int.parse(fieldKey));
                 isAdded = true; // Data is added, stop the loop
                 break; // Exit the loop after updating the first empty spot
               }
@@ -93,7 +109,7 @@ class JoinViewModel with ChangeNotifier {
           print("hellowAman");
           firebaseViewModel.setTable(documentId);
         }
-        ludoProvider.resetPawns(context,firebaseViewModel.table);
+        ludoProvider.resetPawns(context, firebaseViewModel.table);
         Utils.showSuccessToast(value['message']);
       } else {
         setLoading(false);

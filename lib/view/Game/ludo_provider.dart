@@ -14,12 +14,14 @@ class LudoProvider extends ChangeNotifier {
   bool _stopDice=false;
   bool get isMoving => _isMoving;
   bool get stopDice => _stopDice;
+  int _currentDiceIndex =-1;
 
   LudoGameState _gameState = LudoGameState.throwDice;
   int _diceResult = 1;
   bool _diceStarted = false;
   LudoPlayerType _currentTurn = LudoPlayerType.blue;
   DocumentReference<Map<String, dynamic>>? gameDoc;
+  int get currentDiceIndex => _currentDiceIndex;
   final List<LudoPlayer> players = [
     LudoPlayer(LudoPlayerType.blue),
     LudoPlayer(LudoPlayerType.red),
@@ -66,44 +68,17 @@ class LudoProvider extends ChangeNotifier {
   }
   final List<LudoPlayerType> winners = [];
 
-// whiteSaus(){
-//   List<PlayerData> playerDataList = [];
-//   for (int i = 0; i < players.length; i++) {
-//     var player = players[i];
-//     int totalSteps = player.pawns.fold(0, (sum, pawn) {
-//       return sum + (pawn.step - (pawn.initialStep ?? 0));
-//     });
-//     playerDataList.add(PlayerData(name: widget.playerData[i], score: totalSteps.toString()));
-//   }
-//
-// // Sort the player data by score in descending order
-//   playerDataList.sort((a, b) => int.parse(b.score).compareTo(int.parse(a.score)));
-//
-// // Get the highest, second highest, third highest, and fourth highest scores
-//   PlayerData? firstPlace = playerDataList.isNotEmpty ? playerDataList[0] : null;
-//   PlayerData? secondPlace = playerDataList.length > 1 ? playerDataList[1] : null;
-//   PlayerData? thirdPlace = playerDataList.length > 2 ? playerDataList[2] : null;
-//   PlayerData? fourthPlace = playerDataList.length > 3 ? playerDataList[3] : null;
-//
-//   // SchedulerBinding.instance.addPostFrameCallback((_) {
-//     final jsonData = jsonEncode(playerDataList.map((e) => e.toJson()).toList());
-//    setPlayerDataFromJson(playerDataList.map((e) => e.toJson()).toList());
-//  setTopFourPlayers(playerDataList);
-//     print('Player Data JSON: $jsonData');
-//
-//     print('First Place: ${firstPlace?.name['name']} with score ${firstPlace?.score}');
-//     print('Second Place: ${secondPlace?.name['name']} with score ${secondPlace?.score}');
-//     print('Third Place: ${thirdPlace?.name['name']} with score ${thirdPlace?.score}');
-//     print('Fourth Place: ${fourthPlace?.name['name']} with score ${fourthPlace?.score}');
-//   // });
-// }
-  void _listenToGameUpdates() {
+  void listenToGameUpdates(context) {
+    final firebaseViewModel = Provider.of<FirebaseViewModel>(context, listen: false).table.toString();
+    gameDoc = FirebaseFirestore.instance.collection('ludo').doc(firebaseViewModel);
     gameDoc!.snapshots().listen((snapshot) {
       if (snapshot.exists) {
         var data = snapshot.data();
+        print("Listening for updates: $data");
         if (data != null) {
           _diceResult = data['diceResult'] ?? 1;
           _currentTurn = LudoPlayerType.values[data['currentTurn'] ?? 0];
+          _currentDiceIndex= data['currentTurn']??0;
           _gameState = LudoGameState.values[data['gameState'] ?? 0];
 
           var playersData = data['players'];
@@ -146,7 +121,7 @@ class LudoProvider extends ChangeNotifier {
         print("skdkdkd");
       }
     }
-    _listenToGameUpdates();
+    listenToGameUpdates(context);
 
     if (kDebugMode) {
       print("Firehaimai$firebaseViewModel");
@@ -287,10 +262,10 @@ class LudoProvider extends ChangeNotifier {
     for (var player in players) {
       for (var i = 0; i < player.pawns.length; i++) {
         player.pawns[i].step = 0; // Reset to the initial position
-        _currentTurn=LudoPlayerType.yellow;
+        _currentTurn=LudoPlayerType.blue;
         // Update Firestore with the reset position
         await FirebaseFirestore.instance.collection('ludo').doc(firebaseViewModel.toString()).update({
-          '${player.type.toString().split('.').last}PawnPosition$i': 0,
+          '${player.type.toString().split('.').last}PawnPosition$i': 0,'currentTurn': _currentTurn.index,
         });
       }
     }

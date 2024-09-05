@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/launcher.dart';
@@ -80,9 +80,9 @@ class _WinnerScreenState extends State<WinnerScreen> {
                           SizedBox(
                             height: height * 0.07,
                           ),
-                          // int.parse(profile!.data!.id.toString()).toString() ==
-                          //     int.parse(ludoProvider.firstPlace?.name['id'])
-                          //         .toString()?
+                          int.parse(profile!.data!.id.toString()).toString() ==
+                              int.parse(ludoProvider.firstPlace?.name['id'])
+                                  .toString()?
                           Container(
                               alignment: Alignment.center,
                               height: height * 0.04,
@@ -94,18 +94,18 @@ class _WinnerScreenState extends State<WinnerScreen> {
                                 "WINNER",
                                 style: TextStyle(
                                     color: cream, fontWeight: FontWeight.w500),
-                              )),
-                              // :Container(),
+                              ))
+                              :Container(),
                           SizedBox(
                             height: height * 0.01,
                           ),
                           Text(
 
-                            // int.parse(profile!.data!.id.toString()).toString() ==
-                            //     int.parse(ludoProvider.firstPlace?.name['id'])
-                            //         .toString()?
-                            "You have won ₹1.7",
-                                // :"You have lost the match",
+                            int.parse(profile!.data!.id.toString()).toString() ==
+                                int.parse(ludoProvider.firstPlace?.name['id'])
+                                    .toString()?
+                            "You have won ₹1.7"
+                                :"You have lost the match",
                             style: TextStyle(
                                 color: white,
                                 fontWeight: FontWeight.w500,
@@ -256,23 +256,23 @@ class _WinnerScreenState extends State<WinnerScreen> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(top:
-                      // int.parse(profile.data!.id.toString()).toString() ==
-                      //     int.parse(ludoProvider.firstPlace?.name['id'])
-                      //         .toString()?
+                      int.parse(profile.data!.id.toString()).toString() ==
+                          int.parse(ludoProvider.firstPlace?.name['id'])
+                              .toString()?
                       height * 0.03
-                          // :height*0.0
+                          :height*0.0
                       ),
                       child: Image.asset(
-                          // int.parse(profile.data!.id.toString()).toString() ==
-                          //         int.parse(ludoProvider.firstPlace?.name['id'])
-                          //             .toString()
-                          //     ?
-                      Assets.ludoCrown,
-                              // : Assets.imagesLoos,
+                          int.parse(profile.data!.id.toString()).toString() ==
+                                  int.parse(ludoProvider.firstPlace?.name['id'])
+                                      .toString()
+                              ?
+                      Assets.ludoCrown
+                              : Assets.imagesLoos,
                       height:
-                      // int.parse(profile.data!.id.toString()).toString() ==
-                      //     int.parse(ludoProvider.firstPlace?.name['id'])
-                      //         .toString()?null:
+                      int.parse(profile.data!.id.toString()).toString() ==
+                          int.parse(ludoProvider.firstPlace?.name['id'])
+                              .toString()?null:
                       height*0.25
                       ),
                     ),
@@ -311,7 +311,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
                         child: Image.asset(Assets.iconFacebok)),
                     InkWell(
                         onTap: () {
-                          Share.share('Mai jeet gaya');
+                          // Share.share('Mai jeet gaya');
                         },
                         child: Image.asset(Assets.imagesShare)),
                   ],

@@ -59,7 +59,9 @@ class LudoSupremeState extends State<LudoSupreme>
     super.initState();
     _scrollController.addListener(_handleScroll);
     contestCategoryViewModel.contestCategoryApi(context);
-    tournamentViewModel.tournamentApi(context, selectedIndices.toString());
+    Provider.of<TournamentViewModel>(context, listen: false)
+        .tournamentApi(context, selectedIndices.toString());
+
     time = false;
   }
 
@@ -209,9 +211,9 @@ class LudoSupremeState extends State<LudoSupreme>
                                       child: Row(
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.all(10.0),
+                                            padding: const EdgeInsets.all(13.0),
                                             child: Container(
-                                                height: height * 0.045,
+                                                // height: height * 0.045,
                                                 padding:
                                                     const EdgeInsets.all(9),
                                                 decoration: BoxDecoration(
@@ -418,10 +420,10 @@ class LudoSupremeState extends State<LudoSupreme>
               Consumer<TournamentViewModel>(
                 builder: (context, tournamentValue, _) {
                   switch (tournamentValue.tournamentList.status) {
-                    case Status.LOADING:
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                    // case Status.LOADING:
+                    //   return const Center(
+                    //     child: CircularProgressIndicator(),
+                    //   );
                     case Status.ERROR:
                       return Container();
                     case Status.COMPLETED:
@@ -629,10 +631,12 @@ class LudoSupremeState extends State<LudoSupreme>
                                                     ),
                                                     CustomContainer(
                                                       onTap: () {
-                                                        Navigator.pushNamed(
-                                                            context,
-                                                            RoutesName
-                                                                .ludoSupreme);
+                                                        confirmPaymentBottomSheet(context);
+                                                        confirmPayment.confirmPaymentApi(context,
+                                                            tournament[index].id.toString());
+                                                        tournamentID =
+                                                            tournament[index].id.toString();
+
                                                       },
                                                       height: height * 0.05,
                                                       widths: width * 0.3,
@@ -686,217 +690,16 @@ class LudoSupremeState extends State<LudoSupreme>
                   }
                 },
               ),
-              // ListView.builder(
-              //     physics: const NeverScrollableScrollPhysics(),
-              //     shrinkWrap: true,
-              //     itemCount: tournament.tournament.length,
-              //     itemBuilder: (context, index) {
-              //       futureTime = tournament
-              //           .tournament[index].tournamentStarttime
-              //           .toString();
-              //       return Padding(
-              //         padding: const EdgeInsets.all(0.0),
-              //         child: Card(
-              //           shape: RoundedRectangleBorder(
-              //               borderRadius: BorderRadius.circular(15)),
-              //           elevation: 5,
-              //           child: InkWell(
-              //             onTap: () {
-              //               confirmPaymentBottomSheet(context);
-              //               confirmPayment.confirmPaymentApi(context,
-              //                   tournament.tournament[index].id.toString());
-              //               tournamentID =
-              //                   tournament.tournament[index].id.toString();
-              //             },
-              //             child: Container(
-              //               height: height * 0.18,
-              //               decoration: const BoxDecoration(
-              //                   color: white,
-              //                   borderRadius:
-              //                       BorderRadius.all(Radius.circular(15))),
-              //               child: Column(
-              //                 children: [
-              //                   Container(
-              //                     height: height * 0.04,
-              //                     width: width,
-              //                     padding: const EdgeInsets.all(8.0),
-              //                     decoration: const BoxDecoration(
-              //                         color: lightBlue,
-              //                         borderRadius: BorderRadius.only(
-              //                             topRight: Radius.circular(10),
-              //                             topLeft: Radius.circular(10))),
-              //                     child: Row(
-              //                       mainAxisAlignment: MainAxisAlignment.start,
-              //                       children: [
-              //                         const Icon(
-              //                           Icons.people_outline,
-              //                           color: Colors.black,
-              //                           size: 18,
-              //                         ),
-              //                         SizedBox(
-              //                           width: width * 0.01,
-              //                         ),
-              //                         Text(
-              //                             "${tournament.tournament[index].playerNo}+",
-              //                             style: const TextStyle(
-              //                                 fontSize: 11,
-              //                                 fontWeight: FontWeight.w600,
-              //                                 color: Colors.black)),
-              //                         SizedBox(
-              //                           width: width * 0.16,
-              //                         ),
-              //                         Text(
-              //                             tournament.tournament[index]
-              //                                 .contestName!.tr,
-              //                             style: const TextStyle(
-              //                                 fontSize: 12,
-              //                                 color: black,
-              //                                 fontWeight: FontWeight.w500))
-              //                       ],
-              //                     ),
-              //                   ),
-              //                   SizedBox(
-              //                     height: height * 0.03,
-              //                   ),
-              //                   Padding(
-              //                     padding: EdgeInsets.only(
-              //                         left: width * 0.04, right: width * 0.07),
-              //                     child: Row(
-              //                       mainAxisAlignment:
-              //                           MainAxisAlignment.spaceBetween,
-              //                       children: [
-              //                         Text("PRIZE POOL".tr,
-              //                             style: const TextStyle(
-              //                                 fontSize: 12,
-              //                                 color: labelColor,
-              //                                 fontWeight: FontWeight.w500
-              //                                 // fontWeight: FontWeight.bold
-              //                                 )),
-              //                         Text("ENTRY".tr,
-              //                             style: const TextStyle(
-              //                                 fontSize: 12,
-              //                                 color: labelColor,
-              //                                 fontWeight: FontWeight.w500))
-              //                       ],
-              //                     ),
-              //                   ),
-              //                   Padding(
-              //                     padding: const EdgeInsets.all(8.0),
-              //                     child: Row(
-              //                       mainAxisAlignment:
-              //                           MainAxisAlignment.spaceBetween,
-              //                       children: [
-              //                         Container(
-              //                           height: height * 0.05,
-              //                           width: width * 0.3,
-              //                           decoration: BoxDecoration(
-              //                               color: lightBlue,
-              //                               borderRadius:
-              //                                   BorderRadius.circular(20)),
-              //                           child: Center(
-              //                             child: Text(
-              //                                 "₹${tournament.tournament[index].winPrize.toString()}",
-              //                                 style: const TextStyle(
-              //                                     fontSize: 16,
-              //                                     color: black,
-              //                                     fontWeight: FontWeight.w600)),
-              //                           ),
-              //                         ),
-              //                         InkWell(
-              //                           onTap: () {},
-              //                           child: Container(
-              //                             height: height * 0.02,
-              //                             width: width * 0.2,
-              //                             decoration: BoxDecoration(
-              //                                 color: lightBlue,
-              //                                 borderRadius:
-              //                                     BorderRadius.circular(20)),
-              //                             child: Row(
-              //                               mainAxisAlignment:
-              //                                   MainAxisAlignment.spaceEvenly,
-              //                               children: [
-              //                                 const Icon(
-              //                                   Icons.watch_later_outlined,
-              //                                   color: red,
-              //                                   size: 12,
-              //                                 ),
-              //                                 CountdownTimer(
-              //                                   futureTime: tournament
-              //                                       .tournament[index]
-              //                                       .tournamentStarttime
-              //                                       .toString(),
-              //                                   onTimerTick: (int value) {},
-              //                                   fontWeight: FontWeight.w500,
-              //                                   fontSize: 10,
-              //                                   color: red,
-              //                                 ),
-              //                                 // Text('${minutes}m',
-              //                                 //     style: const TextStyle(
-              //                                 //       fontSize: 12,
-              //                                 //       color: red,
-              //                                 //     )),
-              //                                 // Text('${seconds}s',
-              //                                 //     style: const TextStyle(
-              //                                 //       fontSize: 12,
-              //                                 //       color: red,
-              //                                 //     )),
-              //                               ],
-              //                             ),
-              //                           ),
-              //                         ),
-              //                         Stack(
-              //                           alignment: Alignment.center,
-              //                           children: [
-              //                             Shimmer.fromColors(
-              //                               baseColor: secondary,
-              //                               highlightColor: Colors.grey[100]!,
-              //                               child: Container(
-              //                                 height: height * 0.05,
-              //                                 width: width * 0.3,
-              //                                 decoration: const BoxDecoration(
-              //                                   color: Colors
-              //                                       .blue, // Replace with your secondary color
-              //                                   borderRadius: BorderRadius.all(
-              //                                       Radius.circular(25)),
-              //                                 ),
-              //                               ),
-              //                             ),
-              //                             CustomContainer(
-              //                               onTap: () {
-              //                                 Navigator.pushNamed(context,
-              //                                     RoutesName.ludoSupreme);
-              //                               },
-              //                               height: height * 0.05,
-              //                               widths: width * 0.3,
-              //                               alignment: Alignment.center,
-              //                               decoration: const BoxDecoration(
-              //                                 borderRadius: BorderRadius.all(
-              //                                     Radius.circular(25)),
-              //                               ),
-              //                               child: Text(
-              //                                 "₹${tournament.tournament[index].amount.toString()}",
-              //                                 style: const TextStyle(
-              //                                   color:
-              //                                       tertiary, // Replace with your tertiary color
-              //                                   fontWeight: FontWeight.w600,
-              //                                   fontSize: 16,
-              //                                 ),
-              //                               ),
-              //                             ),
-              //                           ],
-              //                         ),
-              //                       ],
-              //                     ),
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       );
-              //     }),
-              ChangeNotifierProvider<TournamentViewModel>(
-                create: (BuildContext context) => tournamentViewModel,
+              SizedBox(
+                height: height * 0.03,
+              ),
+              Text("Other Tournaments".tr,
+                  style: TextStyle(
+                      fontSize: width * 0.05,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
                 child: Consumer<TournamentViewModel>(
                   builder: (context, tournamentValue, _) {
                     switch (tournamentValue.tournamentList.status) {
@@ -910,13 +713,14 @@ class LudoSupremeState extends State<LudoSupreme>
                         final tournament =
                             tournamentValue.tournamentList.data!.data;
                         if (tournament != null && tournament.isNotEmpty) {
-
                           return ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: tournament.length,
                               itemBuilder: (context, index) {
-                                futureTime=tournament[index].tournamentStarttime.toString();
+                                futureTime = tournament[index]
+                                    .tournamentStarttime
+                                    .toString();
                                 return Padding(
                                   padding: const EdgeInsets.all(0.0),
                                   child: Card(
@@ -927,8 +731,8 @@ class LudoSupremeState extends State<LudoSupreme>
                                     child: InkWell(
                                       onTap: () {
                                         confirmPaymentBottomSheet(context);
-                                        confirmPaymentBottomSheet(context);
-                                        confirmPayment.confirmPaymentApi(context,
+                                        confirmPayment.confirmPaymentApi(
+                                            context,
                                             tournament[index].id.toString());
                                         tournamentID =
                                             tournament[index].id.toString();
@@ -1069,7 +873,10 @@ class LudoSupremeState extends State<LudoSupreme>
                                                             size: 12,
                                                           ),
                                                           CountdownTimer(
-                                                            futureTime:tournament[index].tournamentStarttime.toString(),
+                                                            futureTime: tournament[
+                                                                    index]
+                                                                .tournamentStarttime
+                                                                .toString(),
                                                             onTimerTick:
                                                                 (int value) {},
                                                             fontWeight:
@@ -1159,292 +966,9 @@ class LudoSupremeState extends State<LudoSupreme>
                         } else {
                           return const Center(
                             child: Text(
-                              "No Tournament Found!",
+                              "No  Found!",
                               style:
                                   TextStyle(color: Colors.black, fontSize: 16),
-                            ),
-                          );
-                        }
-                      default:
-                        return const Center(
-                          child: Text(
-                            "No Tournament Found!",
-                            style:
-                            TextStyle(color: Colors.black, fontSize: 16),
-                          ),
-                        );
-                    }
-                  },
-                ),
-              ),
-              SizedBox(
-                height: height * 0.03,
-              ),
-              Text("Other Tournaments".tr,
-                  style: TextStyle(
-                      fontSize: width * 0.05,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold)),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child:Consumer<TournamentViewModel>(
-                  builder: (context, tournamentValue, _) {
-                    switch (tournamentValue.tournamentList.status) {
-                      // case Status.LOADING:
-                      //   return const Center(
-                      //     child: CircularProgressIndicator(),
-                      //   );
-                      case Status.ERROR:
-                        return Container();
-                      case Status.COMPLETED:
-                        final tournament =
-                            tournamentValue.tournamentList.data!.data;
-                        if (tournament != null && tournament.isNotEmpty) {
-                          return ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: tournament.length,
-                              itemBuilder: (context, index) {
-                                futureTime = tournament[index]
-                                    .tournamentStarttime
-                                    .toString();
-                                return Padding(
-                                  padding: const EdgeInsets.all(0.0),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15)),
-                                    elevation: 5,
-                                    child: InkWell(
-                                      onTap: () {
-                                        confirmPaymentBottomSheet(context);
-                                        confirmPayment.confirmPaymentApi(context,
-                                            tournament[index].id.toString());
-                                        tournamentID =
-                                            tournament[index].id.toString();
-                                      },
-                                      child: Container(
-                                        height: height * 0.18,
-                                        decoration: const BoxDecoration(
-                                            color: white,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(15))),
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              height: height * 0.04,
-                                              width: width,
-                                              padding: const EdgeInsets.all(8.0),
-                                              decoration: const BoxDecoration(
-                                                  color: lightBlue,
-                                                  borderRadius: BorderRadius.only(
-                                                      topRight:
-                                                      Radius.circular(10),
-                                                      topLeft:
-                                                      Radius.circular(10))),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                                children: [
-                                                  const Icon(
-                                                    Icons.people_outline,
-                                                    color: Colors.black,
-                                                    size: 18,
-                                                  ),
-                                                  SizedBox(
-                                                    width: width * 0.01,
-                                                  ),
-                                                  Text(
-                                                      "${tournament[index].playerNo}+",
-                                                      style: const TextStyle(
-                                                          fontSize: 11,
-                                                          fontWeight:
-                                                          FontWeight.w600,
-                                                          color: Colors.black)),
-                                                  SizedBox(
-                                                    width: width * 0.16,
-                                                  ),
-                                                  Text(
-                                                      tournament[index]
-                                                          .contestName!
-                                                          .tr,
-                                                      style: const TextStyle(
-                                                          fontSize: 12,
-                                                          color: black,
-                                                          fontWeight:
-                                                          FontWeight.w500))
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: height * 0.03,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: width * 0.04,
-                                                  right: width * 0.07),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
-                                                children: [
-                                                  Text("PRIZE POOL".tr,
-                                                      style: const TextStyle(
-                                                          fontSize: 12,
-                                                          color: labelColor,
-                                                          fontWeight:
-                                                          FontWeight.w500
-                                                        // fontWeight: FontWeight.bold
-                                                      )),
-                                                  Text("ENTRY".tr,
-                                                      style: const TextStyle(
-                                                          fontSize: 12,
-                                                          color: labelColor,
-                                                          fontWeight:
-                                                          FontWeight.w500))
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
-                                                children: [
-                                                  Container(
-                                                    height: height * 0.05,
-                                                    width: width * 0.3,
-                                                    decoration: BoxDecoration(
-                                                        color: lightBlue,
-                                                        borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)),
-                                                    child: Center(
-                                                      child: Text(
-                                                          "₹${tournament[index].winPrize.toString()}",
-                                                          style: const TextStyle(
-                                                              fontSize: 16,
-                                                              color: black,
-                                                              fontWeight:
-                                                              FontWeight
-                                                                  .w600)),
-                                                    ),
-                                                  ),
-                                                  InkWell(
-                                                    onTap: () {},
-                                                    child: Container(
-                                                      height: height * 0.02,
-                                                      width: width * 0.2,
-                                                      decoration: BoxDecoration(
-                                                          color: lightBlue,
-                                                          borderRadius:
-                                                          BorderRadius
-                                                              .circular(20)),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                        children: [
-                                                          const Icon(
-                                                            Icons
-                                                                .watch_later_outlined,
-                                                            color: red,
-                                                            size: 12,
-                                                          ),
-                                                          CountdownTimer(
-                                                            futureTime: tournament[
-                                                            index]
-                                                                .tournamentStarttime
-                                                                .toString(),
-                                                            onTimerTick:
-                                                                (int value) {},
-                                                            fontWeight:
-                                                            FontWeight.w500,
-                                                            fontSize: 10,
-                                                            color: red,
-                                                          ),
-                                                          // Text('${minutes}m',
-                                                          //     style: const TextStyle(
-                                                          //       fontSize: 12,
-                                                          //       color: red,
-                                                          //     )),
-                                                          // Text('${seconds}s',
-                                                          //     style: const TextStyle(
-                                                          //       fontSize: 12,
-                                                          //       color: red,
-                                                          //     )),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Stack(
-                                                    alignment: Alignment.center,
-                                                    children: [
-                                                      Shimmer.fromColors(
-                                                        baseColor: secondary,
-                                                        highlightColor:
-                                                        Colors.grey[100]!,
-                                                        child: Container(
-                                                          height: height * 0.05,
-                                                          width: width * 0.3,
-                                                          decoration:
-                                                          const BoxDecoration(
-                                                            color: Colors
-                                                                .blue, // Replace with your secondary color
-                                                            borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius
-                                                                    .circular(
-                                                                    25)),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      CustomContainer(
-                                                        onTap: () {
-                                                          Navigator.pushNamed(
-                                                              context,
-                                                              RoutesName
-                                                                  .ludoSupreme);
-                                                        },
-                                                        height: height * 0.05,
-                                                        widths: width * 0.3,
-                                                        alignment:
-                                                        Alignment.center,
-                                                        decoration:
-                                                        const BoxDecoration(
-                                                          borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  25)),
-                                                        ),
-                                                        child: Text(
-                                                          "₹${tournament[index].amount.toString()}",
-                                                          style: const TextStyle(
-                                                            color:
-                                                            tertiary, // Replace with your tertiary color
-                                                            fontWeight:
-                                                            FontWeight.w600,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              });
-                        } else {
-                          return const Center(
-                            child: Text(
-                              "No  Found!",
-                              style: TextStyle(color: Colors.black, fontSize: 16),
                             ),
                           );
                         }
@@ -1458,160 +982,6 @@ class LudoSupremeState extends State<LudoSupreme>
                     }
                   },
                 ),
-                // ListView.builder(
-                //     // scrollDirection: Axis.vertical,
-                //     physics: const NeverScrollableScrollPhysics(),
-                //     shrinkWrap: true,
-                //     itemCount: addAmount.length,
-                //     itemBuilder: (context, index) {
-                //       return Padding(
-                //         padding: const EdgeInsets.all(8.0),
-                //         child: Card(
-                //           shape: RoundedRectangleBorder(
-                //               borderRadius: BorderRadius.circular(15)),
-                //           elevation: 5,
-                //           child: Container(
-                //             // padding: const EdgeInsets.all(8.0),
-                //             height: height * 0.18,
-                //             // width: width*0.5,
-                //             decoration: const BoxDecoration(
-                //                 // color: Colors.red,
-                //                 color: white,
-                //                 borderRadius:
-                //                     BorderRadius.all(Radius.circular(15))),
-                //             child: Column(
-                //               children: [
-                //                 Container(
-                //                   height: height * 0.04,
-                //                   width: width,
-                //                   padding: const EdgeInsets.all(8.0),
-                //                   decoration: const BoxDecoration(
-                //                       color: lightBlue,
-                //                       borderRadius: BorderRadius.only(
-                //                           topRight: Radius.circular(10),
-                //                           topLeft: Radius.circular(10))),
-                //                   child: Row(
-                //                     mainAxisAlignment: MainAxisAlignment.start,
-                //                     children: [
-                //                       const Icon(
-                //                         Icons.people_outline,
-                //                         color: Colors.black,
-                //                         size: 18,
-                //                       ),
-                //                       Text("2130+",
-                //                           style: TextStyle(
-                //                               fontSize: width * 0.03,
-                //                               color: Colors.black)),
-                //                       SizedBox(
-                //                         width: width * 0.16,
-                //                       ),
-                //                       Text(listNew[index].title,
-                //                           style: TextStyle(
-                //                               fontSize: width * 0.03,
-                //                               color: Colors.black,
-                //                               fontWeight: FontWeight.w400))
-                //                     ],
-                //                   ),
-                //                 ),
-                //                 SizedBox(
-                //                   height: height * 0.03,
-                //                 ),
-                //                 Padding(
-                //                   padding: EdgeInsets.only(
-                //                       left: width * 0.04, right: width * 0.07),
-                //                   child: Row(
-                //                     mainAxisAlignment:
-                //                         MainAxisAlignment.spaceBetween,
-                //                     children: [
-                //                       Text("PRIZE POOL".tr,
-                //                           style: TextStyle(
-                //                               fontSize: width * 0.03,
-                //                               color: labelColor,
-                //                               fontWeight: FontWeight.w400
-                //                               // fontWeight: FontWeight.bold
-                //                               )),
-                //                       Text("ENTRY".tr,
-                //                           style: TextStyle(
-                //                               fontSize: width * 0.03,
-                //                               color: labelColor,
-                //                               fontWeight: FontWeight.w400))
-                //                     ],
-                //                   ),
-                //                 ),
-                //                 Padding(
-                //                   padding: const EdgeInsets.all(8.0),
-                //                   child: Row(
-                //                     mainAxisAlignment:
-                //                         MainAxisAlignment.spaceBetween,
-                //                     children: [
-                //                       Container(
-                //                         height: height * 0.05,
-                //                         width: width * 0.3,
-                //                         decoration: BoxDecoration(
-                //                             color: lightBlue,
-                //                             borderRadius:
-                //                                 BorderRadius.circular(20)),
-                //                         child: Center(
-                //                           child: Text(
-                //                               addAmount[index].title.toString(),
-                //                               style: TextStyle(
-                //                                   fontSize: width * 0.05,
-                //                                   color: Colors.black,
-                //                                   fontWeight: FontWeight.bold)),
-                //                         ),
-                //                       ),
-                //                       InkWell(
-                //                         onTap: () {},
-                //                         child: Container(
-                //                           height: height * 0.02,
-                //                           width: width * 0.2,
-                //                           decoration: BoxDecoration(
-                //                               color: lightBlue,
-                //                               borderRadius:
-                //                                   BorderRadius.circular(20)),
-                //                           child: Row(
-                //                             mainAxisAlignment:
-                //                                 MainAxisAlignment.spaceEvenly,
-                //                             children: [
-                //                               const Icon(
-                //                                 Icons.watch_later_outlined,
-                //                                 color: red,
-                //                                 size: 12,
-                //                               ),
-                //                               CountdownTimer(
-                //                                 onTimerTick: (int value) {},
-                //                                 fontWeight: FontWeight.w500,
-                //                                 fontSize: 10,
-                //                                 color: red,
-                //                               ),
-                //                             ],
-                //                           ),
-                //                         ),
-                //                       ),
-                //                       Container(
-                //                         height: height * 0.05,
-                //                         width: width * 0.3,
-                //                         decoration: BoxDecoration(
-                //                             color: Colors.yellow,
-                //                             borderRadius:
-                //                                 BorderRadius.circular(20)),
-                //                         child: Center(
-                //                           child: Text(addAmount[index].titleOne,
-                //                               style: TextStyle(
-                //                                   fontSize: width * 0.05,
-                //                                   color: tertiary,
-                //                                   fontWeight: FontWeight.w500)),
-                //                         ),
-                //                       ),
-                //                     ],
-                //                   ),
-                //                 ),
-                //               ],
-                //             ),
-                //           ),
-                //         ),
-                //       );
-                //     }),
               ),
             ]),
           ))

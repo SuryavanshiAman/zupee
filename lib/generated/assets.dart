@@ -13,7 +13,6 @@ class Assets {
   static const String diceGreenpawn = 'assets/dice/greenpawn.png';
   static const String diceRedPawn = 'assets/dice/red_pawn.webp';
   static const String diceYellowPawn = 'assets/dice/yellow_pawn.webp';
-  static const String fontDigital7 = 'assets/font/digital-7.ttf';
   static const String gifIcons8Hourglass = 'assets/gif/icons8-hourglass.gif';
   static const String iconAccount = 'assets/icon/account.png';
   static const String iconAccountTwo = 'assets/icon/account_two.png';
@@ -58,6 +57,7 @@ class Assets {
   static const String imagesStressed = 'assets/images/stressed.png';
   static const String imagesStx = 'assets/images/stx.webp';
   static const String imagesSugestion = 'assets/images/sugestion.png';
+  static const String imagesTextArea = 'assets/images/text_area.png';
   static const String imagesTimerPage = 'assets/images/timer_page.webp';
   static const String imagesTimerPageBg = 'assets/images/timer_page_bg.png';
   static const String imagesUmB = 'assets/images/umB.webp';

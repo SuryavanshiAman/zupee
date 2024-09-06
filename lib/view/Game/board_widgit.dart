@@ -293,9 +293,6 @@ class _BoardWidgetState extends State<BoardWidget> {
                   alignment: Alignment.center,
                   children: [
                     ...playersPawn,
-                    // ...winners(context, value.winners.cast<LudoPlayer>()),
-                    // turnIndicator(context, value.currentPlayer.type,
-                    //     value.currentPlayer.color, value.gameState),
                   ],
                 ),
               );

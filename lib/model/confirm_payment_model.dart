@@ -1,13 +1,15 @@
 class ConfirmPaymentModel {
   String? status;
   String? message;
+  int? balanceStatus;
   Deductions? deductions;
 
-  ConfirmPaymentModel({this.status, this.message, this.deductions});
+  ConfirmPaymentModel({this.status, this.message, this.deductions,this.balanceStatus});
 
   ConfirmPaymentModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
+    balanceStatus = json['blancestatus'];
     deductions = json['deductions'] != null
         ? Deductions.fromJson(json['deductions'])
         : null;
@@ -17,6 +19,7 @@ class ConfirmPaymentModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['message'] = message;
+    data['blancestatus'] = balanceStatus;
     if (deductions != null) {
       data['deductions'] = deductions!.toJson();
     }

@@ -20,7 +20,7 @@ dependencies:
   sliding_switch: ^1.1.0
   fluttertoast: ^8.2.8
   another_flushbar: ^1.12.30
-#  share_plus:
+  share_plus:
   image_picker: ^1.1.2
   shared_preferences: ^2.3.2
   carousel_slider: ^5.0.0

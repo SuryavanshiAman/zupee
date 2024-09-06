@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
+import 'package:zupee/res/image_tost.dart';
 import 'package:zupee/view/Game/dice_widgit.dart';
 import 'package:zupee/view/Game/ludo_constant.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
-import 'package:zupee/view_model/join_view_model.dart';
 import 'package:zupee/view_model/timer_view_model.dart';
 
 import '../../res/app_colors.dart';
@@ -36,16 +36,26 @@ TimerProvider timerProvider=TimerProvider();
     super.initState();
     Provider.of<LudoProvider>(context,listen: false).listenToGameUpdates(context);
     timerProvider.startTimer();
-    startTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ImageToast.show(
+        imagePath: Assets.imagesTextArea,
+        height: height * 0.08,
+        width: width * 0.6,
+        context: context,
+        text: "Game will start after 5 sec",
+      );
+    });
+    startTimer(context);
     // checkForFourPlayers();
   }
 
-  void startTimer() {
+  void startTimer(context) {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
         setState(() {
           _remainingSeconds--;
-          _remainingSeconds==0?Navigator.pushReplacementNamed(context, RoutesName.winnerScreen):null;
+          String argument = ModalRoute.of(context)!.settings.arguments.toString();
+          // _remainingSeconds==0?Navigator.pushReplacementNamed(context, RoutesName.winnerScreen,arguments: argument):null;
         });
       } else {
         _timer?.cancel();
@@ -101,12 +111,13 @@ final docId=documentID.table.toString();
 
 
   Widget _buildDynamicContent(BuildContext context, Map<String, dynamic> data) {
+    String argument = ModalRoute.of(context)!.settings.arguments.toString();
     Map<String, dynamic> player1Data = data['1'].isNotEmpty ? json.decode(data['1']) : {};
     Map<String, dynamic> player2Data = data['2'].isNotEmpty ? json.decode(data['2']) : {};
     Map<String, dynamic> player3Data = data['3'].isNotEmpty ? json.decode(data['3']) : {};
     Map<String, dynamic> player4Data = data['4'].isNotEmpty ? json.decode(data['4']) : {};
     final List<Map<String, dynamic> > playerData = [player1Data, player2Data, player3Data, player3Data];
-    // Build the dynamic content using the parsed data
+
     return Container(
       height: height,
       width: width,
@@ -129,9 +140,9 @@ final docId=documentID.table.toString();
                       image: DecorationImage(
                           image: AssetImage(Assets.ludoPrizePool),
                           fit: BoxFit.fill)),
-                  child: const Column(
+                  child:  Column(
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.only(left: 12.0),
                         child: Text(
                           "Prize Pool",
@@ -142,8 +153,8 @@ final docId=documentID.table.toString();
                         ),
                       ),
                       Text(
-                        "₹20",
-                        style: TextStyle(
+                        "₹${argument.toString()}",
+                        style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
                             fontSize: 13),
@@ -272,7 +283,7 @@ final docId=documentID.table.toString();
                       image: DecorationImage(
                           image: AssetImage(Assets.ludoLabelSection),
                           fit: BoxFit.fill)),
-                  child:  Text(player3Data['name'] ?? 'No Name',
+                  child:  Text(  player4Data['name'] ?? 'No Name',
                       style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -302,8 +313,8 @@ final docId=documentID.table.toString();
                       image: DecorationImage(
                           image: AssetImage(Assets.ludoLabelSectionTwo),
                           fit: BoxFit.fill)),
-                  child:  Text(
-                      player4Data['name'] ?? 'No Name',
+                  child:  Text(player3Data['name'] ?? 'No Name'
+                    ,
                       style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,

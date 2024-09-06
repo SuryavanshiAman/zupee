@@ -11,8 +11,6 @@ import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/time_page.dart';
 import 'package:zupee/utils/routes_name.dart';
-import 'package:zupee/view/Game/ludo_player.dart';
-import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view/bottomsheet/tournament_bottomsheet.dart';
 import 'package:zupee/view_model/confirm_payment_view_model.dart';
 import 'package:zupee/view_model/contest_category_view_model.dart';
@@ -47,8 +45,6 @@ class LudoSupreme extends StatefulWidget {
 class LudoSupremeState extends State<LudoSupreme>
     with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
-  // bool _showImage = true;
-
   bool _showTitle = true;
   ContestCategoryViewModel contestCategoryViewModel =
       ContestCategoryViewModel();
@@ -79,10 +75,6 @@ class LudoSupremeState extends State<LudoSupreme>
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   bool nextPage = true;
   int setTime = 0;
@@ -105,15 +97,13 @@ class LudoSupremeState extends State<LudoSupreme>
   int _seconds = 10;
   Timer? _timer;
 
-  void _startTimer() {
+  void _startTimer(prizePool) {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_seconds == 0) {
           _timer?.cancel();
-          Navigator.pushNamed(
-            context,
-            RoutesName.timerScreen,
-          );
+          Navigator.pushNamed(context, RoutesName.timerScreen,
+              arguments: prizePool);
         } else {
           _seconds--;
         }
@@ -123,37 +113,17 @@ class LudoSupremeState extends State<LudoSupreme>
 
   String? futureTime;
 
-  bool _isExpanded = false;
+
   int selectedIndices = 0;
   String tournamentID = "0";
+  String entry = "0";
+  String prizePool = "0";
   @override
   Widget build(BuildContext context) {
     final tournament = Provider.of<TournamentViewModel>(context);
     final confirmPayment = Provider.of<ConfirmPaymentViewModel>(context);
     final profileViewModel = Provider.of<ProfileViewModel>(context);
-    List<FirstList> list = [
-      FirstList("All"),
-      FirstList("QUICK"),
-      FirstList("4 Players - 1 Winner"),
-      FirstList("2 Players - 1 winner"),
-      FirstList("4 Players - 2 Winners"),
-    ];
 
-    List<NewOne> addAmount = [
-      NewOne("₹150", "₹50"),
-      NewOne("₹140", "₹40"),
-      NewOne("₹100", "₹40"),
-      NewOne("₹50", "₹20"),
-      NewOne("₹40", "₹10"),
-    ];
-
-    List<SecondList> listNew = [
-      SecondList("4 Players - 2 Winners"),
-      SecondList("2 Players - 1 Winners"),
-      SecondList("4 Players - 2 Winners"),
-      SecondList("2 Players - 1 Winners"),
-      SecondList("2 Players - 1 Winners"),
-    ];
     return Scaffold(
       backgroundColor: appBarColor,
       body: CustomScrollView(
@@ -446,11 +416,27 @@ class LudoSupremeState extends State<LudoSupreme>
                                   elevation: 5,
                                   child: InkWell(
                                     onTap: () {
-                                      confirmPaymentBottomSheet(context);
-                                      confirmPayment.confirmPaymentApi(context,
-                                          tournament[index].id.toString());
+                                      confirmPayment
+                                          .confirmPaymentApi(context,
+                                              tournament[index].id.toString())
+                                          .then((_) {
+                                        Future.delayed(
+                                            const Duration(seconds: 1), () {
+                                          confirmPayment.confirmPaymentResponse
+                                                      ?.balanceStatus !=
+                                                  1
+                                              ? _showBottomSheet(context)
+                                              : confirmPaymentBottomSheet(
+                                                  context);
+                                        });
+                                      });
+
                                       tournamentID =
                                           tournament[index].id.toString();
+                                      entry =
+                                          tournament[index].amount.toString();
+                                      prizePool =
+                                          tournament[index].winPrize.toString();
                                     },
                                     child: Container(
                                       height: height * 0.18,
@@ -593,16 +579,7 @@ class LudoSupremeState extends State<LudoSupreme>
                                                           fontSize: 10,
                                                           color: red,
                                                         ),
-                                                        // Text('${minutes}m',
-                                                        //     style: const TextStyle(
-                                                        //       fontSize: 12,
-                                                        //       color: red,
-                                                        //     )),
-                                                        // Text('${seconds}s',
-                                                        //     style: const TextStyle(
-                                                        //       fontSize: 12,
-                                                        //       color: red,
-                                                        //     )),
+
                                                       ],
                                                     ),
                                                   ),
@@ -631,12 +608,19 @@ class LudoSupremeState extends State<LudoSupreme>
                                                     ),
                                                     CustomContainer(
                                                       onTap: () {
-                                                        confirmPaymentBottomSheet(context);
-                                                        confirmPayment.confirmPaymentApi(context,
-                                                            tournament[index].id.toString());
+                                                        confirmPaymentBottomSheet(
+                                                            context);
+                                                        confirmPayment
+                                                            .confirmPaymentApi(
+                                                                context,
+                                                                tournament[
+                                                                        index]
+                                                                    .id
+                                                                    .toString());
                                                         tournamentID =
-                                                            tournament[index].id.toString();
-
+                                                            tournament[index]
+                                                                .id
+                                                                .toString();
                                                       },
                                                       height: height * 0.05,
                                                       widths: width * 0.3,
@@ -703,10 +687,10 @@ class LudoSupremeState extends State<LudoSupreme>
                 child: Consumer<TournamentViewModel>(
                   builder: (context, tournamentValue, _) {
                     switch (tournamentValue.tournamentList.status) {
-                      // case Status.LOADING:
-                      //   return const Center(
-                      //     child: CircularProgressIndicator(),
-                      //   );
+                      case Status.LOADING:
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
                       case Status.ERROR:
                         return Container();
                       case Status.COMPLETED:
@@ -736,6 +720,11 @@ class LudoSupremeState extends State<LudoSupreme>
                                             tournament[index].id.toString());
                                         tournamentID =
                                             tournament[index].id.toString();
+                                        entry =
+                                            tournament[index].amount.toString();
+                                        prizePool = tournament[index]
+                                            .winPrize
+                                            .toString();
                                       },
                                       child: Container(
                                         height: height * 0.18,
@@ -884,16 +873,6 @@ class LudoSupremeState extends State<LudoSupreme>
                                                             fontSize: 10,
                                                             color: red,
                                                           ),
-                                                          // Text('${minutes}m',
-                                                          //     style: const TextStyle(
-                                                          //       fontSize: 12,
-                                                          //       color: red,
-                                                          //     )),
-                                                          // Text('${seconds}s',
-                                                          //     style: const TextStyle(
-                                                          //       fontSize: 12,
-                                                          //       color: red,
-                                                          //     )),
                                                         ],
                                                       ),
                                                     ),
@@ -991,25 +970,19 @@ class LudoSupremeState extends State<LudoSupreme>
   }
 
   void sendJsonDataToFirebase(Map<String, dynamic> jsonData) async {
-    // Reference to the Firestore collection "ludo"
     CollectionReference ludoCollection =
         FirebaseFirestore.instance.collection('ludo');
-
-    // Add the JSON data to the collection
     await ludoCollection.add(jsonData).then((docRef) {
       print("Document added with ID: ${docRef.id}");
     }).catchError((error) {
       print("Error adding document: $error");
     });
   }
-
+  bool _isExpanded = false;
   void confirmPaymentBottomSheet(BuildContext context) async {
-    final profile =
-        Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
     final confirmPayment =
         Provider.of<ConfirmPaymentViewModel>(context, listen: false)
             .confirmPaymentResponse;
-    final ludoProvider = Provider.of<LudoProvider>(context, listen: false);
 
     final join = Provider.of<JoinViewModel>(context, listen: false);
     showModalBottomSheet(
@@ -1021,12 +994,264 @@ class LudoSupremeState extends State<LudoSupreme>
         ),
       ),
       builder: (BuildContext context) {
-        return Container(
+        return StatefulBuilder(builder: (BuildContext context, StateSetter setModalState){
+          return    Container(
+            padding: const EdgeInsets.all(16.0),
+            // height: height*0.47,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(Icons.cancel_outlined,
+                        size: 30, color: black)),
+                const Center(
+                  child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: appBarColor,
+                      child: Center(
+                          child:
+                          Image(image: AssetImage(Assets.imagesRupeesBlue)))),
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    'Confirm Payment'.tr,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 18.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Entry Fee'.tr,
+                              style: const TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w600)),
+                          const Spacer(),
+                          Text(entry,
+                              style: const TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w600)),
+                          SizedBox(
+                            width: width * 0.02,
+                          ),
+                          InkWell(
+                              onTap: () {
+                                setModalState(() {
+                                  _isExpanded = !_isExpanded;
+                                });
+                              },
+                              child: Icon(_isExpanded
+                                  ? Icons.expand_less
+                                  : Icons.expand_more))
+                        ],
+                      ),
+                      if (_isExpanded)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Column(
+                            children: [
+                              const Divider(),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: width * 0.5,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Text('From Bonus'.tr,
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: labelColor)),
+                                        Text(
+                                          'From Cashback'.tr,
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              color: labelColor,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text('From Winning & Deposits'.tr,
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: labelColor)),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: width * 0.2,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                            '₹${confirmPayment?.deductions?.bonus ?? "0"}',
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: labelColor)),
+                                        // const SizedBox(height: 8),
+                                        Text(
+                                            ' ₹${confirmPayment?.deductions?.cashback ?? "0"}',
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: labelColor)),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                            '₹${confirmPayment?.deductions?.depositWinning ?? "0"}',
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: labelColor)),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Divider(),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+
+                                children: [
+                                  SizedBox(
+                                    width: width * 0.5,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Entry Fee Breakdown'.tr,
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600)),
+                                        Text(
+                                          'To Prize Pool'.tr,
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: labelColor),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text('To Platform Fee'.tr,
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: labelColor)),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: width * 0.2,
+                                    child: const Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text('', style: TextStyle(fontSize: 16)),
+                                        // SizedBox(height: 8),
+                                        Text(' ₹0.8',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: labelColor)),
+                                        SizedBox(height: 8),
+                                        Text('₹0.2',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: labelColor)),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: height * 0.03),
+                Center(
+                  child: CustomContainer(
+                    onTap: () async {
+                      final firebaseViewModel =
+                      Provider.of<FirebaseViewModel>(context, listen: false);
+                      setState(() {
+                        _startTimer(prizePool);
+                        nextPage = false;
+                        time = true;
+                        Navigator.pop(context);
+                      });
+
+                      join.joinApi(tournamentID.toString(),
+                          firebaseViewModel.table.toString(), context);
+                      showModalBottomSheet(
+                        elevation: 5,
+                        backgroundColor: primary,
+                        shape: const RoundedRectangleBorder(
+                            side: BorderSide(width: 2, color: Colors.white),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(35),
+                                topRight: Radius.circular(35))),
+                        context: context,
+                        builder: (context) {
+                          return TournamentBottomsheet(futureTime: futureTime);
+                        },
+                      );
+                    },
+                    alignment: Alignment.center,
+                    height: height * 0.07,
+                    widths: width * 0.8,
+                    color: secondary,
+                    borderRadius: const BorderRadius.all(Radius.circular(35)),
+                    child: Text(
+                      "Join Now".tr,
+                      style: const TextStyle(
+                          fontSize: 16,
+                          color: tertiary,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        );
+
+      },
+    );
+  }
+
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.0),
+        ),
+      ),
+      builder: (context) {
+        return Padding(
           padding: const EdgeInsets.all(16.0),
-          // height: height*0.47,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
             children: [
               InkWell(
                   onTap: () {
@@ -1042,199 +1267,33 @@ class LudoSupremeState extends State<LudoSupreme>
                         child:
                             Image(image: AssetImage(Assets.imagesRupeesBlue)))),
               ),
+              const SizedBox(height: 16),
+              const Center(
+                child: Text(
+                  'Insufficient balance',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               const SizedBox(height: 8),
               Center(
                 child: Text(
-                  'Confirm Payment'.tr,
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.w500),
+                  'Please add money to register for the selected tournament.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                  ),
                 ),
               ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 18.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Entry Fee'.tr,
-                            style: const TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w600)),
-                        const Spacer(),
-                        const Text('₹1',
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w600)),
-                        SizedBox(
-                          width: width * 0.02,
-                        ),
-                        InkWell(
-                            onTap: () {
-                              setState(() {
-                                _isExpanded = !_isExpanded;
-                              });
-                            },
-                            child: Icon(_isExpanded
-                                ? Icons.expand_less
-                                : Icons.expand_more))
-                      ],
-                    ),
-                    if (_isExpanded)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Column(
-                          children: [
-                            const Divider(),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: width * 0.5,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text('From Bonus'.tr,
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                      Text(
-                                        'From Cashback'.tr,
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            color: labelColor,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text('From Winning & Deposits'.tr,
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: width * 0.2,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                          '₹${confirmPayment?.deductions?.bonus ?? "0"}',
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                          ' ₹${confirmPayment?.deductions?.cashback ?? "0"}',
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                          '₹${confirmPayment?.deductions?.depositWinning ?? "0"}',
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Divider(),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: width * 0.5,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text('Entry Fee Breakdown'.tr,
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600)),
-                                      Text(
-                                        'To Prize Pool'.tr,
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: labelColor),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text('To Platform Fee'.tr,
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: width * 0.2,
-                                  child: const Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text('', style: TextStyle(fontSize: 16)),
-                                      SizedBox(height: 8),
-                                      Text(' ₹0.8',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                      Text('₹0.2',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: labelColor)),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              SizedBox(height: height * 0.03),
+              const SizedBox(height: 24),
               Center(
                 child: CustomContainer(
                   onTap: () async {
-                    final firebaseViewModel =
-                        Provider.of<FirebaseViewModel>(context, listen: false);
-                    setState(() {
-                      _startTimer();
-                      nextPage = false;
-                      time = true;
-                      Navigator.pop(context);
-                    });
-
-                    join.joinApi(tournamentID.toString(),
-                        firebaseViewModel.table.toString(), context);
-                    showModalBottomSheet(
-                      elevation: 5,
-                      backgroundColor: primary,
-                      shape: const RoundedRectangleBorder(
-                          side: BorderSide(width: 2, color: Colors.white),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(35),
-                              topRight: Radius.circular(35))),
-                      context: context,
-                      builder: (context) {
-                        return TournamentBottomsheet(futureTime: futureTime);
-                      },
-                    );
+                    Navigator.pushReplacementNamed(
+                        context, RoutesName.depositScreen);
                   },
                   alignment: Alignment.center,
                   height: height * 0.07,
@@ -1242,7 +1301,7 @@ class LudoSupremeState extends State<LudoSupreme>
                   color: secondary,
                   borderRadius: const BorderRadius.all(Radius.circular(35)),
                   child: Text(
-                    "Join Now".tr,
+                    "Add Cash".tr,
                     style: const TextStyle(
                         fontSize: 16,
                         color: tertiary,
@@ -1250,6 +1309,7 @@ class LudoSupremeState extends State<LudoSupreme>
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
             ],
           ),
         );

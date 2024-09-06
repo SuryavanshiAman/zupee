@@ -78,9 +78,10 @@ class _PawnWidgetState extends State<PawnWidget> {
   // Function to send pawn movement data to Firestore
   Future<void> _sendPawnMovement(int nextStep) async {
     try {
-      await gameDoc.update({
-        '${widget.type.toString().split('.').last}PawnPosition${widget.index}': nextStep,
-      });
+         await gameDoc.update({
+          '${widget.type.toString().split('.').last}PawnPosition${widget.index}': nextStep,
+        });
+
       print("Pawn position updated successfully.");
     } catch (e) {
       print("Error updating pawn position: $e");
@@ -150,12 +151,15 @@ class _PawnWidgetState extends State<PawnWidget> {
 
                 if (provider.diceResult > 0) {
                   print("hello");
+                  // int nextStep = widget.step == -1 ? 1 : widget.step + provider.diceResult;
                   int nextStep = widget.step == -1 ? 1 : widget.step + provider.diceResult;
 
                   // Send move to provider
+                  print("qqqqqq${widget.index}");
                   provider.move(context,widget.type, widget.index, nextStep);
+                  // await _sendPawnMovement(nextStep);
                   // Send the pawn movement to Firestore
-                  await _sendPawnMovement(nextStep);
+
                 }
               },
               child: Stack(

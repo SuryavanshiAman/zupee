@@ -182,9 +182,13 @@ class LudoProvider extends ChangeNotifier {
     LudoPlayer currentPlayer = player(type);
     currentPlayer.highlightAllPawns(false);
     for (int i = currentPlayer.pawns[index].step; i <= step; i++) {
+      print("i= $i || index = $index");
       currentPlayer.movePawn(index, i);
-      await Future.delayed(const Duration(milliseconds: 320));
 
+      gameDoc?.update({
+        '${type.toString().split('.').last}PawnPosition$index':i,
+      });
+      await Future.delayed(const Duration(milliseconds: 320));
       notifyListeners();
     }
     if (await checkToKill(context,type, index, step, currentPlayer.path)) {

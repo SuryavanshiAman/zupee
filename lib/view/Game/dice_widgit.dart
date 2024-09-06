@@ -98,6 +98,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
+import 'package:zupee/main.dart';
+import 'package:zupee/res/image_tost.dart';
 import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view/Game/board_widgit.dart';
 import 'package:zupee/view_model/join_view_model.dart';
@@ -106,13 +108,13 @@ import 'ludo_provider.dart';
 import 'ludo_constant.dart';
 
 class DiceWidget extends StatelessWidget {
-  final List<Map<String,dynamic>> playerData;
-  const DiceWidget({super.key,required this.playerData});
+  final List<Map<String, dynamic>> playerData;
+  const DiceWidget({super.key, required this.playerData});
 
   @override
   Widget build(BuildContext context) {
     final ludoProvider = context.watch<LudoProvider>();
-final join=Provider.of<JoinViewModel>(context).fieldKey;
+    final join = Provider.of<JoinViewModel>(context).fieldKey;
     return RippleAnimation(
       color: ludoProvider.gameState == LudoGameState.throwDice
           ? ludoProvider.currentPlayer.color
@@ -124,29 +126,18 @@ final join=Provider.of<JoinViewModel>(context).fieldKey;
         onTap: () {
           print("AmanJoin${join}");
           print("AmanludoProvider${ludoProvider.currentDiceIndex}");
-          if (join == ludoProvider.currentDiceIndex){
-            if (!ludoProvider.diceStarted&&!ludoProvider.stopDice ) {
-
+          if (join == ludoProvider.currentDiceIndex) {
+            if (!ludoProvider.diceStarted && !ludoProvider.stopDice) {
               ludoProvider.throwDice(context);
-              // List<PlayerData> playerDataList = [];
-              // for (int i = 0; i < ludoProvider.players.length; i++) {
-              //   var player = ludoProvider.players[i];
-              //   int totalSteps = player.pawns.fold(0, (sum, pawn) {
-              //     return sum + (pawn.step - (pawn.initialStep ?? 0));
-              //   });
-              //   playerDataList.add(PlayerData(name: playerData[i], score: totalSteps.toString()));
-              // }
-              // // Defer the update until after the frame is rendered
-              // SchedulerBinding.instance.addPostFrameCallback((_) {
-              //   final jsonData =jsonEncode(playerDataList.map((e) => e.toJson()).toList());
-              //   ludoProvider.setPlayerDataFromJson(playerDataList.map((e) =>e.toJson()).toList());
-              //   print('Player Data JSON: $jsonData');
-              // });
             }
-          }else{
-            Utils.showErrorToast("it's not your turn");
+          } else {
+            ImageToast.show(
+                imagePath: Assets.imagesTextArea,
+                height: height * 0.08,
+                width: width * 0.6,
+                context: context,
+                text: "It's not your turn");
           }
-
         },
         child: Container(
           alignment: Alignment.center,
@@ -160,15 +151,15 @@ final join=Provider.of<JoinViewModel>(context).fieldKey;
           ),
           child: ludoProvider.diceStarted
               ? Image.asset(
-            "assets/dice/dice.gif",
-            height: MediaQuery.of(context).size.height * 0.06,
-            width: MediaQuery.of(context).size.width * 0.17,
-          )
+                  "assets/dice/dice.gif",
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  width: MediaQuery.of(context).size.width * 0.17,
+                )
               : Image.asset(
-            "assets/dice/${ludoProvider.diceResult}.webp",
-            height: MediaQuery.of(context).size.height * 0.06,
-            width: MediaQuery.of(context).size.width * 0.17,
-          ),
+                  "assets/dice/${ludoProvider.diceResult}.webp",
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  width: MediaQuery.of(context).size.width * 0.17,
+                ),
         ),
       ),
     );

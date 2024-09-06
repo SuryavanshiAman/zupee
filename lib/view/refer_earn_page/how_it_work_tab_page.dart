@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:share_plus/share_plus.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/clipBoardPage.dart';
 
@@ -133,8 +133,8 @@ class _HowItWorkTabScreenState extends State<HowItWorkTabScreen> {
                             SizedBox(width: width*0.03,),
                             InkWell(
                               onTap: (){
-                                // Share.share('Hi, dost\nZupee hai mera favourite gaming app !! Yahan per Khelo aur Jeeto cash daily !! \n'
-                                //     'Abhi download karo aur pao ₹10 aur saath hi deposit karne par 25% cashback .Mera code: 0498WTY6NN');
+                                Share.share('Hi, dost\nZupee hai mera favourite gaming app !! Yahan per Khelo aur Jeeto cash daily !! \n'
+                                    'Abhi download karo aur pao ₹10 aur saath hi deposit karne par 25% cashback .Mera code: 0498WTY6NN');
                               },
                               child: const CircleAvatar(
                                 // backgroundColor: green,

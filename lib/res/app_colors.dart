@@ -16,3 +16,4 @@ const green = Color(0xff30b542);
 const lightBlue = Color(0xffe0e6f6);
 const lightBlueTwo = Color(0xff213b89);
 const cream = Color(0xffebdd9a);
+const fadeGrey = Color(0xff778899);

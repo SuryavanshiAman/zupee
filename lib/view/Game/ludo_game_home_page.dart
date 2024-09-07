@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/image_tost.dart';
+import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view/Game/dice_widgit.dart';
 import 'package:zupee/view/Game/ludo_constant.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
@@ -34,8 +35,8 @@ TimerProvider timerProvider=TimerProvider();
   @override
   void initState() {
     super.initState();
-    Provider.of<LudoProvider>(context,listen: false).listenToGameUpdates(context);
-    timerProvider.startTimer();
+    Provider.of<LudoProvider>(context,listen: false). listenToGameUpdates(context);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ImageToast.show(
         imagePath: Assets.imagesTextArea,
@@ -44,8 +45,13 @@ TimerProvider timerProvider=TimerProvider();
         context: context,
         text: "Game will start after 5 sec",
       );
+
     });
-    startTimer(context);
+    Future.delayed(const Duration(seconds: 5),(){
+      timerProvider.startTimer();
+      print("totatota");
+    });
+
     // checkForFourPlayers();
   }
 
@@ -79,32 +85,43 @@ TimerProvider timerProvider=TimerProvider();
   String user3 = '';
   String user4 = '';
   String key = '';
+  Future<bool> _onWillPop() async {
+
+      return await Utils.exitGame(context) ?? false;
+
+  }
   @override
   Widget build(BuildContext context) {
 final documentID=Provider.of<FirebaseViewModel>(context);
 final docId=documentID.table.toString();
     CollectionReference ludoCollection = FirebaseFirestore.instance.collection('ludo');
-    return SafeArea(
-      child: Scaffold(
-        body:Consumer<LudoProvider>(
-            builder: (context, provider, child) {
-              print('docIDAagyi:$docId');
-              return StreamBuilder(
-                // Replace '1' with the specific document ID you want to listen to
-                stream: ludoCollection.doc(docId).snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData || !snapshot.data!.exists) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  // Fetch the data and display it
-                  Map<String, dynamic> data = snapshot.data!.data() as Map<
-                      String,
-                      dynamic>;
+    return PopScope(
+      canPop: false,
+      onPopInvoked:(v) {
+        _onWillPop();
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body:Consumer<LudoProvider>(
+              builder: (context, provider, child) {
+                print('docIDAagyi:$docId');
+                return StreamBuilder(
+                  // Replace '1' with the specific document ID you want to listen to
+                  stream: ludoCollection.doc(docId).snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || !snapshot.data!.exists) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    // Fetch the data and display it
+                    Map<String, dynamic> data = snapshot.data!.data() as Map<
+                        String,
+                        dynamic>;
 
-                  return _buildDynamicContent(context, data);
-                },
-              );
-            })
+                    return _buildDynamicContent(context, data);
+                  },
+                );
+              })
+        ),
       ),
     );
   }

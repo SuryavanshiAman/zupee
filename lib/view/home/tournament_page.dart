@@ -54,10 +54,11 @@ class LudoSupremeState extends State<LudoSupreme>
   void initState() {
     super.initState();
     _scrollController.addListener(_handleScroll);
-    contestCategoryViewModel.contestCategoryApi(context);
-    Provider.of<TournamentViewModel>(context, listen: false)
-        .tournamentApi(context, selectedIndices.toString());
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      contestCategoryViewModel.contestCategoryApi(context);
+      Provider.of<TournamentViewModel>(context, listen: false)
+          .tournamentApi(context, selectedIndices.toString());
+    });
     time = false;
   }
 

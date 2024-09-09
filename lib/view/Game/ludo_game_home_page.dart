@@ -45,14 +45,17 @@ TimerProvider timerProvider=TimerProvider();
         context: context,
         text: "Game will start after 5 sec",
       );
-
+      String argument = ModalRoute.of(context)!.settings.arguments.toString();
+      timerProvider.setAmount(argument);
     });
+
     Future.delayed(const Duration(seconds: 5),(){
-      timerProvider.startTimer();
+
+      // startTimer(context);
+      timerProvider.startTimer(context);
       print("totatota");
     });
 
-    // checkForFourPlayers();
   }
 
   void startTimer(context) {
@@ -61,7 +64,7 @@ TimerProvider timerProvider=TimerProvider();
         setState(() {
           _remainingSeconds--;
           String argument = ModalRoute.of(context)!.settings.arguments.toString();
-          // _remainingSeconds==0?Navigator.pushReplacementNamed(context, RoutesName.winnerScreen,arguments: argument):null;
+          _remainingSeconds==0?Navigator.pushReplacementNamed(context, RoutesName.winnerScreen,arguments: argument):null;
         });
       } else {
         _timer?.cancel();
@@ -104,7 +107,7 @@ final docId=documentID.table.toString();
         child: Scaffold(
           body:Consumer<LudoProvider>(
               builder: (context, provider, child) {
-                print('docIDAagyi:$docId');
+                // print('docIDAagyi:$docId');
                 return StreamBuilder(
                   // Replace '1' with the specific document ID you want to listen to
                   stream: ludoCollection.doc(docId).snapshots(),

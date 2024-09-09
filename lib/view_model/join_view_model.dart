@@ -58,7 +58,7 @@ class JoinViewModel with ChangeNotifier {
         FirebaseFirestore fireStore = FirebaseFirestore.instance;
         CollectionReference ludoCollection = fireStore.collection('ludo');
         bool isAdded = false;
-        final playerColors = ludoProvider.players;
+        final playerColors =  ludoProvider.players;
         print("playerColor${playerColors[0].type}");
         while (!isAdded) {
           DocumentSnapshot documentSnapshot =

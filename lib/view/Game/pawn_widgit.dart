@@ -161,6 +161,7 @@ class _PawnWidgetState extends State<PawnWidget> {
                   // Send the pawn movement to Firestore
 
                 }
+                print("terFigurew");
               },
               child: Stack(
                 children: [

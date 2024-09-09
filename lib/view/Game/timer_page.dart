@@ -8,6 +8,7 @@ import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/time_page.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 
 class TimerScreen extends StatefulWidget {
@@ -61,6 +62,7 @@ _timer!.cancel();
   Widget build(BuildContext context) {
     String argument = ModalRoute.of(context)!.settings.arguments.toString();
     final documentID=Provider.of<FirebaseViewModel>(context);
+    final ludoProvider=Provider.of<LudoProvider>(context);
     final docId=documentID.table.toString();
     CollectionReference ludoCollection = FirebaseFirestore.instance.collection('ludo');
     return
@@ -81,8 +83,9 @@ _timer!.cancel();
         String player4 = data['4'] ?? '';
 
         bool allPlayersPresent = player1.isNotEmpty && player2.isNotEmpty && player3.isNotEmpty && player4.isNotEmpty;
+        bool twoPlayersPresent = player1.isNotEmpty && player2.isNotEmpty ;
 
-        if (allPlayersPresent && !_hasNavigated) {
+        if (ludoProvider.playerQuantity!=2? allPlayersPresent:twoPlayersPresent && !_hasNavigated) {
           _hasNavigated = true;
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Future.delayed(Duration.zero, () {

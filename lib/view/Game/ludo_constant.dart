@@ -17,7 +17,6 @@ class LudoColor {
   static const Color green = Color(0xFF1aaa30);
   static const Color yellow = Color(0xffeac550);
 
-  //
 }
 
 ///Ludo path constant class which contains all the path of the pawns

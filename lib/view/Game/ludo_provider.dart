@@ -11,9 +11,11 @@ import 'package:zupee/view_model/firebase_view_model.dart';
 
 class LudoProvider extends ChangeNotifier {
   bool _isMoving = false;
+  int _playerQuantity=2;
   bool _stopDice=false;
   bool get isMoving => _isMoving;
   bool get stopDice => _stopDice;
+  int get playerQuantity=>_playerQuantity;
   int _currentDiceIndex =-1;
 
   LudoGameState _gameState = LudoGameState.throwDice;
@@ -22,12 +24,30 @@ class LudoProvider extends ChangeNotifier {
   LudoPlayerType _currentTurn = LudoPlayerType.blue;
   DocumentReference<Map<String, dynamic>>? gameDoc;
   int get currentDiceIndex => _currentDiceIndex;
-  final List<LudoPlayer> players = [
-    LudoPlayer(LudoPlayerType.blue),
-    LudoPlayer(LudoPlayerType.red),
-    LudoPlayer(LudoPlayerType.green),
-    LudoPlayer(LudoPlayerType.yellow),
+
+   List<LudoPlayer> players = [
+    // LudoPlayer(LudoPlayerType.blue),
+    // LudoPlayer(LudoPlayerType.red),
+    // LudoPlayer(LudoPlayerType.green),
+    // LudoPlayer(LudoPlayerType.yellow),
   ];
+ void setPlayerQuantity(int value){
+    _playerQuantity=value;
+    if (_playerQuantity == 2) {
+      players = [
+        LudoPlayer(LudoPlayerType.blue),
+        LudoPlayer(LudoPlayerType.red),
+      ];
+    } else {
+      players = [
+        LudoPlayer(LudoPlayerType.blue),
+        LudoPlayer(LudoPlayerType.red),
+        LudoPlayer(LudoPlayerType.green),
+        LudoPlayer(LudoPlayerType.yellow),
+      ];
+    }
+    notifyListeners();
+  }
   List<dynamic> _playerDataList = [];
 
   List<dynamic> get playerDataList => _playerDataList;
@@ -47,18 +67,7 @@ class LudoProvider extends ChangeNotifier {
     secondPlace = playerDataList.length > 1 ? playerDataList[1] : null;
     thirdPlace = playerDataList.length > 2 ? playerDataList[2] : null;
     fourthPlace = playerDataList.length > 3 ? playerDataList[3] : null;
-    if (gameDoc != null) {
-      Map<String, dynamic> topPlayersData = {
-        'firstPlace': firstPlace?.toJson(),
-        'secondPlace': secondPlace?.toJson(),
-        'thirdPlace': thirdPlace?.toJson(),
-        'fourthPlace': fourthPlace?.toJson(),
-      };
 
-    //   await gameDoc!.update({
-    // 'topPlayers': topPlayersData,
-    // });
-  }
     notifyListeners();
   }
   // Setter method to set player data from JSON
@@ -87,9 +96,10 @@ class LudoProvider extends ChangeNotifier {
               var pawnsData = playersData[playerType.toString()];
               if (pawnsData != null) {
                 for (int i = 0;
+               
                 i < players[playerType.index].pawns.length;
                 i++) {
-                  players[playerType.index].pawns[i].step = pawnsData[i];
+                 players[playerType.index].pawns[i].step = pawnsData[i];
                 }
               }
             }
@@ -107,7 +117,8 @@ class LudoProvider extends ChangeNotifier {
   LudoGameState get gameState => _gameState;
 
   LudoPlayer player(LudoPlayerType type) =>
-      players.firstWhere((element) => element.type == type);
+
+     players.firstWhere((element) => element.type == type);
 
   void throwDice(context) async {
     _diceStarted = true;
@@ -263,17 +274,22 @@ class LudoProvider extends ChangeNotifier {
 
   void resetPawns(context, firebaseViewModel) async {
    print(" firebaseViewModel$firebaseViewModel");
-    for (var player in players) {
-      for (var i = 0; i < player.pawns.length; i++) {
-        player.pawns[i].step = 0; // Reset to the initial position
-        _currentTurn=LudoPlayerType.blue;
-        // Update Firestore with the reset position
-        await FirebaseFirestore.instance.collection('ludo').doc(firebaseViewModel.toString()).update({
-          '${player.type.toString().split('.').last}PawnPosition$i': 0,'currentTurn': _currentTurn.index,
-        });
-      }
-    }
 
+     for (var player in players) {
+       for (var i = 0; i < player.pawns.length; i++) {
+         player.pawns[i].step = 0; // Reset to the initial position
+         _currentTurn = LudoPlayerType.blue;
+         // Update Firestore with the reset position
+         await FirebaseFirestore.instance.collection('ludo').doc(
+             firebaseViewModel.toString()).update({
+           '${player.type
+               .toString()
+               .split('.')
+               .last}PawnPosition$i': 0, 'currentTurn': _currentTurn.index,
+         });
+       }
+     }
+  
     notifyListeners(); // Notify listeners to rebuild the UI
   }
   void nextTurn() async {
@@ -282,22 +298,36 @@ class LudoProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
+if(playerQuantity!=2) {
+  switch (_currentTurn) {
+    case LudoPlayerType.blue:
+      _currentTurn = LudoPlayerType.red;
+      break;
+    case LudoPlayerType.red:
+      _currentTurn = LudoPlayerType.green;
+      break;
+    case LudoPlayerType.green:
+      _currentTurn = LudoPlayerType.yellow;
+      break;
+    case LudoPlayerType.yellow:
+      _currentTurn = LudoPlayerType.blue;
+      break;
+  }
+}else{
 
-    switch (_currentTurn) {
-      case LudoPlayerType.blue:
-        _currentTurn = LudoPlayerType.red;
-        break;
-      case LudoPlayerType.red:
-        _currentTurn = LudoPlayerType.green;
-        break;
-      case LudoPlayerType.green:
-        _currentTurn = LudoPlayerType.yellow;
-        break;
-      case LudoPlayerType.yellow:
-        _currentTurn = LudoPlayerType.blue;
-        break;
-    }
+  switch (_currentTurn) {
+    case LudoPlayerType.blue:
+      _currentTurn = LudoPlayerType.red;
+      break;
+    case LudoPlayerType.red:
+      _currentTurn = LudoPlayerType.blue;
+      break;
 
+    case LudoPlayerType.green:
+      // TODO: Handle this case.
+    case LudoPlayerType.yellow:
+      // TODO: Handle this case.
+}}
     if (winners.contains(_currentTurn)) return nextTurn();
     _gameState = LudoGameState.throwDice;
 

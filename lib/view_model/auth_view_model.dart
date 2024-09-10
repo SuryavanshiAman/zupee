@@ -21,8 +21,6 @@ class AuthViewModel with ChangeNotifier {
   }
 
   Future<void> authApi(dynamic phone, context) async {
-    final userPref = Provider.of<UserViewModel>(context, listen: false);
-
     setLoading(true);
     Map data={
       "mobile_number":phone
@@ -30,18 +28,20 @@ class AuthViewModel with ChangeNotifier {
     _authRepo.authApi(data).then((value) {
       if (value['status'] == "201") {
         setLoading(false);
-        userPref.saveUser(value['data']['id'].toString());
+        // userPref.saveUser(value['data']['id'].toString());
         sedOtpApi(phone, context);
         Navigator.pushNamed(context, RoutesName.verifyPage,arguments: {
           "phone": phone,
+          "userID":value['data']['id'].toString()
         });
         Utils.showSuccessToast(value['message']);
       } else if(value['status'] == "200") {
         setLoading(false);
-        userPref.saveUser(value['data']['id'].toString());
+
         sedOtpApi(phone, context);
         Navigator.pushNamed(context, RoutesName.verifyPage,arguments: {
           "phone": phone,
+          "userID":value['data']['id'].toString()
         });
         Utils.showSuccessToast(value['message']);
       }
@@ -78,11 +78,14 @@ class AuthViewModel with ChangeNotifier {
     });
   }
 
-  Future<void> verifyOtpApi(dynamic phone,dynamic otp, context) async {
+  Future<void> verifyOtpApi(dynamic phone,dynamic otp,dynamic userID, context) async {
+    final userPref = Provider.of<UserViewModel>(context, listen: false);
     setLoading(true);
+    print(otp);
     _otpRepo.verifyOtpApi(phone,otp).then((value) {
       if (value['error'] == "200") {
         setLoading(false);
+        userPref.saveUser(userID.toString());
         Utils.showSuccessToast(value['msg']);
 
         Navigator.pushReplacementNamed(context, RoutesName.bottomNevBar);

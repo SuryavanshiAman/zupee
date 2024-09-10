@@ -1,5 +1,4 @@
 
-import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,28 +25,12 @@ class LudoProvider extends ChangeNotifier {
   int get currentDiceIndex => _currentDiceIndex;
 
    List<LudoPlayer> players = [
-    // LudoPlayer(LudoPlayerType.blue),
-    // LudoPlayer(LudoPlayerType.red),
-    // LudoPlayer(LudoPlayerType.green),
-    // LudoPlayer(LudoPlayerType.yellow),
+    LudoPlayer(LudoPlayerType.blue),
+    LudoPlayer(LudoPlayerType.red),
+    LudoPlayer(LudoPlayerType.green),
+    LudoPlayer(LudoPlayerType.yellow),
   ];
- void setPlayerQuantity(int value){
-    _playerQuantity=value;
-    if (_playerQuantity == 2) {
-      players = [
-        LudoPlayer(LudoPlayerType.blue),
-        LudoPlayer(LudoPlayerType.red),
-      ];
-    } else {
-      players = [
-        LudoPlayer(LudoPlayerType.blue),
-        LudoPlayer(LudoPlayerType.red),
-        LudoPlayer(LudoPlayerType.green),
-        LudoPlayer(LudoPlayerType.yellow),
-      ];
-    }
-    notifyListeners();
-  }
+
   List<dynamic> _playerDataList = [];
 
   List<dynamic> get playerDataList => _playerDataList;
@@ -298,36 +281,53 @@ class LudoProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
-if(playerQuantity!=2) {
-  switch (_currentTurn) {
-    case LudoPlayerType.blue:
-      _currentTurn = LudoPlayerType.red;
-      break;
-    case LudoPlayerType.red:
-      _currentTurn = LudoPlayerType.green;
-      break;
-    case LudoPlayerType.green:
-      _currentTurn = LudoPlayerType.yellow;
-      break;
-    case LudoPlayerType.yellow:
-      _currentTurn = LudoPlayerType.blue;
-      break;
-  }
-}else{
 
-  switch (_currentTurn) {
-    case LudoPlayerType.blue:
-      _currentTurn = LudoPlayerType.red;
-      break;
-    case LudoPlayerType.red:
-      _currentTurn = LudoPlayerType.blue;
-      break;
+  // switch (_currentTurn) {
+  //   case LudoPlayerType.blue:
+  //     _currentTurn = LudoPlayerType.red;
+  //     break;
+  //   case LudoPlayerType.red:
+  //     _currentTurn = LudoPlayerType.green;
+  //     break;
+  //   case LudoPlayerType.green:
+  //     _currentTurn = LudoPlayerType.yellow;
+  //     break;
+  //   case LudoPlayerType.yellow:
+  //     _currentTurn = LudoPlayerType.blue;
+  //     break;
+  // }
+    if(playerQuantity!=2) {
+      switch (_currentTurn) {
+        case LudoPlayerType.blue:
+          _currentTurn = LudoPlayerType.red;
+          break;
+        case LudoPlayerType.red:
+          _currentTurn = LudoPlayerType.green;
+          break;
+        case LudoPlayerType.green:
+          _currentTurn = LudoPlayerType.yellow;
+          break;
+        case LudoPlayerType.yellow:
+          _currentTurn = LudoPlayerType.blue;
+          break;
+      }
+    }else{
 
-    case LudoPlayerType.green:
-      // TODO: Handle this case.
-    case LudoPlayerType.yellow:
-      // TODO: Handle this case.
-}}
+      switch (_currentTurn) {
+        case LudoPlayerType.blue:
+          _currentTurn = LudoPlayerType.green;
+          break;
+        case LudoPlayerType.green:
+          _currentTurn = LudoPlayerType.blue;
+          break;
+
+        case LudoPlayerType.green:
+        // TODO: Handle this case.
+        case LudoPlayerType.yellow:
+        // TODO: Handle this case.
+        case LudoPlayerType.red:
+          // TODO: Handle this case.
+      }}
     if (winners.contains(_currentTurn)) return nextTurn();
     _gameState = LudoGameState.throwDice;
 

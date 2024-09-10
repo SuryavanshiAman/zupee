@@ -34,8 +34,8 @@ class DiceWidget extends StatelessWidget {
         onTap: () {
           print("AmanJoin${join}");
           print("AmanludoProvider${ludoProvider.currentDiceIndex}");
-          // if (join == ludoProvider.currentDiceIndex) { /// original
-          if (join != ludoProvider.currentDiceIndex) {
+          if (join == ludoProvider.currentDiceIndex) { /// original
+          // if (join != ludoProvider.currentDiceIndex) {
             if (!ludoProvider.diceStarted && !ludoProvider.stopDice) {
               ludoProvider.throwDice(context);
             }

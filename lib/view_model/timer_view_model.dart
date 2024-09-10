@@ -46,7 +46,7 @@ String _amount="0";
           notifyListeners();
           // Optionally navigate to another screen
           // Navigator.pushReplacementNamed(context, RoutesName.winnerScreen);
-          Navigator.pushReplacementNamed(context, RoutesName.winnerScreen,arguments:amount);
+          // Navigator.pushReplacementNamed(context, RoutesName.winnerScreen,arguments:amount);
         }
       } else {
         _timer?.cancel();

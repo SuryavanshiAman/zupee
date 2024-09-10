@@ -83,7 +83,7 @@ _timer!.cancel();
         String player4 = data['4'] ?? '';
 
         bool allPlayersPresent = player1.isNotEmpty && player2.isNotEmpty && player3.isNotEmpty && player4.isNotEmpty;
-        bool twoPlayersPresent = player1.isNotEmpty && player2.isNotEmpty ;
+        bool twoPlayersPresent = player1.isNotEmpty && player3.isNotEmpty ;
 
         if (ludoProvider.playerQuantity!=2? allPlayersPresent:twoPlayersPresent && !_hasNavigated) {
           _hasNavigated = true;

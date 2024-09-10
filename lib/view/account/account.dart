@@ -684,27 +684,59 @@ bool?isSelectedLanguage;
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          ElevatedButton(
+                          WillPopScope(
+                            onWillPop: () async {
+                              return false;  // This disables the back button.
+                            },
+                            child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: secondary,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(55)),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: width * 0.34,
-                                      vertical: height * 0.02)),
+                                backgroundColor: secondary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(55),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: width * 0.34,
+                                  vertical: height * 0.02,
+                                ),
+                              ),
                               onPressed: () {
-                                setState((){
+                                setState(() {
                                   UserViewModel userViewModel = UserViewModel();
                                   userViewModel.remove();
-                                  Navigator.pushReplacementNamed(context,  RoutesName.loginScreen);
+                                  Navigator.pushReplacementNamed(context, RoutesName.loginScreen);
                                 });
-
                               },
-                              child: const Text("Yes,Logout",
-                                  style: TextStyle(
-                                      color: tertiary,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold))),
+                              child: const Text(
+                                "Yes, Logout",
+                                style: TextStyle(
+                                  color: tertiary,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          // ElevatedButton(
+                          //     style: ElevatedButton.styleFrom(
+                          //         backgroundColor: secondary,
+                          //         shape: RoundedRectangleBorder(
+                          //             borderRadius: BorderRadius.circular(55)),
+                          //         padding: EdgeInsets.symmetric(
+                          //             horizontal: width * 0.34,
+                          //             vertical: height * 0.02)),
+                          //     onPressed: () {
+                          //       setState((){
+                          //         UserViewModel userViewModel = UserViewModel();
+                          //         userViewModel.remove();
+                          //         Navigator.pushReplacementNamed(context,  RoutesName.loginScreen);
+                          //       });
+                          //
+                          //     },
+                          //     child: const Text("Yes,Logout",
+                          //         style: TextStyle(
+                          //             color: tertiary,
+                          //             fontSize: 16,
+                          //             fontWeight: FontWeight.bold))),
                           SizedBox(height: height * 0.03),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(

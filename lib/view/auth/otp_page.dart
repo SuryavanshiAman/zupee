@@ -77,6 +77,7 @@ class _VerifyPageState extends State<VerifyPage> {
     Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     String phone = arguments["phone"].toString();
+    String userID = arguments["userID"].toString();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -163,7 +164,7 @@ class _VerifyPageState extends State<VerifyPage> {
                 : InkWell(
                     onTap: () {
                       startCountdown();
-                      verifyOtpApi.sedOtpApi(phone, context);
+                      verifyOtpApi.sedOtpApi(phone,context);
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -202,11 +203,11 @@ class _VerifyPageState extends State<VerifyPage> {
               ),
               child: CustomContainer(
                 onTap: () {
+                  print("wwww${otpCon.text}");
                   otpCon.text.isEmpty
                       ? Utils.flushBarErrorMessage(
                           "Please Enter OTP", context, white)
-                      : verifyOtpApi.verifyOtpApi(phone.toString(),
-                          otpCon.text, context);
+                      : verifyOtpApi.verifyOtpApi(phone.toString(),otpCon.text,userID, context);
                 },
                 alignment: Alignment.center,
                 height: height * 0.07,

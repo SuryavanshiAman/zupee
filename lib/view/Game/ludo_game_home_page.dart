@@ -132,10 +132,22 @@ final docId=documentID.table.toString();
 
   Widget _buildDynamicContent(BuildContext context, Map<String, dynamic> data) {
     String argument = ModalRoute.of(context)!.settings.arguments.toString();
-    Map<String, dynamic> player1Data = data['1'].isNotEmpty ? json.decode(data['1']) : {};
-    Map<String, dynamic> player2Data = data['2'].isNotEmpty ? json.decode(data['2']) : {};
-    Map<String, dynamic> player3Data = data['3'].isNotEmpty ? json.decode(data['3']) : {};
-    Map<String, dynamic> player4Data = data['4'].isNotEmpty ? json.decode(data['4']) : {};
+    Map<String, dynamic> player1Data = (data['1'] != null && data['1'].isNotEmpty)
+        ? json.decode(data['1'])
+        : {};
+    Map<String, dynamic> player2Data = (data['2'] != null && data['2'].isNotEmpty)
+        ? json.decode(data['2'])
+        : {};
+    Map<String, dynamic> player3Data = (data['3'] != null && data['3'].isNotEmpty)
+        ? json.decode(data['3'])
+        : {};
+    Map<String, dynamic> player4Data = (data['4'] != null && data['4'].isNotEmpty)
+        ? json.decode(data['4'])
+        : {};
+    // Map<String, dynamic> player1Data = data['1'].isNotEmpty ? json.decode(data['1']) : {};
+    // Map<String, dynamic> player2Data = data['2'].isNotEmpty ? json.decode(data['2']) : {};
+    // Map<String, dynamic> player3Data = data['3'].isNotEmpty ? json.decode(data['3']) : {};
+    // Map<String, dynamic> player4Data = data['4'].isNotEmpty ? json.decode(data['4']) : {};
     final List<Map<String, dynamic> > playerData = [player1Data, player2Data, player3Data, player3Data];
 
     return Container(

@@ -52,7 +52,9 @@ class DiceWidget extends StatelessWidget {
           alignment: Alignment.center,
           height: MediaQuery.of(context).size.height * 0.08,
           width: MediaQuery.of(context).size.width * 0.19,
+          padding: EdgeInsets.only(left:width*0.025 ),
           decoration: const BoxDecoration(
+
             image: DecorationImage(
               image: AssetImage(Assets.ludoDiceSectionOne),
               fit: BoxFit.fill,

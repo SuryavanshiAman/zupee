@@ -26,10 +26,9 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   void initState() {
     super.initState();
- WidgetsBinding.instance.addPostFrameCallback((_){
- _startTimer();
- });
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startTimer();
+    });
   }
 
   void _startTimer() {
@@ -45,6 +44,7 @@ class _TimerScreenState extends State<TimerScreen> {
       });
     });
   }
+
   void _startBlinking() {
     // Blinking logic
     Timer.periodic(const Duration(milliseconds: 500), (timer) {
@@ -53,20 +53,22 @@ class _TimerScreenState extends State<TimerScreen> {
       });
     });
   }
+
   @override
   void dispose() {
-_timer!.cancel();
+    _timer!.cancel();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     String argument = ModalRoute.of(context)!.settings.arguments.toString();
-    final documentID=Provider.of<FirebaseViewModel>(context);
-    final ludoProvider=Provider.of<LudoProvider>(context);
-    final docId=documentID.table.toString();
-    CollectionReference ludoCollection = FirebaseFirestore.instance.collection('ludo');
-    return
-      StreamBuilder(
+    final documentID = Provider.of<FirebaseViewModel>(context);
+    final ludoProvider = Provider.of<LudoProvider>(context);
+    final docId = documentID.table.toString();
+    CollectionReference ludoCollection =
+        FirebaseFirestore.instance.collection('ludo');
+    return StreamBuilder(
       // Replace '1' with the specific document ID you want to listen to
       stream: ludoCollection.doc(docId).snapshots(),
       builder: (context, snapshot) {
@@ -74,23 +76,28 @@ _timer!.cancel();
           return const Center(child: CircularProgressIndicator());
         }
         // Fetch the data and display it
-        Map<String, dynamic> data = snapshot.data!.data() as Map<
-            String,
-            dynamic>;
+        Map<String, dynamic> data =
+            snapshot.data!.data() as Map<String, dynamic>;
         String player1 = data['1'] ?? '';
         String player2 = data['2'] ?? '';
         String player3 = data['3'] ?? '';
         String player4 = data['4'] ?? '';
 
-        bool allPlayersPresent = player1.isNotEmpty && player2.isNotEmpty && player3.isNotEmpty && player4.isNotEmpty;
-        bool twoPlayersPresent = player1.isNotEmpty && player3.isNotEmpty ;
+        bool allPlayersPresent = player1.isNotEmpty &&
+            player2.isNotEmpty &&
+            player3.isNotEmpty &&
+            player4.isNotEmpty;
+        bool twoPlayersPresent = player1.isNotEmpty && player3.isNotEmpty;
 
-        if (ludoProvider.playerQuantity!=2? allPlayersPresent:twoPlayersPresent && !_hasNavigated) {
-          _hasNavigated = true;
+        if (ludoProvider.playerQuantity != 2
+            ? allPlayersPresent
+            : twoPlayersPresent && !_hasNavigated) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Future.delayed(Duration.zero, () {
-              Navigator.pushReplacementNamed(context, RoutesName.ludoHomeScreen, arguments: argument);
+              Navigator.pushReplacementNamed(context, RoutesName.ludoHomeScreen,
+                  arguments: argument);
             });
+            _hasNavigated = true;
           });
         }
         return Scaffold(
@@ -99,11 +106,10 @@ _timer!.cancel();
             width: width,
             decoration: const BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage(Assets.imagesTimerPageBg), fit: BoxFit.fill)),
+                    image: AssetImage(Assets.imagesTimerPageBg),
+                    fit: BoxFit.fill)),
             child: Center(
-              child:
-              Column(
-
+              child: Column(
                 children: [
                   Spacer(),
                   Container(
@@ -113,25 +119,38 @@ _timer!.cancel();
                         image: DecorationImage(
                             image: AssetImage(Assets.imagesTimerPage),
                             fit: BoxFit.cover)),
-                    child:  Column(
+                    child: Column(
                       children: [
-                        SizedBox(height: height*0.1,),
+                        SizedBox(
+                          height: height * 0.1,
+                        ),
                         // CountdownTimer(
                         //   onTimerTick: (int value) {
                         //   }, fontWeight: FontWeight.w00, fontSize: 60, color: white,
                         // ),
                         Text(
                           _seconds.toString(),
-                          style: const TextStyle(color: white,fontSize: 60,fontWeight: FontWeight.w900),
+                          style: const TextStyle(
+                              color: white,
+                              fontSize: 60,
+                              fontWeight: FontWeight.w900),
                         ),
-                        SizedBox(height: height*0.15,),
-                        const Text("Start Game...",
-                          style: TextStyle(color: white,fontSize: 24,fontWeight: FontWeight.w500),),
-
+                        SizedBox(
+                          height: height * 0.15,
+                        ),
+                        const Text(
+                          "Start Game...",
+                          style: TextStyle(
+                              color: white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ],
                     ),
                   ),
-                  SizedBox(height: height*0.1,),
+                  SizedBox(
+                    height: height * 0.1,
+                  ),
                   if (_seconds == 0)
                     AnimatedOpacity(
                       opacity: _isBlinking ? 1.0 : 0.0, // Toggle opacity
@@ -145,7 +164,9 @@ _timer!.cancel();
                         ),
                       ),
                     ),
-                  SizedBox(height: height*0.1,),
+                  SizedBox(
+                    height: height * 0.1,
+                  ),
                 ],
               ),
             ),
@@ -153,6 +174,5 @@ _timer!.cancel();
         );
       },
     );
-
   }
 }

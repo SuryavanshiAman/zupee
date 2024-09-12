@@ -141,7 +141,7 @@ class JoinViewModel with ChangeNotifier {
                   print("Empty spot found at $fieldKey, updating...");
                   await ludoCollection.doc(documentId.toString()).update({
                     fieldKey:
-                    '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i == 1 ? 0 : 1].type}"}'
+                    '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i == 1 ? 0 : 2].type}"}'
                   });
                   setFieldKey(i);
                   isAdded = true;

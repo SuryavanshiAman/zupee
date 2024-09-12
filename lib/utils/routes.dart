@@ -39,7 +39,6 @@ class Routers {
     switch (routeName) {
       case RoutesName.splashScreen:
         return (context) => const SplashScreen();
-
       case RoutesName.registerScreen:
         return (context) => const RegisterScreen();
     case RoutesName.loginScreen:

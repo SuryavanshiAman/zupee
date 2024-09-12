@@ -8,21 +8,28 @@ import 'ludo_constant.dart';
 import 'ludo_player.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 
-class LudoProvider extends ChangeNotifier {
+class LudoProvider with ChangeNotifier {
   bool _isMoving = false;
-  int _playerQuantity=2;
+  int _playerQuantity=0;
   bool _stopDice=false;
   bool get isMoving => _isMoving;
   bool get stopDice => _stopDice;
   int get playerQuantity=>_playerQuantity;
-  int _currentDiceIndex =-1;
+
 
   LudoGameState _gameState = LudoGameState.throwDice;
   int _diceResult = 1;
   bool _diceStarted = false;
   LudoPlayerType _currentTurn = LudoPlayerType.blue;
   DocumentReference<Map<String, dynamic>>? gameDoc;
+
+  int _currentDiceIndex =0;
   int get currentDiceIndex => _currentDiceIndex;
+
+  void setCurrentDiceIndex(int val){
+    _currentDiceIndex=val;
+    notifyListeners();
+  }
 
    List<LudoPlayer> players = [
     LudoPlayer(LudoPlayerType.blue),
@@ -40,7 +47,10 @@ class LudoProvider extends ChangeNotifier {
   PlayerData? fourthPlace;
 
   // Other existing properties and methods
-
+void setPlayerQuantity(int value){
+  _playerQuantity=value;
+  notifyListeners();
+}
   void setTopFourPlayers(List<PlayerData> playerDataList) async {
     // Sort the player data by score in descending order
     playerDataList.sort((a, b) => int.parse(b.score).compareTo(int.parse(a.score)));
@@ -70,16 +80,15 @@ class LudoProvider extends ChangeNotifier {
         if (data != null) {
           _diceResult = data['diceResult'] ?? 1;
           _currentTurn = LudoPlayerType.values[data['currentTurn'] ?? 0];
+          // setCurrentDiceIndex(data['currentTurn']??0);
           _currentDiceIndex= data['currentTurn']??0;
           _gameState = LudoGameState.values[data['gameState'] ?? 0];
-
           var playersData = data['players'];
           if (playersData != null) {
             for (var playerType in LudoPlayerType.values) {
               var pawnsData = playersData[playerType.toString()];
               if (pawnsData != null) {
                 for (int i = 0;
-               
                 i < players[playerType.index].pawns.length;
                 i++) {
                  players[playerType.index].pawns[i].step = pawnsData[i];
@@ -87,7 +96,6 @@ class LudoProvider extends ChangeNotifier {
               }
             }
           }
-
           notifyListeners();
         }
       }
@@ -115,6 +123,12 @@ class LudoProvider extends ChangeNotifier {
         print("skdkdkd");
       }
     }
+    gameDoc!.update({
+      'diceResult': _diceResult,
+      'currentTurn': _currentTurn.index,
+      'currentDiceIndex':_currentDiceIndex,
+      'gameState': LudoGameState.pickPawn.index,
+    });
     listenToGameUpdates(context);
 
     if (kDebugMode) {
@@ -123,11 +137,7 @@ class LudoProvider extends ChangeNotifier {
 
     _diceResult = Random().nextInt(6) + 1;
 
-     gameDoc!.update({
-      'diceResult': _diceResult,
-      'currentTurn': _currentTurn.index,
-      'gameState': LudoGameState.pickPawn.index,
-    });
+
      Future.delayed(const Duration(milliseconds: 500),(){
        _diceStarted = false;
        notifyListeners();
@@ -269,6 +279,7 @@ class LudoProvider extends ChangeNotifier {
                .toString()
                .split('.')
                .last}PawnPosition$i': 0, 'currentTurn': _currentTurn.index,
+           'currentDiceIndex':_currentDiceIndex,
          });
        }
      }

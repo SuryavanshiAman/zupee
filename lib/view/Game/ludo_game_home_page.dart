@@ -19,7 +19,6 @@ import 'board_widgit.dart';
 import 'ludo_provider.dart';
 
 class LudoHomeScreen extends StatefulWidget {
-  // final int documentId;
   const LudoHomeScreen({super.key});
 
   @override
@@ -27,136 +26,132 @@ class LudoHomeScreen extends StatefulWidget {
 }
 
 class _LudoHomeScreenState extends State<LudoHomeScreen> {
-  static const maxSeconds = 300; // 5 minutes = 300 seconds
-  int _remainingSeconds = maxSeconds;
-  Timer? _timer;
-FirebaseViewModel firebaseViewModel=FirebaseViewModel();
-TimerProvider timerProvider=TimerProvider();
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<LudoProvider>(context,listen: false). listenToGameUpdates(context);
+  // static const maxSeconds = 300;
+  // int _remainingSeconds = maxSeconds;
+  // Timer? _timer;
+  // FirebaseViewModel firebaseViewModel = FirebaseViewModel();
+  TimerProvider timerProvider = TimerProvider();
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // Provider.of<LudoProvider>(context,listen: false). listenToGameUpdates(context);
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     ImageToast.show(
+  //       imagePath: Assets.imagesTextArea,
+  //       height: height * 0.08,
+  //       width: width * 0.6,
+  //       context: context,
+  //       text: "Game will start after 5 sec",
+  //     );
+  //     String argument = ModalRoute.of(context)!.settings.arguments.toString();
+  //     timerProvider.setAmount(argument);
+  //   });
+  //
+  //   Future.delayed(const Duration(seconds: 5), () {
+  //     timerProvider.startTimer(context);
+  //   });
+  // }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ImageToast.show(
-        imagePath: Assets.imagesTextArea,
-        height: height * 0.08,
-        width: width * 0.6,
-        context: context,
-        text: "Game will start after 5 sec",
-      );
-      String argument = ModalRoute.of(context)!.settings.arguments.toString();
-      timerProvider.setAmount(argument);
-    });
+  // void startTimer(context) {
+  //   _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+  //     if (_remainingSeconds > 0) {
+  //       setState(() {
+  //         _remainingSeconds--;
+  //         String argument =
+  //             ModalRoute.of(context)!.settings.arguments.toString();
+  //         _remainingSeconds == 0
+  //             ? Navigator.pushReplacementNamed(context, RoutesName.winnerScreen,
+  //                 arguments: argument)
+  //             : null;
+  //       });
+  //     } else {
+  //       _timer?.cancel();
+  //     }
+  //   });
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   _timer?.cancel();
+  //   super.dispose();
+  // }
+  //
+  // String get timerText {
+  //   int minutes = _remainingSeconds ~/ 60;
+  //   int seconds = _remainingSeconds % 60;
+  //   return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  // }
 
-    Future.delayed(const Duration(seconds: 5),(){
-
-      // startTimer(context);
-      timerProvider.startTimer(context);
-      print("totatota");
-    });
-
-  }
-
-  void startTimer(context) {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_remainingSeconds > 0) {
-        setState(() {
-          _remainingSeconds--;
-          String argument = ModalRoute.of(context)!.settings.arguments.toString();
-          _remainingSeconds==0?Navigator.pushReplacementNamed(context, RoutesName.winnerScreen,arguments: argument):null;
-        });
-      } else {
-        _timer?.cancel();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  String get timerText {
-    int minutes = _remainingSeconds ~/ 60;
-    int seconds = _remainingSeconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-  }
-  String user1 = '';
-  String user2 = '';
-  String user3 = '';
-  String user4 = '';
-  String key = '';
+  //
   Future<bool> _onWillPop() async {
-
-      return await Utils.exitGame(context) ?? false;
-
+    return await Utils.exitGame(context) ?? false;
   }
+
   @override
   Widget build(BuildContext context) {
-final documentID=Provider.of<FirebaseViewModel>(context);
-final docId=documentID.table.toString();
-    CollectionReference ludoCollection = FirebaseFirestore.instance.collection('ludo');
+    final documentID = Provider.of<FirebaseViewModel>(context);
+    final docId = documentID.table.toString();
+    CollectionReference ludoCollection =
+        FirebaseFirestore.instance.collection('ludo');
     return PopScope(
       canPop: false,
-      onPopInvoked:(v) {
+      onPopInvoked: (v) {
         _onWillPop();
       },
       child: SafeArea(
         child: Scaffold(
-          body:Consumer<LudoProvider>(
-              builder: (context, provider, child) {
-                // print('docIDAagyi:$docId');
-                return StreamBuilder(
-                  // Replace '1' with the specific document ID you want to listen to
-                  stream: ludoCollection.doc(docId).snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData || !snapshot.data!.exists) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    // Fetch the data and display it
-                    Map<String, dynamic> data = snapshot.data!.data() as Map<
-                        String,
-                        dynamic>;
-
-                    return _buildDynamicContent(context, data);
-                  },
-                );
-              })
-        ),
+            body: StreamBuilder(
+              stream: ludoCollection.doc(docId).snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || !snapshot.data!.exists) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                Map<String, dynamic> data =
+                    snapshot.data!.data() as Map<String, dynamic>;
+                return _buildDynamicContent(context, data);
+              },
+            )),
       ),
     );
   }
 
-
   Widget _buildDynamicContent(BuildContext context, Map<String, dynamic> data) {
     String argument = ModalRoute.of(context)!.settings.arguments.toString();
-    Map<String, dynamic> player1Data = (data['1'] != null && data['1'].isNotEmpty)
-        ? json.decode(data['1'])
-        : {};
-    Map<String, dynamic> player2Data = (data['2'] != null && data['2'].isNotEmpty)
-        ? json.decode(data['2'])
-        : {};
-    Map<String, dynamic> player3Data = (data['3'] != null && data['3'].isNotEmpty)
-        ? json.decode(data['3'])
-        : {};
-    Map<String, dynamic> player4Data = (data['4'] != null && data['4'].isNotEmpty)
-        ? json.decode(data['4'])
-        : {};
+    final ludoProvider = Provider.of<LudoProvider>(context);
+    Map<String, dynamic> player1Data =
+        (data['1'] != null && data['1'].isNotEmpty)
+            ? json.decode(data['1'])
+            : {};
+    Map<String, dynamic> player2Data =
+        (data['2'] != null && data['2'].isNotEmpty)
+            ? json.decode(data['2'])
+            : {};
+    Map<String, dynamic> player3Data =
+        (data['3'] != null && data['3'].isNotEmpty)
+            ? json.decode(data['3'])
+            : {};
+    Map<String, dynamic> player4Data =
+        (data['4'] != null && data['4'].isNotEmpty)
+            ? json.decode(data['4'])
+            : {};
     // Map<String, dynamic> player1Data = data['1'].isNotEmpty ? json.decode(data['1']) : {};
     // Map<String, dynamic> player2Data = data['2'].isNotEmpty ? json.decode(data['2']) : {};
     // Map<String, dynamic> player3Data = data['3'].isNotEmpty ? json.decode(data['3']) : {};
     // Map<String, dynamic> player4Data = data['4'].isNotEmpty ? json.decode(data['4']) : {};
-    final List<Map<String, dynamic> > playerData = [player1Data, player2Data, player3Data, player3Data];
+    final List<Map<String, dynamic>> playerData = [
+      player1Data,
+      player2Data,
+      player3Data,
+      player3Data
+    ];
 
     return Container(
       height: height,
       width: width,
       decoration: const BoxDecoration(
           image: DecorationImage(
-              image: AssetImage(Assets.imagesLudoHomeBg),
-              fit: BoxFit.fill)),
+              image: AssetImage(Assets.imagesLudoHomeBg), fit: BoxFit.fill)),
       child: Column(
         children: [
           Row(
@@ -172,7 +167,7 @@ final docId=documentID.table.toString();
                       image: DecorationImage(
                           image: AssetImage(Assets.ludoPrizePool),
                           fit: BoxFit.fill)),
-                  child:  Column(
+                  child: Column(
                     children: [
                       const Padding(
                         padding: EdgeInsets.only(left: 12.0),
@@ -198,8 +193,7 @@ final docId=documentID.table.toString();
               ),
               SizedBox(
                   height: height * 0.04,
-                  child:
-                  const Image(image: AssetImage(Assets.ludoSetting))),
+                  child: const Image(image: AssetImage(Assets.ludoSetting))),
               SizedBox(
                 width: width * 0.03,
               )
@@ -210,23 +204,26 @@ final docId=documentID.table.toString();
           ),
           Container(
               alignment: Alignment.center,
-              padding: const EdgeInsets.only(left: 2,right: 2),
+              padding: const EdgeInsets.only(left: 2, right: 2),
               height: height * 0.033,
               width: width * 0.24,
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   image: const DecorationImage(
                       image: AssetImage(Assets.ludoLabelSection),
                       fit: BoxFit.fill)),
-              child:  Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const Icon(Icons.watch_later_outlined,color: white,size: 19,),
-                  Text(
-                      timerProvider.timerText.toString(),
-                      style:  const TextStyle(
+                  const Icon(
+                    Icons.watch_later_outlined,
+                    color: white,
+                    size: 19,
+                  ),
+                  Text(timerProvider.timerText.toString(),
+                      style: const TextStyle(
                           color: green,
-                          fontFamily:"digital",
+                          fontFamily: "digital",
                           fontWeight: FontWeight.w600,
                           fontSize: 20)),
                 ],
@@ -242,8 +239,7 @@ final docId=documentID.table.toString();
                       image: DecorationImage(
                           image: AssetImage(Assets.ludoLabelSection),
                           fit: BoxFit.fill)),
-                  child:  Text(
-                      player1Data['name'].toString(),
+                  child: Text(player1Data['name'].toString(),
                       style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -257,48 +253,55 @@ final docId=documentID.table.toString();
                 fit: BoxFit.fill,
               ),
               const Spacer(),
-              Image(
-                image: const AssetImage(
-                  Assets.ludoInfo,
-                ),
-                height: height * 0.03,
-                width: width * 0.08,
-                fit: BoxFit.fill,
-              ),
-              Container(
-                  alignment: Alignment.center,
-                  height: height * 0.03,
-                  width: width * 0.23,
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(Assets.ludoLabelSectionTwo),
-                          fit: BoxFit.fill)),
-                  child:  Text(
-                      player2Data['name'] ?? 'No Name',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12))),
+              ludoProvider.playerQuantity != 2
+                  ? Image(
+                      image: const AssetImage(
+                        Assets.ludoInfo,
+                      ),
+                      height: height * 0.03,
+                      width: width * 0.08,
+                      fit: BoxFit.fill,
+                    )
+                  : Container(),
+              ludoProvider.playerQuantity != 2
+                  ? Container(
+                      alignment: Alignment.center,
+                      height: height * 0.03,
+                      width: width * 0.23,
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(Assets.ludoLabelSectionTwo),
+                              fit: BoxFit.fill)),
+                      child: Text(player2Data['name'] ?? 'No Name',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12)))
+                  : Container(),
             ],
           ),
           Padding(
-            padding:  const EdgeInsets.all(6.0),
+            padding: const EdgeInsets.all(6.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 userDiceDesign(playerData),
                 const Spacer(),
-                opponentsOneTurn(playerData),
+                ludoProvider.playerQuantity != 2
+                    ? opponentsOneTurn(playerData)
+                    : Container(),
               ],
             ),
           ),
-           BoardWidget(playerData: playerData),
+          BoardWidget(playerData: playerData),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                opponentsTwoTurn(playerData),
+                ludoProvider.playerQuantity != 2
+                    ? opponentsTwoTurn(playerData)
+                    : Container(),
                 const Spacer(),
                 opponentsThreeTurn(playerData),
               ],
@@ -307,27 +310,31 @@ final docId=documentID.table.toString();
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                  alignment: Alignment.center,
-                  height: height * 0.03,
-                  width: width * 0.23,
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(Assets.ludoLabelSection),
-                          fit: BoxFit.fill)),
-                  child:  Text(  player4Data['name'] ?? 'No Name',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12))),
-              Image(
-                image: const AssetImage(
-                  Assets.ludoInfo,
-                ),
-                height: height * 0.03,
-                width: width * 0.08,
-                fit: BoxFit.fill,
-              ),
+              ludoProvider.playerQuantity != 2
+                  ? Container(
+                      alignment: Alignment.center,
+                      height: height * 0.03,
+                      width: width * 0.23,
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(Assets.ludoLabelSection),
+                              fit: BoxFit.fill)),
+                      child: Text(player4Data['name'] ?? 'No Name',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12)))
+                  : Container(),
+              ludoProvider.playerQuantity != 2
+                  ? Image(
+                      image: const AssetImage(
+                        Assets.ludoInfo,
+                      ),
+                      height: height * 0.03,
+                      width: width * 0.08,
+                      fit: BoxFit.fill,
+                    )
+                  : Container(),
               const Spacer(),
               Image(
                 image: const AssetImage(
@@ -345,8 +352,7 @@ final docId=documentID.table.toString();
                       image: DecorationImage(
                           image: AssetImage(Assets.ludoLabelSectionTwo),
                           fit: BoxFit.fill)),
-                  child:  Text(player3Data['name'] ?? 'No Name'
-                    ,
+                  child: Text(player3Data['name'] ?? 'No Name',
                       style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -357,78 +363,78 @@ final docId=documentID.table.toString();
       ),
     );
   }
+
   Widget userDiceDesign(List<Map<String, dynamic>> playerData) {
     return Consumer<LudoProvider>(
       builder: (context, value, child) => Padding(
-        padding: const EdgeInsets.only(bottom:0, left:  0),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-            Container(
-            height: height * 0.07,
-            width: width * 0.15,
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(Assets.ludoProfileSection))),
-            child: Image(
-              image: const AssetImage(
-                Assets.ludoUser,
-              ),
-              height: height * 0.03,
-              width: width * 0.23,
-              fit: BoxFit.fill,
-            )),
-          value.currentPlayer.type ==LudoPlayerType.blue? DiceWidget(playerData: playerData):
+        padding: const EdgeInsets.only(bottom: 0, left: 0),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Container(
-              alignment: Alignment.center,
-              height: height * 0.08,
-              width: width * 0.19,
+              height: height * 0.07,
+              width: width * 0.15,
               decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage(Assets.ludoDiceSectionOne),
-                      fit: BoxFit.fill)),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Image(
-                  image: const AssetImage(
-                    Assets.ludoDice,
-                  ),
-                  height: height * 0.06,
-                  width: width * 0.17,
+                      image: AssetImage(Assets.ludoProfileSection))),
+              child: Image(
+                image: const AssetImage(
+                  Assets.ludoUser,
                 ),
-              ))
-              ,
-            ]),
+                height: height * 0.03,
+                width: width * 0.23,
+                fit: BoxFit.fill,
+              )),
+          value.currentPlayer.type == LudoPlayerType.blue
+              ? DiceWidget(playerData: playerData)
+              : Container(
+                  alignment: Alignment.center,
+                  height: height * 0.08,
+                  width: width * 0.19,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(Assets.ludoDiceSectionOne),
+                          fit: BoxFit.fill)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Image(
+                      image: const AssetImage(
+                        Assets.ludoDice,
+                      ),
+                      height: height * 0.06,
+                      width: width * 0.17,
+                    ),
+                  )),
+        ]),
       ),
     );
   }
 
-  // bool isUserTurn = true;
   Widget opponentsOneTurn(List<Map<String, dynamic>> playerData) {
     return Consumer<LudoProvider>(
       builder: (context, value, child) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            value.currentPlayer.type ==LudoPlayerType.red? DiceWidget(playerData: playerData):
-            Container(
-                alignment: Alignment.center,
-                height: height * 0.08,
-                width: width * 0.19,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(Assets.ludoDiceSectionOne),
-                        fit: BoxFit.fill)),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Image(
-                    image: const AssetImage(
-                      Assets.ludoDice,
-                    ),
-                    height: height * 0.06,
-                    width: width * 0.17,
-                  ),
-                )),
+            value.currentPlayer.type == LudoPlayerType.red
+                ? DiceWidget(playerData: playerData)
+                : Container(
+                    alignment: Alignment.center,
+                    height: height * 0.08,
+                    width: width * 0.19,
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(Assets.ludoDiceSectionOne),
+                            fit: BoxFit.fill)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Image(
+                        image: const AssetImage(
+                          Assets.ludoDice,
+                        ),
+                        height: height * 0.06,
+                        width: width * 0.17,
+                      ),
+                    )),
             Container(
                 height: height * 0.07,
                 width: width * 0.15,
@@ -448,6 +454,7 @@ final docId=documentID.table.toString();
       },
     );
   }
+
   Widget opponentsTwoTurn(List<Map<String, dynamic>> playerData) {
     return Consumer<LudoProvider>(
       builder: (context, value, child) {
@@ -468,57 +475,58 @@ final docId=documentID.table.toString();
                   width: width * 0.23,
                   fit: BoxFit.fill,
                 )),
-            value.currentPlayer.type ==LudoPlayerType.yellow? DiceWidget(playerData: playerData):
-
-            Container(
-                alignment: Alignment.center,
-                height: height * 0.08,
-                width: width * 0.19,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(Assets.ludoDiceSectionOne),
-                        fit: BoxFit.fill)),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 25.0),
-                  child: Image(
-                    image: const AssetImage(
-                      Assets.ludoDice,
-                    ),
-                    height: height * 0.06,
-                    width: width * 0.17,
-                  ),
-                )),
-
+            value.currentPlayer.type == LudoPlayerType.yellow
+                ? DiceWidget(playerData: playerData)
+                : Container(
+                    alignment: Alignment.center,
+                    height: height * 0.08,
+                    width: width * 0.19,
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(Assets.ludoDiceSectionOne),
+                            fit: BoxFit.fill)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 25.0),
+                      child: Image(
+                        image: const AssetImage(
+                          Assets.ludoDice,
+                        ),
+                        height: height * 0.06,
+                        width: width * 0.17,
+                      ),
+                    )),
           ],
         );
       },
     );
   }
+
   Widget opponentsThreeTurn(List<Map<String, dynamic>> playerData) {
     return Consumer<LudoProvider>(
       builder: (context, value, child) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            value.currentPlayer.type ==LudoPlayerType.green? DiceWidget(playerData: playerData):
-            Container(
-                alignment: Alignment.center,
-                height: height * 0.08,
-                width: width * 0.19,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(Assets.ludoDiceSectionOne),
-                        fit: BoxFit.fill)),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Image(
-                    image: const AssetImage(
-                      Assets.ludoDice,
-                    ),
-                    height: height * 0.06,
-                    width: width * 0.17,
-                  ),
-                )),
+            value.currentPlayer.type == LudoPlayerType.green
+                ? DiceWidget(playerData: playerData)
+                : Container(
+                    alignment: Alignment.center,
+                    height: height * 0.08,
+                    width: width * 0.19,
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(Assets.ludoDiceSectionOne),
+                            fit: BoxFit.fill)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Image(
+                        image: const AssetImage(
+                          Assets.ludoDice,
+                        ),
+                        height: height * 0.06,
+                        width: width * 0.17,
+                      ),
+                    )),
             Container(
                 height: height * 0.07,
                 width: width * 0.15,

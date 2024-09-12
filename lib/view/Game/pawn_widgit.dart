@@ -36,7 +36,7 @@ class _PawnWidgetState extends State<PawnWidget> {
   void initState() {
     super.initState();
     final firebaseViewModel =Provider.of<FirebaseViewModel>(context,listen: false);
-    print("PawnWidget${firebaseViewModel.table}");
+    // print("PawnWidget${firebaseViewModel.table}");
     gameDoc = FirebaseFirestore.instance.collection('ludo').doc(firebaseViewModel.table.toString());
     _fetchPawnAsset(); // Fetch the pawn asset on initialization
     _listenForPawnChanges(); // Listen for pawn position updates
@@ -76,21 +76,21 @@ class _PawnWidgetState extends State<PawnWidget> {
   }
 
   // Function to send pawn movement data to Firestore
-  Future<void> _sendPawnMovement(int nextStep) async {
-    try {
-         await gameDoc.update({
-          '${widget.type.toString().split('.').last}PawnPosition${widget.index}': nextStep,
-        });
-
-      print("Pawn position updated successfully.");
-    } catch (e) {
-      print("Error updating pawn position: $e");
-    }
-    // print("jaraha hau data ");
-    // await gameDoc.update({
-    //   '${widget.type.toString().split('.').last}AmanPawnPosition${widget.index}': nextStep,
-    // });
-  }
+  // Future<void> _sendPawnMovement(int nextStep) async {
+  //   try {
+  //        await gameDoc.update({
+  //         '${widget.type.toString().split('.').last}PawnPosition${widget.index}': nextStep,
+  //       });
+  //
+  //     print("Pawn position updated successfully.");
+  //   } catch (e) {
+  //     print("Error updating pawn position: $e");
+  //   }
+  //   // print("jaraha hau data ");
+  //   // await gameDoc.update({
+  //   //   '${widget.type.toString().split('.').last}AmanPawnPosition${widget.index}': nextStep,
+  //   // });
+  // }
 
   // Listen for pawn position changes
   void _listenForPawnChanges() {
@@ -108,27 +108,34 @@ class _PawnWidgetState extends State<PawnWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Color color;
+    final ludoProvider = Provider.of<LudoProvider>(context);
+
+    // Only show pawns for blue and green players if playerQuantity is 2
+    if (ludoProvider.playerQuantity == 2 && (widget.type != LudoPlayerType.blue && widget.type != LudoPlayerType.green)) {
+      // Return an empty container for red and yellow pawns when only 2 players are active
+      return const SizedBox.shrink();
+    }
+    // Color color;
 
     switch (widget.type) {
       case LudoPlayerType.blue:
-        color = LudoColor.blue;
+        LudoColor.blue;
         pawnAsset = Assets.diceBluePawn;
         break;
       case LudoPlayerType.red:
-        color = LudoColor.red;
+        LudoColor.red;
         pawnAsset = Assets.diceRedPawn;
         break;
       case LudoPlayerType.green:
-        color = LudoColor.green;
+         LudoColor.green;
         pawnAsset =Assets.diceGreenpawn;
         break;
       case LudoPlayerType.yellow:
-        color = LudoColor.yellow;
+       LudoColor.yellow;
         pawnAsset = Assets.diceYellowPawn;
         break;
       default:
-        color = Colors.white;
+         Colors.white;
         pawnAsset = Assets.diceYellowPawn;
     }
 

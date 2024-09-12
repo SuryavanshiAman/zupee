@@ -29,7 +29,6 @@ class _BottomNevBarState extends State<BottomNevBar> {
   @override
   void initState() {
     super.initState();
-
     Future.delayed(Duration.zero, () {
       final routeArgs = ModalRoute.of(context)?.settings.arguments;
       if (routeArgs != null && routeArgs is Map<String, dynamic>) {
@@ -55,7 +54,7 @@ class _BottomNevBarState extends State<BottomNevBar> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked:(v) {
+      onPopInvoked: (v) {
         _onWillPop();
       },
       child: Scaffold(
@@ -64,10 +63,10 @@ class _BottomNevBarState extends State<BottomNevBar> {
       ),
     );
   }
-  int bottom = 0;
+
   Widget buildMyNavBar(BuildContext context) {
     return Container(
-      height: height*0.085,
+      height: height * 0.085,
       decoration: const BoxDecoration(
         color: white,
       ),
@@ -75,7 +74,7 @@ class _BottomNevBarState extends State<BottomNevBar> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           GestureDetector(
-            onTap: (){
+            onTap: () {
               setState(() {
                 pageIndex = 0;
               });
@@ -83,27 +82,26 @@ class _BottomNevBarState extends State<BottomNevBar> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
-                    pageIndex == 0
-                        ? Image.asset(
-                            Assets.iconHome,
-                            height: 32,
-                          )
-                        : Image.asset(
-                            Assets.iconHomeTwo,
-                            height: 30,
-                ),
                 pageIndex == 0
-                    ?  Text(
+                    ? Image.asset(
+                        Assets.iconHome,
+                        height: 32,
+                      )
+                    : Image.asset(
+                        Assets.iconHomeTwo,
+                        height: 30,
+                      ),
+                pageIndex == 0
+                    ? Text(
                         'Home'.tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 11,
                             color: tertiary,
                             fontWeight: FontWeight.bold),
                       )
-                    :  Text(
+                    : Text(
                         'Home'.tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 10,
                             color: labelColor,
                             fontWeight: FontWeight.bold),
@@ -112,7 +110,7 @@ class _BottomNevBarState extends State<BottomNevBar> {
             ),
           ),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               setState(() {
                 pageIndex = 1;
               });
@@ -120,27 +118,26 @@ class _BottomNevBarState extends State<BottomNevBar> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
-                    pageIndex == 1
-                        ? Image.asset(
-                            Assets.iconRefer,
-                            height: 32,
-                          )
-                        : Image.asset(
-                            Assets.iconReferTwo,
-                            height: 30,
-                ),
                 pageIndex == 1
-                    ?  Text(
+                    ? Image.asset(
+                        Assets.iconRefer,
+                        height: 32,
+                      )
+                    : Image.asset(
+                        Assets.iconReferTwo,
+                        height: 30,
+                      ),
+                pageIndex == 1
+                    ? Text(
                         'Refer'.tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 11,
                             color: tertiary,
                             fontWeight: FontWeight.bold),
                       )
-                    :  Text(
+                    : Text(
                         'Refer'.tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 10,
                             color: labelColor,
                             fontWeight: FontWeight.bold),
@@ -149,7 +146,7 @@ class _BottomNevBarState extends State<BottomNevBar> {
             ),
           ),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               setState(() {
                 pageIndex = 2;
               });
@@ -158,25 +155,25 @@ class _BottomNevBarState extends State<BottomNevBar> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 pageIndex == 2
-                      ? Image.asset(
-                          Assets.iconAdda,
-                          height: 32,
-                        )
-                      : Image.asset(
-                          Assets.iconAddaTwo,
-                          height: 30,
-                        ),
+                    ? Image.asset(
+                        Assets.iconAdda,
+                        height: 32,
+                      )
+                    : Image.asset(
+                        Assets.iconAddaTwo,
+                        height: 30,
+                      ),
                 pageIndex == 2
-                    ?  Text(
+                    ? Text(
                         'Adda'.tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 11,
                             color: tertiary,
                             fontWeight: FontWeight.bold),
                       )
-                    :  Text(
+                    : Text(
                         'Adda'.tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 10,
                             color: labelColor,
                             fontWeight: FontWeight.bold),
@@ -185,7 +182,7 @@ class _BottomNevBarState extends State<BottomNevBar> {
             ),
           ),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               setState(() {
                 pageIndex = 3;
               });
@@ -193,27 +190,26 @@ class _BottomNevBarState extends State<BottomNevBar> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
-                  pageIndex == 3
-                      ? Image.asset(
-                          Assets.iconAccount,
-                          height: 32,
-                        )
-                      : Image.asset(
-                          Assets.iconAccountTwo,
-                          height: 30,
-                ),
                 pageIndex == 3
-                    ?  Text(
+                    ? Image.asset(
+                        Assets.iconAccount,
+                        height: 32,
+                      )
+                    : Image.asset(
+                        Assets.iconAccountTwo,
+                        height: 30,
+                      ),
+                pageIndex == 3
+                    ? Text(
                         'Account'.tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 11,
                             color: tertiary,
                             fontWeight: FontWeight.bold),
                       )
-                    :  Text(
+                    : Text(
                         'Account'.tr,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 10,
                             color: labelColor,
                             fontWeight: FontWeight.bold),

@@ -11,6 +11,7 @@ import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/time_page.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view/bottomsheet/tournament_bottomsheet.dart';
 import 'package:zupee/view_model/confirm_payment_view_model.dart';
 import 'package:zupee/view_model/contest_category_view_model.dart';
@@ -19,22 +20,6 @@ import 'package:zupee/view_model/join_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 import 'package:zupee/view_model/tournament_view_moedl.dart';
 
-class FirstList {
-  String title;
-  FirstList(this.title);
-}
-
-class SecondList {
-  String title;
-  SecondList(this.title);
-}
-
-class NewOne {
-  String? title;
-  String titleOne;
-  NewOne(this.title, this.titleOne);
-}
-
 class LudoSupreme extends StatefulWidget {
   const LudoSupreme({super.key});
 
@@ -42,13 +27,12 @@ class LudoSupreme extends StatefulWidget {
   LudoSupremeState createState() => LudoSupremeState();
 }
 
-class LudoSupremeState extends State<LudoSupreme>
-    with SingleTickerProviderStateMixin {
+class LudoSupremeState extends State<LudoSupreme> {
   final ScrollController _scrollController = ScrollController();
   bool _showTitle = true;
   ContestCategoryViewModel contestCategoryViewModel =
       ContestCategoryViewModel();
-  TournamentViewModel tournamentViewModel = TournamentViewModel();
+  // TournamentViewModel tournamentViewModel = TournamentViewModel();
   bool time = false;
   @override
   void initState() {
@@ -56,45 +40,26 @@ class LudoSupremeState extends State<LudoSupreme>
     _scrollController.addListener(_handleScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       contestCategoryViewModel.contestCategoryApi(context);
-      Provider.of<TournamentViewModel>(context, listen: false)
-          .tournamentApi(context, selectedIndices.toString());
+     final tournamentViewModel= Provider.of<TournamentViewModel>(context, listen: false);
+      tournamentViewModel.tournamentApi(context, selectedIndices.toString());
     });
     time = false;
   }
 
-  Duration myDuration = const Duration(days: 5);
+  // Duration myDuration = const Duration(days: 5);
 
   void _handleScroll() {
     setState(() {
       if (_scrollController.position.pixels > 100) {
-        // _showImage = false;
         _showTitle = false;
       } else {
-        // _showImage = true;
         _showTitle = true;
       }
     });
   }
 
-
   bool nextPage = true;
   int setTime = 0;
-  // void _updateTimerValue(int value, context) {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     if (value == 10 && nextPage==false ) {
-  //       Navigator.pushNamed(context, RoutesName.timerScreen);
-  //     } else if (value == 9 ) {
-  //      setState(() {
-  //        nextPage==true;
-  //      });
-  //     }
-  //    else {
-  //       setState(() {
-  //         setTime = (value - 1) % 60;
-  //       });
-  //     }
-  //   });
-  // }
   int _seconds = 10;
   Timer? _timer;
 
@@ -114,7 +79,6 @@ class LudoSupremeState extends State<LudoSupreme>
 
   String? futureTime;
 
-
   int selectedIndices = 0;
   String tournamentID = "0";
   String entry = "0";
@@ -124,7 +88,7 @@ class LudoSupremeState extends State<LudoSupreme>
     final tournament = Provider.of<TournamentViewModel>(context);
     final confirmPayment = Provider.of<ConfirmPaymentViewModel>(context);
     final profileViewModel = Provider.of<ProfileViewModel>(context);
-
+    final ludoProvider = Provider.of<LudoProvider>(context);
     return Scaffold(
       backgroundColor: appBarColor,
       body: CustomScrollView(
@@ -166,17 +130,6 @@ class LudoSupremeState extends State<LudoSupreme>
                                           selectedIndices = index;
                                           tournament.tournamentApi(context,
                                               selectedIndices.toString());
-                                          // if (selectedIndices.contains(index)) {
-                                          //   selectedIndices.remove(index);
-                                          // } else {
-                                          //   if (index != 0) {
-                                          //     selectedIndices.add(index);
-                                          //     selectedIndices.remove(0);
-                                          //   } else {
-                                          //     selectedIndices.clear();
-                                          //     selectedIndices.add(0);
-                                          //   }
-                                          // }
                                         });
                                       },
                                       child: Row(
@@ -391,10 +344,10 @@ class LudoSupremeState extends State<LudoSupreme>
               Consumer<TournamentViewModel>(
                 builder: (context, tournamentValue, _) {
                   switch (tournamentValue.tournamentList.status) {
-                    // case Status.LOADING:
-                    //   return const Center(
-                    //     child: CircularProgressIndicator(),
-                    //   );
+                    case Status.LOADING:
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     case Status.ERROR:
                       return Container();
                     case Status.COMPLETED:
@@ -438,6 +391,10 @@ class LudoSupremeState extends State<LudoSupreme>
                                           tournament[index].amount.toString();
                                       prizePool =
                                           tournament[index].winPrize.toString();
+                                      ludoProvider.setPlayerQuantity(int.parse(
+                                          tournament[index]
+                                              .playerNo
+                                              .toString()));
                                     },
                                     child: Container(
                                       height: height * 0.18,
@@ -460,26 +417,33 @@ class LudoSupremeState extends State<LudoSupreme>
                                                         Radius.circular(10))),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                const Icon(
-                                                  Icons.people_outline,
-                                                  color: Colors.black,
-                                                  size: 18,
-                                                ),
-                                                SizedBox(
-                                                  width: width * 0.01,
+                                                Row(
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.people_outline,
+                                                      color: Colors.black,
+                                                      size: 18,
+                                                    ),
+                                                    Text(
+                                                        "${tournament[index].playerNo}+",
+                                                        style: const TextStyle(
+                                                            fontSize: 11,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            color:
+                                                                Colors.black)),
+                                                  ],
                                                 ),
                                                 Text(
-                                                    "${tournament[index].playerNo}+",
+                                                    "${tournament[index].playerNo} PLAYERS.${tournament[index].winnerNo}WINNER",
                                                     style: const TextStyle(
-                                                        fontSize: 11,
+                                                        fontSize: 12,
+                                                        color: black,
                                                         fontWeight:
-                                                            FontWeight.w600,
-                                                        color: Colors.black)),
-                                                SizedBox(
-                                                  width: width * 0.16,
-                                                ),
+                                                            FontWeight.w500)),
                                                 Text(
                                                     tournament[index]
                                                         .contestName!
@@ -488,7 +452,7 @@ class LudoSupremeState extends State<LudoSupreme>
                                                         fontSize: 12,
                                                         color: black,
                                                         fontWeight:
-                                                            FontWeight.w500))
+                                                            FontWeight.w500)),
                                               ],
                                             ),
                                           ),
@@ -580,7 +544,6 @@ class LudoSupremeState extends State<LudoSupreme>
                                                           fontSize: 10,
                                                           color: red,
                                                         ),
-
                                                       ],
                                                     ),
                                                   ),
@@ -973,12 +936,9 @@ class LudoSupremeState extends State<LudoSupreme>
   void sendJsonDataToFirebase(Map<String, dynamic> jsonData) async {
     CollectionReference ludoCollection =
         FirebaseFirestore.instance.collection('ludo');
-    await ludoCollection.add(jsonData).then((docRef) {
-      print("Document added with ID: ${docRef.id}");
-    }).catchError((error) {
-      print("Error adding document: $error");
-    });
+    await ludoCollection.add(jsonData).then((docRef) {}).catchError((error) {});
   }
+
   bool _isExpanded = false;
   void confirmPaymentBottomSheet(BuildContext context) async {
     final confirmPayment =
@@ -995,8 +955,9 @@ class LudoSupremeState extends State<LudoSupreme>
         ),
       ),
       builder: (BuildContext context) {
-        return StatefulBuilder(builder: (BuildContext context, StateSetter setModalState){
-          return    Container(
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setModalState) {
+          return Container(
             padding: const EdgeInsets.all(16.0),
             // height: height*0.47,
             child: Column(
@@ -1014,8 +975,8 @@ class LudoSupremeState extends State<LudoSupreme>
                       radius: 50,
                       backgroundColor: appBarColor,
                       child: Center(
-                          child:
-                          Image(image: AssetImage(Assets.imagesRupeesBlue)))),
+                          child: Image(
+                              image: AssetImage(Assets.imagesRupeesBlue)))),
                 ),
                 const SizedBox(height: 8),
                 Center(
@@ -1073,7 +1034,7 @@ class LudoSupremeState extends State<LudoSupreme>
                                     width: width * 0.5,
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text('From Bonus'.tr,
                                             style: const TextStyle(
@@ -1099,7 +1060,8 @@ class LudoSupremeState extends State<LudoSupreme>
                                   SizedBox(
                                     width: width * 0.2,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
                                             '₹${confirmPayment?.deductions?.bonus ?? "0"}',
@@ -1129,13 +1091,12 @@ class LudoSupremeState extends State<LudoSupreme>
                               const Divider(),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-
                                 children: [
                                   SizedBox(
                                     width: width * 0.5,
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text('Entry Fee Breakdown'.tr,
                                             style: const TextStyle(
@@ -1160,9 +1121,11 @@ class LudoSupremeState extends State<LudoSupreme>
                                   SizedBox(
                                     width: width * 0.2,
                                     child: const Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
-                                        Text('', style: TextStyle(fontSize: 16)),
+                                        Text('',
+                                            style: TextStyle(fontSize: 16)),
                                         // SizedBox(height: 8),
                                         Text(' ₹0.8',
                                             style: TextStyle(
@@ -1190,8 +1153,9 @@ class LudoSupremeState extends State<LudoSupreme>
                 Center(
                   child: CustomContainer(
                     onTap: () async {
-                      final firebaseViewModel =
-                      Provider.of<FirebaseViewModel>(context, listen: false);
+                      final firebaseViewModel = Provider.of<FirebaseViewModel>(
+                          context,
+                          listen: false);
                       setState(() {
                         _startTimer(prizePool);
                         nextPage = false;
@@ -1232,9 +1196,7 @@ class LudoSupremeState extends State<LudoSupreme>
               ],
             ),
           );
-        }
-        );
-
+        });
       },
     );
   }

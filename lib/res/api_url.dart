@@ -1,13 +1,8 @@
 
 
 class ApiUrl{
-  // base url
   static const String baseUrl = 'https://ludozupee.fctechteam.org/api/';
-  // api url
-
-  // static const String sendOtp="https://otp.hopegamings.in/send_otp.php?";
   static const String sendOtp="https://otp.fctechteam.org/send_otp.php?";
-  // static const String verifyOtp="https://otp.hopegamings.in/verifyotp.php?";
   static const String verifyOtp="https://otp.fctechteam.org/verifyotp.php?";
   static const String authApi = '${baseUrl}login';
   static const String profileApi = '${baseUrl}profile?userid=';
@@ -23,5 +18,5 @@ class ApiUrl{
   static const String tournamentsApi = "${baseUrl}tournaments?category_id=";
   static const String joinTournamentApi = "${baseUrl}echekjoin-tournament";
   static const String joinApi = "${baseUrl}join-tournament";
-  static const String medicineApi = "https://sleekcare.apponrent.co.in/api/medication_completed_details";
+  static const String sendResultApi = "${baseUrl}getResult";
 }

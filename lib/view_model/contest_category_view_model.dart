@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:zupee/model/ContestCategoryModel.dart';
-import 'package:zupee/model/medical_model.dart';
 import 'package:zupee/repo/contest_category_repo.dart';
-import 'package:zupee/repo/medicin_repo.dart';
 
 import '../helper/response/api_response.dart';
 

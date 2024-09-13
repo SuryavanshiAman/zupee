@@ -20,6 +20,7 @@ import 'package:zupee/view_model/join_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 import 'package:zupee/view_model/tournament_view_moedl.dart';
 
+
 class LudoSupreme extends StatefulWidget {
   const LudoSupreme({super.key});
 
@@ -387,6 +388,8 @@ class LudoSupremeState extends State<LudoSupreme> {
 
                                       tournamentID =
                                           tournament[index].id.toString();
+                                      ludoProvider.setTournamentID(tournament[index].id.toString());
+                                      ludoProvider.setPrizePool( tournament[index].winPrize.toString());
                                       entry =
                                           tournament[index].amount.toString();
                                       prizePool =
@@ -572,19 +575,33 @@ class LudoSupremeState extends State<LudoSupreme> {
                                                     ),
                                                     CustomContainer(
                                                       onTap: () {
-                                                        confirmPaymentBottomSheet(
-                                                            context);
                                                         confirmPayment
-                                                            .confirmPaymentApi(
-                                                                context,
-                                                                tournament[
-                                                                        index]
-                                                                    .id
-                                                                    .toString());
+                                                            .confirmPaymentApi(context,
+                                                            tournament[index].id.toString())
+                                                            .then((_) {
+                                                          Future.delayed(
+                                                              const Duration(seconds: 1), () {
+                                                            confirmPayment.confirmPaymentResponse
+                                                                ?.balanceStatus !=
+                                                                1
+                                                                ? _showBottomSheet(context)
+                                                                : confirmPaymentBottomSheet(
+                                                                context);
+                                                          });
+                                                        });
+
                                                         tournamentID =
+                                                            tournament[index].id.toString();
+                                                        ludoProvider.setTournamentID(tournament[index].id.toString());
+                                                        ludoProvider.setPrizePool( tournament[index].winPrize.toString());
+                                                        entry =
+                                                            tournament[index].amount.toString();
+                                                        prizePool =
+                                                            tournament[index].winPrize.toString();
+                                                        ludoProvider.setPlayerQuantity(int.parse(
                                                             tournament[index]
-                                                                .id
-                                                                .toString();
+                                                                .playerNo
+                                                                .toString()));
                                                       },
                                                       height: height * 0.05,
                                                       widths: width * 0.3,
@@ -684,6 +701,8 @@ class LudoSupremeState extends State<LudoSupreme> {
                                             tournament[index].id.toString());
                                         tournamentID =
                                             tournament[index].id.toString();
+                                        ludoProvider.setTournamentID(tournament[index].id.toString());
+                                        ludoProvider.setPrizePool( tournament[index].winPrize.toString());
                                         entry =
                                             tournament[index].amount.toString();
                                         prizePool = tournament[index]
@@ -865,10 +884,33 @@ class LudoSupremeState extends State<LudoSupreme> {
                                                       ),
                                                       CustomContainer(
                                                         onTap: () {
-                                                          Navigator.pushNamed(
-                                                              context,
-                                                              RoutesName
-                                                                  .ludoSupreme);
+                                                          confirmPayment
+                                                              .confirmPaymentApi(context,
+                                                              tournament[index].id.toString())
+                                                              .then((_) {
+                                                            Future.delayed(
+                                                                const Duration(seconds: 1), () {
+                                                              confirmPayment.confirmPaymentResponse
+                                                                  ?.balanceStatus !=
+                                                                  1
+                                                                  ? _showBottomSheet(context)
+                                                                  : confirmPaymentBottomSheet(
+                                                                  context);
+                                                            });
+                                                          });
+
+                                                          tournamentID =
+                                                              tournament[index].id.toString();
+                                                          ludoProvider.setTournamentID(tournament[index].id.toString());
+                                                          ludoProvider.setPrizePool( tournament[index].winPrize.toString());
+                                                          entry =
+                                                              tournament[index].amount.toString();
+                                                          prizePool =
+                                                              tournament[index].winPrize.toString();
+                                                          ludoProvider.setPlayerQuantity(int.parse(
+                                                              tournament[index]
+                                                                  .playerNo
+                                                                  .toString()));
                                                         },
                                                         height: height * 0.05,
                                                         widths: width * 0.3,
@@ -1156,28 +1198,108 @@ class LudoSupremeState extends State<LudoSupreme> {
                       final firebaseViewModel = Provider.of<FirebaseViewModel>(
                           context,
                           listen: false);
+                      final profile =
+                          Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
+                      final ludoProvider = Provider.of<LudoProvider>(context, listen: false);
+                      int documentId = 1;
                       setState(() {
-                        _startTimer(prizePool);
                         nextPage = false;
                         time = true;
-                        Navigator.pop(context);
+                      });
+                      FirebaseFirestore fireStore = FirebaseFirestore.instance;
+                      CollectionReference ludoCollection = fireStore.collection('ludo');
+                      bool isAdded = false;
+                      final playerColors =  ludoProvider.players;
+                      final twoPlayer =(ludoProvider.playerQuantity==2);
+                      while (!isAdded) {
+                        DocumentSnapshot documentSnapshot = await ludoCollection.doc(documentId.toString()).get();
+
+                        if (!documentSnapshot.exists) {
+                          // If the document does not exist, create a new document
+                          print("Creating new document with ID $documentId");
+
+                          // Create JSON data based on player quantity
+                          Map<String, dynamic> jsonData = twoPlayer
+                              ? {
+                            "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}',
+                            "3": ''  // Leave 2nd position empty, use 3rd position
+                          }
+                              : {
+                            "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}',
+                            "2": '',
+                            "3": '',
+                            "4": ''
+                          };
+
+                          await ludoCollection.doc(documentId.toString()).set(jsonData);
+                          ludoProvider.setFieldKey(1);  // Set fieldKey for first position
+                          isAdded = true;
+
+                        } else {
+                          // Document exists, check for available spaces
+                          print("Document $documentId exists, checking for available spaces");
+                          Map<String, dynamic>? existingData = documentSnapshot.data() as Map<String, dynamic>?;
+
+                          if (ludoProvider.playerQuantity==2) {
+                            // Logic for two players: Check positions 1 and 3 only
+                            for (int i = 1; i <= 3; i += 2) {  // Check position 1 and 3
+                              String fieldKey = i.toString();
+                              if (existingData != null && (existingData[fieldKey] == '' || existingData[fieldKey] == null)) {
+                                print("Empty spot found at $fieldKey, updating...");
+                                await ludoCollection.doc(documentId.toString()).update({
+                                  fieldKey:
+                                  '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i == 1 ? 0 : 2].type}"}'
+                                });
+                                ludoProvider.setFieldKey(i);
+                                isAdded = true;
+                                break;
+                              }
+                            }
+                          } else {
+                            // Logic for more than 2 players: Check all positions (1-4)
+                            for (int i = 1; i <= 4; i++) {
+                              String fieldKey = i.toString();
+                              if (existingData != null && (existingData[fieldKey] == '' || existingData[fieldKey] == null)) {
+                                print("Empty spot found at $fieldKey, updating...");
+                                await ludoCollection.doc(documentId.toString()).update({
+                                  fieldKey:
+                                  '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i - 1].type}"}'
+                                });
+                                ludoProvider. setFieldKey(i);
+                                isAdded = true;
+                                break;
+                              }
+                            }
+                          }
+
+                          // If no available space, increment document ID and try again
+                          if (!isAdded) {
+                            documentId += 1;
+                          }
+                        }
+                      }
+                      if (isAdded) {
+                        firebaseViewModel.setTable(documentId);
+                        join.joinApi(tournamentID.toString(), documentId.toString(),prizePool,context).then((_){
+                          ludoProvider.resetPawns(context, documentId);
+                        });
+                      }
+                      WidgetsBinding.instance.addPostFrameCallback((_){
+                        showModalBottomSheet(
+                          elevation: 5,
+                          backgroundColor: primary,
+                          shape: const RoundedRectangleBorder(
+                              side: BorderSide(width: 2, color: Colors.white),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(35),
+                                  topRight: Radius.circular(35))),
+                          context: context,
+                          builder: (context) {
+                            return TournamentBottomsheet(futureTime: futureTime);
+                          },
+                        );
                       });
 
-                      join.joinApi(tournamentID.toString(),
-                          firebaseViewModel.table.toString(), context);
-                      showModalBottomSheet(
-                        elevation: 5,
-                        backgroundColor: primary,
-                        shape: const RoundedRectangleBorder(
-                            side: BorderSide(width: 2, color: Colors.white),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(35),
-                                topRight: Radius.circular(35))),
-                        context: context,
-                        builder: (context) {
-                          return TournamentBottomsheet(futureTime: futureTime);
-                        },
-                      );
                     },
                     alignment: Alignment.center,
                     height: height * 0.07,

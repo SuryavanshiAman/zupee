@@ -15,6 +15,7 @@ import 'package:zupee/view_model/confirm_payment_view_model.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 import 'package:zupee/view_model/join_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
+import 'package:zupee/view_model/send_result_view_model.dart';
 import 'package:zupee/view_model/timer_view_model.dart';
 import 'package:zupee/view_model/tournament_view_moedl.dart';
 import 'package:zupee/view_model/transaction_history_view_model.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TournamentViewModel()),
         ChangeNotifierProvider(create: (_) => ConfirmPaymentViewModel()),
         ChangeNotifierProvider(create: (_) => JoinViewModel()),
+        ChangeNotifierProvider(create: (_) => SendResultViewModel()),
       ],
       child: GetMaterialApp(
         title: AppConstants.appName,

@@ -23,15 +23,15 @@ class SendResultViewModel with ChangeNotifier {
     _loading = value;
     notifyListeners();
   }
-  Future<void> sendResultApi(dynamic tournamentID, dynamic tableId, context) async {
+  Future<void> sendResultApi(dynamic tournamentID, dynamic position,dynamic score, context) async {
     UserViewModel userViewModel = UserViewModel();
     String? userId = await userViewModel.getUser();
     setLoading(true);
     Map data = {
       "userid":userId,
-      "tournament_id":tableId,
-      "game_playing_status":"2",
-      "score":"135"
+      "tournament_id":tournamentID,
+      "game_playing_status":position,
+      "score":score
     };
     _sendResultRepo.sendResultApi(data).then((value) async {
       if (value['status'] == 200) {

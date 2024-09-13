@@ -15,8 +15,20 @@ class LudoProvider with ChangeNotifier {
   bool get isMoving => _isMoving;
   bool get stopDice => _stopDice;
   int get playerQuantity=>_playerQuantity;
+  String _tournamentId="0";
+  String get tournamentId=>_tournamentId;
 
-
+  String _prizePool="0";
+  String get prizePool=> _prizePool;
+  int _fieldKey = 0;
+  int get fieldKey => _fieldKey;
+  setFieldKey(int value) {
+    if(value==0){
+      _fieldKey = value;
+    }else{
+      _fieldKey = value-1;}
+    notifyListeners();
+  }
   LudoGameState _gameState = LudoGameState.throwDice;
   int _diceResult = 1;
   bool _diceStarted = false;
@@ -30,7 +42,14 @@ class LudoProvider with ChangeNotifier {
     _currentDiceIndex=val;
     notifyListeners();
   }
-
+void setTournamentID(String value){
+    _tournamentId=value;
+    notifyListeners();
+}
+void setPrizePool(String value){
+    _prizePool=value;
+    notifyListeners();
+}
    List<LudoPlayer> players = [
     LudoPlayer(LudoPlayerType.blue),
     LudoPlayer(LudoPlayerType.red),
@@ -101,6 +120,21 @@ void setPlayerQuantity(int value){
       }
     });
   }
+  dynamic _myData;
+  dynamic get myData=>_myData;
+  int _myPosition=0;
+  int get myPosition=>_myPosition;
+  setMyData(profile){
+     _myData = _playerDataList.firstWhere(
+          (player) => player['name']['id'] == profile?.data?.id.toString(),
+      orElse: () => null,
+    );
+     notifyListeners();
+  }
+setMyPosition(profile){
+   _myPosition =playerDataList.indexWhere((player) => player['name']['id'] == profile?.data?.id.toString()) + 1;
+}
+
 
   LudoPlayer get currentPlayer => player(_currentTurn);
   bool get diceStarted => _diceStarted;

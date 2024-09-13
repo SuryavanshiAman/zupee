@@ -19,71 +19,43 @@ import 'board_widgit.dart';
 import 'ludo_provider.dart';
 
 class LudoHomeScreen extends StatefulWidget {
-  const LudoHomeScreen({super.key});
+  final String? amount;
+  const LudoHomeScreen({super.key, this.amount});
 
   @override
   State<LudoHomeScreen> createState() => _LudoHomeScreenState();
 }
 
 class _LudoHomeScreenState extends State<LudoHomeScreen> {
-  // static const maxSeconds = 300;
-  // int _remainingSeconds = maxSeconds;
-  // Timer? _timer;
-  // FirebaseViewModel firebaseViewModel = FirebaseViewModel();
+
   TimerProvider timerProvider = TimerProvider();
   //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // Provider.of<LudoProvider>(context,listen: false). listenToGameUpdates(context);
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     ImageToast.show(
-  //       imagePath: Assets.imagesTextArea,
-  //       height: height * 0.08,
-  //       width: width * 0.6,
-  //       context: context,
-  //       text: "Game will start after 5 sec",
-  //     );
-  //     String argument = ModalRoute.of(context)!.settings.arguments.toString();
-  //     timerProvider.setAmount(argument);
-  //   });
-  //
-  //   Future.delayed(const Duration(seconds: 5), () {
-  //     timerProvider.startTimer(context);
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    // Provider.of<LudoProvider>(context,listen: false). listenToGameUpdates(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      imageToast();
+      String argument = ModalRoute.of(context)!.settings.arguments.toString();
+      timerProvider.setAmount(widget.amount.toString());
+    });
 
-  // void startTimer(context) {
-  //   _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-  //     if (_remainingSeconds > 0) {
-  //       setState(() {
-  //         _remainingSeconds--;
-  //         String argument =
-  //             ModalRoute.of(context)!.settings.arguments.toString();
-  //         _remainingSeconds == 0
-  //             ? Navigator.pushReplacementNamed(context, RoutesName.winnerScreen,
-  //                 arguments: argument)
-  //             : null;
-  //       });
-  //     } else {
-  //       _timer?.cancel();
-  //     }
-  //   });
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   _timer?.cancel();
-  //   super.dispose();
-  // }
-  //
-  // String get timerText {
-  //   int minutes = _remainingSeconds ~/ 60;
-  //   int seconds = _remainingSeconds % 60;
-  //   return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-  // }
 
-  //
+    Future.delayed(const Duration(seconds: 5), () {
+      timerProvider.startTimer(context);
+    });
+  }
+
+  void imageToast() {
+    ImageToast.show(
+      imagePath: Assets.imagesTextArea,
+      height: height * 0.08,
+      width: width * 0.6,
+      context: context,
+      text: "Game will start after 5 sec",
+    );
+  }
+
   Future<bool> _onWillPop() async {
     return await Utils.exitGame(context) ?? false;
   }
@@ -180,7 +152,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                         ),
                       ),
                       Text(
-                        "₹${argument.toString()}",
+                        "₹${widget.amount.toString()}",
                         style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,

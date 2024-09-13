@@ -11,6 +11,8 @@ import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 
+import 'ludo_game_home_page.dart';
+
 class TimerScreen extends StatefulWidget {
   const TimerScreen({super.key});
 
@@ -94,8 +96,9 @@ class _TimerScreenState extends State<TimerScreen> {
             : twoPlayersPresent && !_hasNavigated) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Future.delayed(Duration.zero, () {
-              Navigator.pushReplacementNamed(context, RoutesName.ludoHomeScreen,
-                  arguments: argument);
+              // Navigator.pushReplacement(context, RoutesName.ludoHomeScreen,
+              //     arguments: argument);
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LudoHomeScreen(amount:argument)));
             });
             _hasNavigated = true;
           });

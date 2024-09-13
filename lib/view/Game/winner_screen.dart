@@ -8,6 +8,7 @@ import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 
 import '../../generated/assets.dart';
+import '../../view_model/send_result_view_model.dart';
 import 'ludo_provider.dart';
 
 class WinnerScreen extends StatefulWidget {
@@ -19,7 +20,6 @@ class WinnerScreen extends StatefulWidget {
 
 class _WinnerScreenState extends State<WinnerScreen> {
   String number = '7485499624';
-
   String maskNumber(number) {
     if (number.length < 2) {
       return number;
@@ -29,12 +29,29 @@ class _WinnerScreenState extends State<WinnerScreen> {
     String maskedPart = 'x' * (number.length - 4);
     return '$firstPart$maskedPart$lastPart';
   }
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      final profile = Provider.of<ProfileViewModel>(context,listen: false).profileResponse;
+      final ludoProvider = Provider.of<LudoProvider>(context,listen: false);
+      ludoProvider.setMyData(profile);
+      ludoProvider.setMyPosition(profile);
+      final sendResultViewModel=Provider.of<SendResultViewModel>(context,listen: false);
+      sendResultViewModel.sendResultApi(ludoProvider.tournamentId.toString(), ludoProvider.myPosition.toString(), ludoProvider.myData['score'].toString(), context);
+
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {
     String argument = ModalRoute.of(context)!.settings.arguments.toString();
     final ludoProvider = Provider.of<LudoProvider>(context);
     final profile = Provider.of<ProfileViewModel>(context).profileResponse;
+
+    // sendResultViewModel.sendResultApi("1", myPosition, matchingPlayer['score'], context);
+    print("${ludoProvider.playerDataList .toString()}");
     return Scaffold(
       body: Container(
         height: height,
@@ -134,9 +151,9 @@ class _WinnerScreenState extends State<WinnerScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: height * 0.005,
-                          ),
+                          // SizedBox(
+                          //   height: height * 0.005,
+                          // ),
                           Consumer<LudoProvider>(
                             builder: (context, ludoProvider, child) {
                               return ListView.builder(
@@ -146,86 +163,90 @@ class _WinnerScreenState extends State<WinnerScreen> {
                                 itemBuilder: (context, index) {
                                   var player =
                                       ludoProvider.playerDataList[index];
-                                  return Container(
-                                    padding: const EdgeInsets.all(3),
-                                    height: height * 0.055,
-                                    width: width * 0.8,
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: white, width: 1),
-                                        color: blue,
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: Row(
-                                      children: [
-                                        Stack(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 25.0, top: 9),
-                                              child: Container(
-                                                  alignment: Alignment.center,
-                                                  width: width * 0.12,
-                                                  height: height * 0.025,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                          // shape: BoxShape.circle,
-                                                          image: DecorationImage(
-                                                              image: AssetImage(
-                                                                  Assets
-                                                                      .imagesFirsrt),
-                                                              fit:
-                                                                  BoxFit.fill)),
-                                                  child: Text(
-                                                      "${index + 1}${index == 0 ? 'st' : 'nd'}",
-                                                      style: const TextStyle(
-                                                          color: cream,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 13))),
-                                            ),
-                                            Container(
-                                                decoration: const BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    image: DecorationImage(
-                                                        image: AssetImage(Assets
-                                                            .ludoProfileSection))),
-                                                child: Image.asset(
-                                                  Assets.ludoUser,
-                                                )),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          width: width * 0.03,
-                                        ),
-                                        Text(
-                                            "+91${maskNumber(player['name']['number'])}",
-                                            style: const TextStyle(
-                                                color: white,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 13)),
-                                        SizedBox(
-                                          width: width * 0.04,
-                                        ),
-                                        Text(player['score'].toString(),
-                                            style: const TextStyle(
-                                                color: white,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16)),
-                                        SizedBox(
-                                          width: width * 0.1,
-                                        ),
-                                         Text("₹$argument",
-                                            style: const TextStyle(
-                                                color: white,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16)),
-                                      ],
+                                  return Center(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(3),
+                                      margin: EdgeInsets.only(bottom: 4),
+                                      height: height * 0.055,
+                                      width: width * 0.78,
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: white, width: 1),
+                                          color: blue,
+                                          borderRadius: BorderRadius.circular(8)),
+                                      child: Row(
+                                        children: [
+                                          Stack(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 25.0, top: 9),
+                                                child: Container(
+                                                    alignment: Alignment.center,
+                                                    width: width * 0.12,
+                                                    height: height * 0.025,
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                            // shape: BoxShape.circle,
+                                                            image: DecorationImage(
+                                                                image: AssetImage(
+                                                                    Assets
+                                                                        .imagesFirsrt),
+                                                                fit:
+                                                                    BoxFit.fill)),
+                                                    child: Text(
+                                                        "${index + 1}${index == 0 ? 'st' : 'nd'}",
+                                                        style: const TextStyle(
+                                                            color: cream,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 13))),
+                                              ),
+                                              Container(
+                                                  decoration: const BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      image: DecorationImage(
+                                                          image: AssetImage(Assets
+                                                              .ludoProfileSection))),
+                                                  child: Image.asset(
+                                                    Assets.ludoUser,
+                                                  )),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: width * 0.03,
+                                          ),
+                                          Text(
+                                              "+91${maskNumber(player['name']['number'])}",
+                                              style: const TextStyle(
+                                                  color: white,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 13)),
+                                          SizedBox(
+                                            width: width * 0.04,
+                                          ),
+                                          Text(player['score'].toString(),
+                                              style: const TextStyle(
+                                                  color: white,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16)),
+                                          SizedBox(
+                                            width: width * 0.1,
+                                          ),
+                                           Text("₹$argument",
+                                              style: const TextStyle(
+                                                  color: white,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16)),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
                               );
                             },
                           ),
+
                         ],
                       ),
                     ),
@@ -260,8 +281,10 @@ class _WinnerScreenState extends State<WinnerScreen> {
             SizedBox(
               height: height * 0.01,
             ),
-            Text(ludoProvider.firstPlace?.name['id'] ?? ""),
-            // Text(ludoProvider.playerDataList[0]['name'] ?? ""),
+            // Text(ludoProvider.firstPlace?.name['id'] ?? ""),
+            // // Text(ludoProvider.playerDataList .toString()?? ""),
+            // Text(ludoProvider.myData['score'].toString()),
+            // Text(ludoProvider.myPosition.toString()),
             Container(
                 padding: const EdgeInsets.all(4),
                 height: height * 0.055,

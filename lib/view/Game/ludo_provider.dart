@@ -20,7 +20,7 @@ class LudoProvider with ChangeNotifier {
 
   String _prizePool="0";
   String get prizePool=> _prizePool;
-  int _fieldKey = 0;
+  int _fieldKey = 1;
   int get fieldKey => _fieldKey;
   setFieldKey(int value) {
     if(value==0){
@@ -35,7 +35,7 @@ class LudoProvider with ChangeNotifier {
   LudoPlayerType _currentTurn = LudoPlayerType.blue;
   DocumentReference<Map<String, dynamic>>? gameDoc;
 
-  int _currentDiceIndex =0;
+  int _currentDiceIndex =-1;
   int get currentDiceIndex => _currentDiceIndex;
 
   void setCurrentDiceIndex(int val){
@@ -65,16 +65,13 @@ void setPrizePool(String value){
   PlayerData? thirdPlace;
   PlayerData? fourthPlace;
 
-  // Other existing properties and methods
 void setPlayerQuantity(int value){
   _playerQuantity=value;
   notifyListeners();
 }
   void setTopFourPlayers(List<PlayerData> playerDataList) async {
-    // Sort the player data by score in descending order
     playerDataList.sort((a, b) => int.parse(b.score).compareTo(int.parse(a.score)));
 
-    // Set the top four players
     firstPlace = playerDataList.isNotEmpty ? playerDataList[0] : null;
     secondPlace = playerDataList.length > 1 ? playerDataList[1] : null;
     thirdPlace = playerDataList.length > 2 ? playerDataList[2] : null;
@@ -82,7 +79,6 @@ void setPlayerQuantity(int value){
 
     notifyListeners();
   }
-  // Setter method to set player data from JSON
   void setPlayerDataFromJson(dynamic jsonData) {
     _playerDataList=List.from(jsonData);
       notifyListeners();
@@ -95,11 +91,9 @@ void setPlayerQuantity(int value){
     gameDoc!.snapshots().listen((snapshot) {
       if (snapshot.exists) {
         var data = snapshot.data();
-        print("Listening for updates: $data");
         if (data != null) {
           _diceResult = data['diceResult'] ?? 1;
           _currentTurn = LudoPlayerType.values[data['currentTurn'] ?? 0];
-          // setCurrentDiceIndex(data['currentTurn']??0);
           _currentDiceIndex= data['currentTurn']??0;
           _gameState = LudoGameState.values[data['gameState'] ?? 0];
           var playersData = data['players'];
@@ -160,14 +154,10 @@ setMyPosition(profile){
     gameDoc!.update({
       'diceResult': _diceResult,
       'currentTurn': _currentTurn.index,
-      'currentDiceIndex':_currentDiceIndex,
       'gameState': LudoGameState.pickPawn.index,
     });
     listenToGameUpdates(context);
 
-    if (kDebugMode) {
-      print("Firehaimai$firebaseViewModel");
-    }
 
     _diceResult = Random().nextInt(6) + 1;
 
@@ -215,12 +205,10 @@ setMyPosition(profile){
     if (_isMoving) return;
     _isMoving = true;
     _stopDice=false;
-    // notifyListeners();
     _gameState = LudoGameState.moving;
     LudoPlayer currentPlayer = player(type);
     currentPlayer.highlightAllPawns(false);
     for (int i = currentPlayer.pawns[index].step; i <= step; i++) {
-      print("i= $i || index = $index");
       currentPlayer.movePawn(index, i);
 
       gameDoc?.update({
@@ -300,8 +288,6 @@ setMyPosition(profile){
   }
 
   void resetPawns(context, firebaseViewModel) async {
-   print(" firebaseViewModel$firebaseViewModel");
-
      for (var player in players) {
        for (var i = 0; i < player.pawns.length; i++) {
          player.pawns[i].step = 0; // Reset to the initial position
@@ -312,8 +298,8 @@ setMyPosition(profile){
            '${player.type
                .toString()
                .split('.')
-               .last}PawnPosition$i': 0, 'currentTurn': _currentTurn.index,
-           'currentDiceIndex':_currentDiceIndex,
+               .last}PawnPosition$i': 0,
+           'currentTurn': _currentTurn.index,
          });
        }
      }
@@ -327,20 +313,6 @@ setMyPosition(profile){
       return;
     }
 
-  // switch (_currentTurn) {
-  //   case LudoPlayerType.blue:
-  //     _currentTurn = LudoPlayerType.red;
-  //     break;
-  //   case LudoPlayerType.red:
-  //     _currentTurn = LudoPlayerType.green;
-  //     break;
-  //   case LudoPlayerType.green:
-  //     _currentTurn = LudoPlayerType.yellow;
-  //     break;
-  //   case LudoPlayerType.yellow:
-  //     _currentTurn = LudoPlayerType.blue;
-  //     break;
-  // }
     if(playerQuantity!=2) {
       switch (_currentTurn) {
         case LudoPlayerType.blue:
@@ -383,9 +355,26 @@ setMyPosition(profile){
 
     notifyListeners();
   }
+   removePlayerData(context) async {
+    final documentID = Provider.of<FirebaseViewModel>(context, listen: false).table.toString();
+    final ludoProvider = Provider.of<LudoProvider>(context, listen: false);
+    CollectionReference ludoCollection = FirebaseFirestore.instance.collection('ludo');
+
+    // Get the field key for the current player
+    int fieldKey = ludoProvider.fieldKey+1;  // This should contain the key for the player position
+
+    // Update Firestore to remove the current player's data
+    await ludoCollection.doc(documentID).update({
+      fieldKey.toString(): ''  // Clear the player's data from the document
+    });
+
+    // Optionally, reset the provider or any local state related to the player
+    // ludoProvider.resetPlayerData();
+  }
 
   @override
   void dispose() {
     super.dispose();
   }
+
 }

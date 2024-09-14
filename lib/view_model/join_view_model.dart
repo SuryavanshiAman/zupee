@@ -19,15 +19,7 @@ class JoinViewModel with ChangeNotifier {
   bool _loading = false;
   int documentId = 1;
   bool get loading => _loading;
-  int _fieldKey = 0;
-  int get fieldKey => _fieldKey;
-  setFieldKey(int value) {
-    if(value==0){
-      _fieldKey = value;
-    }else{
-    _fieldKey = value-1;}
-    notifyListeners();
-  }
+
 
   setLoading(bool value) {
     _loading = value;

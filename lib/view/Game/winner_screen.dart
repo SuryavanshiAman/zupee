@@ -49,9 +49,6 @@ class _WinnerScreenState extends State<WinnerScreen> {
     String argument = ModalRoute.of(context)!.settings.arguments.toString();
     final ludoProvider = Provider.of<LudoProvider>(context);
     final profile = Provider.of<ProfileViewModel>(context).profileResponse;
-
-    // sendResultViewModel.sendResultApi("1", myPosition, matchingPlayer['score'], context);
-    print("${ludoProvider.playerDataList .toString()}");
     return Scaffold(
       body: Container(
         height: height,

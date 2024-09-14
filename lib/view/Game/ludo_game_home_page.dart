@@ -29,15 +29,15 @@ class LudoHomeScreen extends StatefulWidget {
 class _LudoHomeScreenState extends State<LudoHomeScreen> {
 
   TimerProvider timerProvider = TimerProvider();
-  //
+  LudoProvider ludoProvider=LudoProvider();
   @override
   void initState() {
     super.initState();
-    // Provider.of<LudoProvider>(context,listen: false). listenToGameUpdates(context);
+    Provider.of<LudoProvider>(context,listen: false). listenToGameUpdates(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       imageToast();
       String argument = ModalRoute.of(context)!.settings.arguments.toString();
-      timerProvider.setAmount(widget.amount.toString());
+      timerProvider.setAmount(argument);
     });
 
 
@@ -57,11 +57,17 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   }
 
   Future<bool> _onWillPop() async {
-    return await Utils.exitGame(context) ?? false;
+    return await Utils.exitGame(context,timerProvider,ludoProvider) ?? false;
   }
+  @override
+  void dispose() {
 
+    super.dispose();
+  }
+bool timerAndTost=false;
   @override
   Widget build(BuildContext context) {
+
     final documentID = Provider.of<FirebaseViewModel>(context);
     final docId = documentID.table.toString();
     CollectionReference ludoCollection =
@@ -73,7 +79,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
       },
       child: SafeArea(
         child: Scaffold(
-            body: StreamBuilder(
+            body: StreamBuilder<DocumentSnapshot>(
               stream: ludoCollection.doc(docId).snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData || !snapshot.data!.exists) {
@@ -107,10 +113,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
         (data['4'] != null && data['4'].isNotEmpty)
             ? json.decode(data['4'])
             : {};
-    // Map<String, dynamic> player1Data = data['1'].isNotEmpty ? json.decode(data['1']) : {};
-    // Map<String, dynamic> player2Data = data['2'].isNotEmpty ? json.decode(data['2']) : {};
-    // Map<String, dynamic> player3Data = data['3'].isNotEmpty ? json.decode(data['3']) : {};
-    // Map<String, dynamic> player4Data = data['4'].isNotEmpty ? json.decode(data['4']) : {};
+
     final List<Map<String, dynamic>> playerData = [
       player1Data,
       player2Data,
@@ -152,7 +155,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                         ),
                       ),
                       Text(
-                        "₹${widget.amount.toString()}",
+                        "₹${timerProvider.amount.toString()}",
                         style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,

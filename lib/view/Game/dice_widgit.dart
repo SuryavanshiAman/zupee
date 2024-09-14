@@ -22,7 +22,7 @@ class DiceWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ludoProvider = context.watch<LudoProvider>();
-    final join = Provider.of<JoinViewModel>(context).fieldKey;
+    // final join = Provider.of<>(context).fieldKey;
     return RippleAnimation(
       color: ludoProvider.gameState == LudoGameState.throwDice
           ? ludoProvider.currentPlayer.color
@@ -32,9 +32,9 @@ class DiceWidget extends StatelessWidget {
       repeat: true,
       child: InkWell(
         onTap: () {
-          print("AmanJoin${join}");
+          print("AmanJoin${ludoProvider.fieldKey}");
           print("AmanludoProvider${ludoProvider.currentDiceIndex}");
-          if (join == ludoProvider.currentDiceIndex) { /// original
+          if (ludoProvider.fieldKey == ludoProvider.currentDiceIndex) { /// original
           // if (join != ludoProvider.currentDiceIndex) {
             if (!ludoProvider.diceStarted && !ludoProvider.stopDice) {
               ludoProvider.throwDice(context);

@@ -87,8 +87,8 @@ class Routers {
         return (context) =>   const LossManagementScreen();
       case RoutesName.timerScreen:
         return (context) =>   const TimerScreen();
-      // case RoutesName.ludoHomeScreen:
-      //   return (context) =>   const LudoHomeScreen();
+      case RoutesName.ludoHomeScreen:
+        return (context) =>   const LudoHomeScreen();
       case RoutesName.leaderboardScreen:
         return (context) =>   const LeaderboardScreen();
       case RoutesName.userProfileScreen:

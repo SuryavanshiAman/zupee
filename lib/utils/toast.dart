@@ -7,6 +7,8 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:another_flushbar/flushbar_route.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view/Game/ludo_provider.dart';
+import 'package:zupee/view_model/timer_view_model.dart';
 
 import '../res/app_colors.dart';
 
@@ -179,7 +181,8 @@ class Utils {
         ) ??
         false;
   }
-  static exitGame(BuildContext context) async {
+  // TimerProvider timerProvider = TimerProvider();
+  static exitGame(BuildContext context, TimerProvider timerProvider,LudoProvider ludoProvider) async {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return await showModalBottomSheet(
@@ -236,6 +239,8 @@ class Utils {
                             onTap: () {
                               Navigator.pushNamed(context, RoutesName.bottomNevBar,
                                       arguments: {"index": 0});
+                              timerProvider.stopTimer();
+                               ludoProvider.removePlayerData(context);
                             },
                             alignment: Alignment.center,
                             height: height * 0.07,

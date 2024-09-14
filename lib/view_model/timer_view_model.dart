@@ -61,6 +61,7 @@ class TimerProvider with ChangeNotifier {
   }
 
   void stopTimer() {
+    print("😂😂😂😂😂😂");
     _timer?.cancel();
     _isTimerRunning = false;
     notifyListeners();

@@ -1205,12 +1205,29 @@ class LudoSupremeState extends State<LudoSupreme> {
                       setState(() {
                         nextPage = false;
                         time = true;
+                        // Navigator.pop(context);
+                      });
+                      WidgetsBinding.instance.addPostFrameCallback((_){
+                        showModalBottomSheet(
+                          elevation: 5,
+                          backgroundColor: primary,
+                          shape: const RoundedRectangleBorder(
+                              side: BorderSide(width: 2, color: Colors.white),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(35),
+                                  topRight: Radius.circular(35))),
+                          context: context,
+                          builder: (context) {
+                            return TournamentBottomsheet(futureTime: futureTime);
+                          },
+                        );
                       });
                       FirebaseFirestore fireStore = FirebaseFirestore.instance;
                       CollectionReference ludoCollection = fireStore.collection('ludo');
                       bool isAdded = false;
-                      final playerColors =  ludoProvider.players;
-                      final twoPlayer =(ludoProvider.playerQuantity==2);
+                      final playerColors = ludoProvider.players;
+                      final twoPlayer = (ludoProvider.playerQuantity == 2);
+
                       while (!isAdded) {
                         DocumentSnapshot documentSnapshot = await ludoCollection.doc(documentId.toString()).get();
 
@@ -1240,21 +1257,37 @@ class LudoSupremeState extends State<LudoSupreme> {
                           print("Document $documentId exists, checking for available spaces");
                           Map<String, dynamic>? existingData = documentSnapshot.data() as Map<String, dynamic>?;
 
-                          if (ludoProvider.playerQuantity==2) {
-                            // Logic for two players: Check positions 1 and 3 only
-                            for (int i = 1; i <= 3; i += 2) {  // Check position 1 and 3
-                              String fieldKey = i.toString();
-                              if (existingData != null && (existingData[fieldKey] == '' || existingData[fieldKey] == null)) {
-                                print("Empty spot found at $fieldKey, updating...");
-                                await ludoCollection.doc(documentId.toString()).update({
-                                  fieldKey:
-                                  '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i == 1 ? 0 : 2].type}"}'
-                                });
-                                ludoProvider.setFieldKey(i);
-                                isAdded = true;
-                                break;
-                              }
+                          bool spaceAvailable = false;
+
+                          if (twoPlayer) {
+                            // Check if both positions 1 and 3 are already filled
+                            bool slot1Filled = existingData != null && existingData["1"] != '' && existingData["1"] != null;
+                            bool slot3Filled = existingData != null && existingData["3"] != '' && existingData["3"] != null;
+
+                            if (slot1Filled && slot3Filled) {
+                              // If both slots are filled, move to the next document (create new table)
+                              print("Both positions in 2-player table are filled, creating new table...");
+                              documentId += 1;
+                              continue;  // Go back to the top of the while loop to check/create the next table
                             }
+
+                            // If there is a space, add the player to the available slot
+                            if (!slot1Filled) {
+                              print("Empty spot found at position 1, updating...");
+                              await ludoCollection.doc(documentId.toString()).update({
+                                "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}'
+                              });
+                              ludoProvider.setFieldKey(1);
+                              isAdded = true;
+                            } else if (!slot3Filled) {
+                              print("Empty spot found at position 3, updating...");
+                              await ludoCollection.doc(documentId.toString()).update({
+                                "3": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[2].type}"}'
+                              });
+                              ludoProvider.setFieldKey(3);
+                              isAdded = true;
+                            }
+
                           } else {
                             // Logic for more than 2 players: Check all positions (1-4)
                             for (int i = 1; i <= 4; i++) {
@@ -1262,43 +1295,111 @@ class LudoSupremeState extends State<LudoSupreme> {
                               if (existingData != null && (existingData[fieldKey] == '' || existingData[fieldKey] == null)) {
                                 print("Empty spot found at $fieldKey, updating...");
                                 await ludoCollection.doc(documentId.toString()).update({
-                                  fieldKey:
-                                  '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i - 1].type}"}'
+                                  fieldKey: '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i - 1].type}"}'
                                 });
-                                ludoProvider. setFieldKey(i);
+                                ludoProvider.setFieldKey(i);
                                 isAdded = true;
                                 break;
                               }
                             }
                           }
 
-                          // If no available space, increment document ID and try again
                           if (!isAdded) {
+                            // No available space found, increment document ID and try again
                             documentId += 1;
                           }
                         }
                       }
+
                       if (isAdded) {
                         firebaseViewModel.setTable(documentId);
-                        join.joinApi(tournamentID.toString(), documentId.toString(),prizePool,context).then((_){
+                        join.joinApi(tournamentID.toString(), documentId.toString(), prizePool, context).then((_) {
                           ludoProvider.resetPawns(context, documentId);
                         });
                       }
-                      WidgetsBinding.instance.addPostFrameCallback((_){
-                        showModalBottomSheet(
-                          elevation: 5,
-                          backgroundColor: primary,
-                          shape: const RoundedRectangleBorder(
-                              side: BorderSide(width: 2, color: Colors.white),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(35),
-                                  topRight: Radius.circular(35))),
-                          context: context,
-                          builder: (context) {
-                            return TournamentBottomsheet(futureTime: futureTime);
-                          },
-                        );
-                      });
+
+                      // FirebaseFirestore fireStore = FirebaseFirestore.instance;
+                      // CollectionReference ludoCollection = fireStore.collection('ludo');
+                      // bool isAdded = false;
+                      // final playerColors =  ludoProvider.players;
+                      // final twoPlayer =(ludoProvider.playerQuantity==2);
+                      // while (!isAdded) {
+                      //   DocumentSnapshot documentSnapshot = await ludoCollection.doc(documentId.toString()).get();
+                      //
+                      //   if (!documentSnapshot.exists) {
+                      //     // If the document does not exist, create a new document
+                      //     print("Creating new document with ID $documentId");
+                      //
+                      //     // Create JSON data based on player quantity
+                      //     Map<String, dynamic> jsonData = twoPlayer
+                      //         ? {
+                      //       "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}',
+                      //       "3": ''  // Leave 2nd position empty, use 3rd position
+                      //     }
+                      //         : {
+                      //       "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}',
+                      //       "2": '',
+                      //       "3": '',
+                      //       "4": ''
+                      //     };
+                      //
+                      //     await ludoCollection.doc(documentId.toString()).set(jsonData);
+                      //     ludoProvider.setFieldKey(1);  // Set fieldKey for first position
+                      //     isAdded = true;
+                      //
+                      //   } else {
+                      //     // Document exists, check for available spaces
+                      //     print("Document $documentId exists, checking for available spaces");
+                      //     Map<String, dynamic>? existingData = documentSnapshot.data() as Map<String, dynamic>?;
+                      //     bool spaceAvailable = false;
+                      //     if (ludoProvider.playerQuantity==2) {
+                      //       // Logic for two players: Check positions 1 and 3 only
+                      //       for (int i = 1; i <= 3; i += 2) {  // Check position 1 and 3
+                      //         String fieldKey = i.toString();
+                      //         if (existingData != null && (existingData[fieldKey] == '' || existingData[fieldKey] == null)) {
+                      //           print("Empty spot found at $fieldKey, updating...");
+                      //           await ludoCollection.doc(documentId.toString()).update({
+                      //             fieldKey:
+                      //             '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i == 1 ? 0 : 2].type}"}'
+                      //           });
+                      //           ludoProvider.setFieldKey(i);
+                      //           isAdded = true;
+                      //           spaceAvailable = true;
+                      //           break;
+                      //         }
+                      //       }
+                      //     } else {
+                      //       // Logic for more than 2 players: Check all positions (1-4)
+                      //       for (int i = 1; i <= 4; i++) {
+                      //         String fieldKey = i.toString();
+                      //         if (existingData != null && (existingData[fieldKey] == '' || existingData[fieldKey] == null)) {
+                      //           print("Empty spot found at $fieldKey, updating...");
+                      //           await ludoCollection.doc(documentId.toString()).update({
+                      //             fieldKey:
+                      //             '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i - 1].type}"}'
+                      //           });
+                      //           ludoProvider. setFieldKey(i);
+                      //           isAdded = true;
+                      //           spaceAvailable = true;
+                      //           break;
+                      //         }
+                      //       }
+                      //     }
+                      //
+                      //     // If no available space, increment document ID and try again
+                      //     if (!spaceAvailable) {
+                      //       documentId += 1;
+                      //
+                      //     }
+                      //   }
+                      // }
+                      // if (isAdded) {
+                      //   firebaseViewModel.setTable(documentId);
+                      //   join.joinApi(tournamentID.toString(), documentId.toString(),prizePool,context).then((_){
+                      //     ludoProvider.resetPawns(context, documentId);
+                      //   });
+                      // }
+
 
                     },
                     alignment: Alignment.center,

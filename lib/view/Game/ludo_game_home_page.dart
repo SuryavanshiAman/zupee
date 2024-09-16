@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,9 +11,7 @@ import 'package:zupee/view/Game/dice_widgit.dart';
 import 'package:zupee/view/Game/ludo_constant.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 import 'package:zupee/view_model/timer_view_model.dart';
-
 import '../../res/app_colors.dart';
-import '../../utils/routes_name.dart';
 import 'board_widgit.dart';
 import 'ludo_provider.dart';
 
@@ -27,22 +24,24 @@ class LudoHomeScreen extends StatefulWidget {
 }
 
 class _LudoHomeScreenState extends State<LudoHomeScreen> {
-
   TimerProvider timerProvider = TimerProvider();
-  LudoProvider ludoProvider=LudoProvider();
+  LudoProvider ludoProvider = LudoProvider();
+  bool showContainer=false;
   @override
   void initState() {
     super.initState();
-    Provider.of<LudoProvider>(context,listen: false). listenToGameUpdates(context);
+    Provider.of<LudoProvider>(context, listen: false)
+        .listenToGameUpdates(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       imageToast();
       String argument = ModalRoute.of(context)!.settings.arguments.toString();
       timerProvider.setAmount(argument);
     });
-
-
     Future.delayed(const Duration(seconds: 5), () {
       timerProvider.startTimer(context);
+      setState(() {
+        showContainer = true;
+      });
     });
   }
 
@@ -57,17 +56,17 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   }
 
   Future<bool> _onWillPop() async {
-    return await Utils.exitGame(context,timerProvider,ludoProvider) ?? false;
+    return await Utils.exitGame(context, timerProvider, ludoProvider) ?? false;
   }
+
   @override
   void dispose() {
-
     super.dispose();
   }
-bool timerAndTost=false;
+
+  bool timerAndTost = false;
   @override
   Widget build(BuildContext context) {
-
     final documentID = Provider.of<FirebaseViewModel>(context);
     final docId = documentID.table.toString();
     CollectionReference ludoCollection =
@@ -80,22 +79,29 @@ bool timerAndTost=false;
       child: SafeArea(
         child: Scaffold(
             body: StreamBuilder<DocumentSnapshot>(
-              stream: ludoCollection.doc(docId).snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData || !snapshot.data!.exists) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                Map<String, dynamic> data =
-                    snapshot.data!.data() as Map<String, dynamic>;
-                return _buildDynamicContent(context, data);
-              },
-            )),
+          stream: ludoCollection.doc(docId).snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+            return Stack(
+                children: [_buildDynamicContent(context, data),
+                  if (!showContainer)
+                    Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.black.withOpacity(0.5),  // Use proper opacity
+                    ),
+                ]);
+          },
+        )),
       ),
     );
   }
 
   Widget _buildDynamicContent(BuildContext context, Map<String, dynamic> data) {
-    String argument = ModalRoute.of(context)!.settings.arguments.toString();
     final ludoProvider = Provider.of<LudoProvider>(context);
     Map<String, dynamic> player1Data =
         (data['1'] != null && data['1'].isNotEmpty)

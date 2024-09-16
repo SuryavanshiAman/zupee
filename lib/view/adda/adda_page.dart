@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:zupee/helper/response/status.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_rich_text.dart';
+import 'package:zupee/view_model/adda_player_list_view_model.dart';
 
 import '../../res/custom_back_button.dart';
 import '../../utils/routes_name.dart';
@@ -15,27 +18,24 @@ class AddaScreen extends StatefulWidget {
 }
 
 class _AddaScreenState extends State<AddaScreen> {
-  final List<Map<String, String>> topScorers = [
-    {
-      'name': 'Yogesh lodhi',
-      'subtitle': 'Mahasangram Winners\nLudo Supreme',
-      'imageUrl': 'https://placekitten.com/200/200',
-    },
-    {
-      'name': 'ANSH PRATAP Singh',
-      'subtitle': 'Purane Khiladi',
-      'imageUrl': 'https://placekitten.com/200/200',
-    },
-    // Add more scorers as needed
-  ];
+  // PlayerRankViewModel playerRankViewModel = PlayerRankViewModel();
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<PlayerRankViewModel>(context, listen: false)
+          .tournamentApi(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appBarColor,
-      appBar:AppBar(
+      appBar: AppBar(
         backgroundColor: appBarColor,
         leadingWidth: 220,
-        leading:  Row(
+        leading: Row(
           children: [
             // CustomBackButton(),
             GestureDetector(
@@ -44,16 +44,17 @@ class _AddaScreenState extends State<AddaScreen> {
                     arguments: {"index": 0});
               },
               child: const Icon(
-                Icons.keyboard_arrow_left_rounded,color: black,size: 30,
+                Icons.keyboard_arrow_left_rounded,
+                color: black,
+                size: 30,
               ),
             ),
-             Text(
+            Text(
               "Adda".tr,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ],
         ),
-
       ),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
@@ -61,29 +62,22 @@ class _AddaScreenState extends State<AddaScreen> {
           shrinkWrap: false,
           children: [
             const SizedBox(height: 16),
-             Text(
+            Text(
               "Top Players(Past 7 days)".tr,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             CustomRichText(textSpans: [
               CustomTextSpan(
                   text: "LAST UPDATE:".tr,
-                fontSize: 10,
-                textColor: labelColor,
-                fontWeight: FontWeight.w500
-              ),
+                  fontSize: 10,
+                  textColor: labelColor,
+                  fontWeight: FontWeight.w500),
               CustomTextSpan(
                   text: "TODAY,12:00 AM".tr,
                   fontSize: 10,
                   textColor: labelColor,
-                  fontWeight: FontWeight.w500
-              ),
+                  fontWeight: FontWeight.w500),
             ]),
-            // const Text(
-            //   "LAST UPDATE TODAY,12:00 AM",
-            //   style: TextStyle(
-            //       fontSize: 10, color: labelColor, fontWeight: FontWeight.w500),
-            // ),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
@@ -99,8 +93,8 @@ class _AddaScreenState extends State<AddaScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: height*0.02),
-                         Row(
+                        SizedBox(height: height * 0.02),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const CircleAvatar(
@@ -110,10 +104,11 @@ class _AddaScreenState extends State<AddaScreen> {
                             // Icon(Icons.ac_unit),
                             const Spacer(),
                             InkWell(
-                              onTap:(){
-                                Navigator.pushNamed(context, RoutesName.leaderboardScreen);
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, RoutesName.leaderboardScreen);
                               },
-                              child:  Text(
+                              child: Text(
                                 'VIEW ALL'.tr,
                                 style: const TextStyle(
                                     fontSize: 12,
@@ -139,40 +134,75 @@ class _AddaScreenState extends State<AddaScreen> {
                               fontWeight: FontWeight.bold,
                               color: labelColor),
                         ),
-                         SizedBox(height: height*0.02),
+                        SizedBox(height: height * 0.02),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(children: [
                             SizedBox(
                               // width: width,
                               height: height * 0.14,
-                              child:addaList(),
+                              child: addaList(),
                             )
                           ]),
                         ),
-                        SizedBox(height: height*0.03,),
-                        const Divider()                      ],
+                        SizedBox(
+                          height: height * 0.03,
+                        ),
+                        const Divider()
+                      ],
                     );
                   }),
             ),
-            SizedBox(height: height*0.03,),
-             Text("Top players for you to follow".tr,style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: black),),
-            SizedBox(height: height*0.03,),
             SizedBox(
-              height: height*0.24,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: topScorers.length,
-                itemBuilder: (context, index) {
-                  final scorer = topScorers[index];
-                  return buildTopScorerCard(
-                    scorer['name']!,
-                    scorer['subtitle']!,
-                    scorer['imageUrl']!,
-                  );
+              height: height * 0.03,
+            ),
+            Text(
+              "Top players for you to follow".tr,
+              style: const TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold, color: black),
+            ),
+            SizedBox(
+              height: height * 0.03,
+            ),
+            SizedBox(
+              height: height * 0.24,
+              child: Consumer<PlayerRankViewModel>(
+                builder: (context, playerRankData, _) {
+                  switch (playerRankData.playerRankList.status) {
+                    case Status.LOADING:
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    case Status.ERROR:
+                      return Container();
+                    case Status.COMPLETED:
+                      final playerRank =
+                          playerRankData.playerRankList.data!.data;
+                      if (playerRank != null && playerRank.isNotEmpty) {
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: playerRank.length,
+                          itemBuilder: (context, index) {
+                            final playerRankData = playerRank[index];
+                            return buildTopScorerCard(
+                              playerRankData.username.toString(),
+                              playerRankData.profilePicture.toString(),
+                              index,
+
+                            );
+                          },
+                        );
+                      } else {
+                        return const Center(
+                          child: Text(
+                            "No Player History Found!",
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                        );
+                      }
+                    default:
+                      return Container();
+                  }
                 },
               ),
             ),
@@ -182,41 +212,73 @@ class _AddaScreenState extends State<AddaScreen> {
     );
   }
 
-  Widget addaList() {
-    return ListView.builder(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: 6,
-        itemBuilder: (context, index) {
-          return  SizedBox(
-            width: 100,
 
-            // margin: EdgeInsets.only(right: 16.0),
-            child: Column(
-              children: [
-                InkWell(
-                  onTap:(){
-                    Navigator.pushNamed(context, RoutesName.userProfileScreen);
-                  },
-                  child: const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/images/zupee.png'),
-                  ),
+
+
+  Widget addaList() {
+    return Consumer<PlayerRankViewModel>(
+      builder: (context, playerRankData, _) {
+        switch (playerRankData.playerRankList.status) {
+          case Status.LOADING:
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          case Status.ERROR:
+            return Container();
+          case Status.COMPLETED:
+            final playerRank = playerRankData.playerRankList.data!.data;
+            if (playerRank != null && playerRank.isNotEmpty) {
+              return ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: playerRank.length,
+                  itemBuilder: (context, index) {
+                    return SizedBox(
+                      width: 100,
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, RoutesName.userProfileScreen);
+                            },
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundImage: NetworkImage(
+                                  playerRank[index].profilePicture.toString()),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'RANK #${playerRank[index].userRank}',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(playerRank[index].username.toString(),
+                              overflow: TextOverflow.ellipsis),
+                        ],
+                      ),
+                    );
+                  });
+            } else {
+              return const Center(
+                child: Text(
+                  "No Player History Found!",
+                  style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
-                const SizedBox(height: 8),
-                const Text(
-                  'RANK #1',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Text('Cash', overflow: TextOverflow.ellipsis),
-              ],
-            ),
-          );
-        });
+              );
+            }
+          default:
+            return Container();
+        }
+      },
+    );
   }
-  Widget buildTopScorerCard(String name, String subtitle, String imageUrl) {
+bool selectedIndex =false;
+  Set<int> followedIndices = {};
+  Widget buildTopScorerCard(String name, String imageUrl,index) {
+    bool isFollowed = followedIndices.contains(index);
     return Container(
-      width: width*0.4,
+      width: width * 0.4,
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -250,37 +312,40 @@ class _AddaScreenState extends State<AddaScreen> {
               ),
             ),
             const SizedBox(height: 4),
-            Text(
-              subtitle,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.black54,
+            const Spacer(),
+            const SizedBox(height: 8),
+            InkWell(
+              onTap: (){
+                setState(() {
+                  if (followedIndices.contains(index)) {
+                    followedIndices.remove(index); // Unfollow
+                  } else {
+                    followedIndices.add(index); // Follow
+                  }
+                });
+              },
+              child: Container(
+                alignment: Alignment.center,
+                height: height * 0.045,
+                width: width * 0.7,
+                decoration: BoxDecoration(
+                    color:isFollowed ? lightBlue:white,
+                    border: Border.all(color:isFollowed ?Colors.transparent: tertiary),
+                    borderRadius: const BorderRadius.all(Radius.circular(25))),
+                child:  Text(
+                  isFollowed ? "Following":'Follow',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: tertiary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 8),
-            Container(
-              alignment: Alignment.center,
-              height: height*0.045,
-              width: width*0.7,
-              decoration: BoxDecoration(
-                // color: secondary,
-                  border: Border.all(color: tertiary),
-                  borderRadius: const BorderRadius.all(Radius.circular(25))
-              ),
-              child:  const Text(
-                'Follow',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: tertiary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            )
           ],
         ),
       ),
     );
   }
-
 }

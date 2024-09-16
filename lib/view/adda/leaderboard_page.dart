@@ -1,11 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
+import 'package:zupee/helper/response/status.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/utils/routes_name.dart';
 
 import '../../res/app_colors.dart';
 import '../../res/custom_back_button.dart';
+import '../../view_model/adda_player_list_view_model.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});
@@ -17,48 +20,57 @@ class LeaderboardScreen extends StatefulWidget {
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
   final List<Map<String, String>> otherPlayers = [
     {
-      'rank':'4',
+      'rank': '4',
       'name': 'is it fair Game',
       'amount': '₹14.4L',
       'image': 'URL_TO_IMAGE',
     },
     {
-      'rank':'5',
+      'rank': '5',
       'name': 'rakesh Kumar kumawat',
       'amount': '₹12.2L',
       'image': 'URL_TO_IMAGE',
     },
     {
-      'rank':'6',
+      'rank': '6',
       'name': 'Tirtha Mondal You...',
       'amount': '₹11.5L',
       'image': 'URL_TO_IMAGE',
     },
     {
-      'rank':'7',
+      'rank': '7',
       'name': 'jitna hain',
       'amount': '₹8.12L',
       'image': 'URL_TO_IMAGE',
     },
     {
-      'rank':'8',
+      'rank': '8',
       'name': 'Akshaya Valvaiker',
       'amount': '₹6.82L',
       'image': 'URL_TO_IMAGE',
     },
     {
-      'rank':'9',
+      'rank': '9',
       'name': 'Jai shri ram',
       'amount': '₹6.49L',
       'image': 'URL_TO_IMAGE',
     },
     {
-      'rank':'10',
+      'rank': '10',
       'name': 'BholeNath baba',
       'amount': '₹5.49L',
       'image': 'URL_TO_IMAGE',
     },
   ];
+  PlayerRankViewModel playerRankViewModel = PlayerRankViewModel();
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<PlayerRankViewModel>(context, listen: false)
+          .tournamentApi(context);
+    });
+  }
 
   void _showPlayerDetails(int index) {
     showDialog(
@@ -76,8 +88,11 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
+    final playerRankViewModel = Provider.of<PlayerRankViewModel>(context);
+
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
@@ -114,17 +129,26 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   height: height * 0.03,
                 ),
                 Container(
-                  height: height*0.03,
-                  width: width*0.8,
+                  height: height * 0.03,
+                  width: width * 0.8,
                   decoration: const BoxDecoration(
-                    image: DecorationImage(image: AssetImage(Assets.imagesMaukebaaz),fit: BoxFit.fill)
-                  ),
+                      image: DecorationImage(
+                          image: AssetImage(Assets.imagesMaukebaaz),
+                          fit: BoxFit.fill)),
                   child: const Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("😎",style: TextStyle(color: tertiary,fontWeight: FontWeight.w600),),
-                      Text("Ludo Supreme League Maukebaaz",style: TextStyle(color: tertiary,fontWeight: FontWeight.w600),)
+                      Text(
+                        "😎",
+                        style: TextStyle(
+                            color: tertiary, fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        "Ludo Supreme League Maukebaaz",
+                        style: TextStyle(
+                            color: tertiary, fontWeight: FontWeight.w600),
+                      )
                     ],
                   ),
                 ),
@@ -143,15 +167,18 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                                   color: white,
                                   border:
                                       Border.all(color: tertiary, width: 2)),
-                              child: const Center(
+                              child: Center(
                                 child: CircleAvatar(
                                   radius: 33,
+                                  backgroundImage: NetworkImage(
+                                      playerRankViewModel.playerRankList.data
+                                              ?.data?[1].profilePicture ??
+                                          "0"),
                                 ),
                               ),
                             ),
                             const Padding(
-                              padding:
-                                  EdgeInsets.fromLTRB(26.0, 60, 0, 0),
+                              padding: EdgeInsets.fromLTRB(26.0, 60, 0, 0),
                               child: CircleAvatar(
                                 radius: 15,
                                 backgroundColor: white,
@@ -167,11 +194,16 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                             )
                           ],
                         ),
-                        const Text("Aman",
-                            style: TextStyle(
+                        Text(
+                            playerRankViewModel
+                                    .playerRankList.data?.data?[1].username ??
+                                "0",
+                            // "Aman",
+                            style: const TextStyle(
                                 color: tertiary, fontWeight: FontWeight.bold)),
-                        const Text("₹2,54,688",
-                            style: TextStyle(
+                        Text(
+                            "₹${playerRankViewModel.playerRankList.data?.data?[1].totalWinAmount ?? "0"}",
+                            style: const TextStyle(
                                 color: black, fontWeight: FontWeight.bold)),
                       ],
                     ),
@@ -187,14 +219,17 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                                   color: white,
                                   border:
                                       Border.all(color: tertiary, width: 2)),
-                              child: const Center(
+                              child: Center(
                                   child: CircleAvatar(
                                 radius: 47,
+                                backgroundImage: NetworkImage(
+                                    playerRankViewModel.playerRankList.data
+                                            ?.data?[0].profilePicture ??
+                                        "0"),
                               )),
                             ),
                             const Padding(
-                              padding:
-                                  EdgeInsets.fromLTRB(42.0, 90, 0, 0),
+                              padding: EdgeInsets.fromLTRB(42.0, 90, 0, 0),
                               child: CircleAvatar(
                                 radius: 17,
                                 backgroundColor: white,
@@ -210,61 +245,78 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                             )
                           ],
                         ),
-                        const Text("Aman",
-                            style: TextStyle(
+                        Text(
+                            playerRankViewModel
+                                    .playerRankList.data?.data?[0].username ??
+                                "0",
+                            style: const TextStyle(
                               color: tertiary,
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             )),
-                        const Text("₹2,54,688",
-                            style: TextStyle(
+                        Text(
+                            "₹${playerRankViewModel.playerRankList.data?.data?[0].totalWinAmount ?? "0"}",
+                            style: const TextStyle(
                                 color: black, fontWeight: FontWeight.bold)),
                       ],
                     ),
-                    Column(
-                      children: [
-                        Stack(
-                          children: [
-                            Container(
-                              height: height * 0.1,
-                              width: width * 0.21,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: white,
-                                  border:
-                                      Border.all(color: tertiary, width: 2)),
-                              child: const Center(
-                                child: CircleAvatar(
-                                  radius: 33,
+                    if (playerRankViewModel.playerRankList.data?.data != null &&
+                        playerRankViewModel.playerRankList.data!.data!.length >
+                            2)
+                      Column(
+                        children: [
+                          Stack(
+                            children: [
+                              Container(
+                                height: height * 0.1,
+                                width: width * 0.21,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: white,
+                                    border:
+                                        Border.all(color: tertiary, width: 2)),
+                                child: Center(
+                                  child: CircleAvatar(
+                                    radius: 33,
+                                    backgroundImage: NetworkImage(
+                                        playerRankViewModel.playerRankList.data
+                                                ?.data?[2].profilePicture ??
+                                            "0"),
+                                  ),
                                 ),
                               ),
-                            ),
-                            const Padding(
-                              padding:
-                                  EdgeInsets.fromLTRB(26.0, 60, 0, 0),
-                              child: CircleAvatar(
-                                radius: 15,
-                                backgroundColor: white,
+                              const Padding(
+                                padding: EdgeInsets.fromLTRB(26.0, 60, 0, 0),
                                 child: CircleAvatar(
-                                  radius: 14,
-                                  backgroundColor: tertiary,
-                                  child: Text("#3",
-                                      style: TextStyle(
-                                          color: secondary,
-                                          fontWeight: FontWeight.bold)),
+                                  radius: 15,
+                                  backgroundColor: white,
+                                  child: CircleAvatar(
+                                    radius: 14,
+                                    backgroundColor: tertiary,
+                                    child: Text("#3",
+                                        style: TextStyle(
+                                            color: secondary,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                        const Text("Aman",
-                            style: TextStyle(
-                                color: tertiary, fontWeight: FontWeight.bold)),
-                        const Text("₹2,54,688",
-                            style: TextStyle(
-                                color: black, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
+                              )
+                            ],
+                          ),
+                          Text(
+                              playerRankViewModel
+                                      .playerRankList.data?.data?[2].username ??
+                                  "0",
+                              style: const TextStyle(
+                                  color: tertiary,
+                                  fontWeight: FontWeight.bold)),
+                          Text(
+                              "₹${playerRankViewModel.playerRankList.data?.data?[2].totalWinAmount ?? "0"}",
+                              style: const TextStyle(
+                                  color: black, fontWeight: FontWeight.bold)),
+                        ],
+                      )
+                    else
+                      Container(),
                   ],
                 ),
               ],
@@ -288,9 +340,11 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SizedBox(width: width * 0.08),
-                const Text("RANK", style: TextStyle(color: labelColor, fontSize: 10)),
+                const Text("RANK",
+                    style: TextStyle(color: labelColor, fontSize: 10)),
                 SizedBox(width: width * 0.15),
-                const Text("NAME", style: TextStyle(color: labelColor, fontSize: 10)),
+                const Text("NAME",
+                    style: TextStyle(color: labelColor, fontSize: 10)),
                 SizedBox(width: width * 0.15),
                 const Text("AMUNT WON",
                     style: TextStyle(color: labelColor, fontSize: 10)),
@@ -299,61 +353,97 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: otherPlayers.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: (){
-                    _showPlayerDetails(index);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      // padding: EdgeInsets.all(8),
-                      height: height * 0.06,
-                      width: width,
-                      decoration: const BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.all(Radius.circular(15))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SizedBox(width: width*0.02),
-                          Text(
-                      otherPlayers[index]["rank"].toString(),
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(width: width*0.02),
-                          CircleAvatar(
-                            radius: 20,
-                            backgroundColor: secondary,
-                            child: Image.asset(Assets.iconAccount,scale: 8,),
-                          ),
-                          SizedBox(
-                            width: width * 0.24,
-                            // color: Colors.red,
-                            child: Text(
-                              otherPlayers[index]["name"].toString(),
-                              style: const TextStyle(fontWeight: FontWeight.w400,fontSize: 12,color: labelColor),
+            child: Consumer<PlayerRankViewModel>(
+              builder: (context, playerRankData, _) {
+                switch (playerRankData.playerRankList.status) {
+                  case Status.LOADING:
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case Status.ERROR:
+                    return Container();
+                  case Status.COMPLETED:
+                    final playerRank = playerRankData.playerRankList.data!.data;
+                    if (playerRank != null && playerRank.isNotEmpty) {
+                      return ListView.builder(
+                        itemCount: playerRank.length-3,
+                        itemBuilder: (context, index) {
+                          final actualIndex = index + 3;
+                          return InkWell(
+                            onTap: () {
+                              _showPlayerDetails(index);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                // padding: EdgeInsets.all(8),
+                                height: height * 0.06,
+                                width: width,
+                                decoration: const BoxDecoration(
+                                    color: white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15))),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(width: width * 0.02),
+                                    Text(
+                                      playerRank[actualIndex].userRank.toString(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    SizedBox(width: width * 0.02),
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: secondary,
+                                      backgroundImage: NetworkImage(playerRank[actualIndex].profilePicture.toString()),
+                                    ),
+                                    SizedBox(
+                                      width: width * 0.24,
+                                      // color: Colors.red,
+                                      child: Text(
+                                        playerRank[actualIndex].username.toString(),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 12,
+                                            color: labelColor),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: width * 0.24,
+                                      // color: Colors.red,
+                                      child: Text(
+                                        "₹${playerRank[actualIndex].totalWinAmount.toString()}"
+                                            .toString(),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                    const Text(
+                                      "FOLLOW",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: tertiary),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: width * 0.24,
-                            // color: Colors.red,
-                            child: Text(
-                              otherPlayers[index]["amount"].toString(),
-                              style: const TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          const Text(
-                            "FOLLOW",
-                            style: TextStyle(fontWeight: FontWeight.w600,color: tertiary),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                          );
+                        },
+                      );
+                    } else {
+                      return const Center(
+                        child: Text(
+                          "No Player History Found!",
+                          style: TextStyle(color: Colors.black, fontSize: 16),
+                        ),
+                      );
+                    }
+                  default:
+                    return Container();
+                }
               },
             ),
           )
@@ -362,6 +452,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     );
   }
 }
+
 class PlayerDetailsCarousel extends StatelessWidget {
   final int initialIndex;
   final List<Map<String, String>> players;
@@ -382,7 +473,7 @@ class PlayerDetailsCarousel extends StatelessWidget {
         enableInfiniteScroll: false,
         viewportFraction: 0.85,
         enlargeFactor: 0.3,
-        height: height*0.5,
+        height: height * 0.5,
       ),
       itemBuilder: (context, index, realIdx) {
         final player = players[index];
@@ -404,12 +495,13 @@ class PlayerDetailsCarousel extends StatelessWidget {
                     backgroundImage: NetworkImage(player['image'] ?? ''),
                     backgroundColor: Colors.grey[200],
                   ),
-                  SizedBox(height: height*0.03),
+                  SizedBox(height: height * 0.03),
                   Text(
                     player['name']!,
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: height*0.03),
+                  SizedBox(height: height * 0.03),
                   Container(
                     alignment: Alignment.center,
                     width: width,
@@ -419,7 +511,7 @@ class PlayerDetailsCarousel extends StatelessWidget {
                       style: const TextStyle(fontSize: 16, color: black),
                     ),
                   ),
-                  SizedBox(height: height*0.03),
+                  SizedBox(height: height * 0.03),
                   Padding(
                     padding: const EdgeInsets.only(left: 28.0),
                     child: Center(
@@ -430,11 +522,13 @@ class PlayerDetailsCarousel extends StatelessWidget {
                             children: [
                               Text(
                                 '${player['followers']} Followers',
-                                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.grey),
                               ),
                               Text(
                                 '${player['gamesPlayed']} Games Played',
-                                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.grey),
                               ),
                             ],
                           ),
@@ -450,11 +544,13 @@ class PlayerDetailsCarousel extends StatelessWidget {
                             children: [
                               Text(
                                 '${player['gamesWon']} Following',
-                                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.grey),
                               ),
                               Text(
                                 '${player['gamesWon']} Games Won',
-                                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.grey),
                               ),
                             ],
                           ),
@@ -462,7 +558,6 @@ class PlayerDetailsCarousel extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
                   Container(
                     alignment: Alignment.center,
@@ -482,10 +577,11 @@ class PlayerDetailsCarousel extends StatelessWidget {
                           fontWeight: FontWeight.w600),
                     ),
                   ),
-                  SizedBox(height: height*0.03),
+                  SizedBox(height: height * 0.03),
                   InkWell(
-                    onTap: (){
-                      Navigator.pushNamed(context, RoutesName.userProfileScreen);
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, RoutesName.userProfileScreen);
                     },
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -497,11 +593,15 @@ class PlayerDetailsCarousel extends StatelessWidget {
                               fontSize: 12,
                               fontWeight: FontWeight.w600),
                         ),
-                        Icon(Icons.arrow_forward_ios_sharp,color: tertiary,size: 15,)
+                        Icon(
+                          Icons.arrow_forward_ios_sharp,
+                          color: tertiary,
+                          size: 15,
+                        )
                       ],
                     ),
                   ),
-                  SizedBox(height: height*0.03),
+                  SizedBox(height: height * 0.03),
                 ],
               ),
             ),

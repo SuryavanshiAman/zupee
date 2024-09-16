@@ -11,6 +11,7 @@ import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/Game/ludo_game_home_page.dart';
 import 'package:zupee/view/Game/winner_screen.dart';
 import 'package:zupee/view_model/about_view_model.dart';
+import 'package:zupee/view_model/adda_player_list_view_model.dart';
 import 'package:zupee/view_model/confirm_payment_view_model.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 import 'package:zupee/view_model/join_view_model.dart';
@@ -70,6 +71,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ConfirmPaymentViewModel()),
         ChangeNotifierProvider(create: (_) => JoinViewModel()),
         ChangeNotifierProvider(create: (_) => SendResultViewModel()),
+        ChangeNotifierProvider(create: (_) => SendResultViewModel()),
+        ChangeNotifierProvider(create: (_) => PlayerRankViewModel()),
       ],
       child: GetMaterialApp(
         title: AppConstants.appName,

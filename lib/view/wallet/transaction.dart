@@ -158,6 +158,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             itemCount: transaction.length,
                             scrollDirection: Axis.vertical,
                             shrinkWrap: true,
+                            physics: BouncingScrollPhysics(),
                             itemBuilder: (BuildContext context, int index) {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),

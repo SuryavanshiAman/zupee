@@ -303,46 +303,46 @@ bool?isSelectedLanguage;
                 Divider(
                   height: height * 0.05,
                 ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, RoutesName.kycCScreen);
-                  },
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 25,
-                        backgroundColor: lightBlue,
-                        child: Image.asset(
-                          Assets.iconKyc,
-                          scale: 3,
-                        ),
-                      ),
-                      SizedBox(
-                        width: width * 0.03,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Complete your KYC".tr,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          Text("Verify your identity".tr,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: labelColor,
-                                  fontSize: 13)),
-                        ],
-                      ),
-                      const Spacer(),
-                      const Icon(Icons.arrow_forward_ios_rounded,
-                          color: tertiary, size: 16)
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: height * 0.05,
-                ),
+                // InkWell(
+                //   onTap: () {
+                //     Navigator.pushNamed(context, RoutesName.kycCScreen);
+                //   },
+                //   child: Row(
+                //     children: [
+                //       CircleAvatar(
+                //         radius: 25,
+                //         backgroundColor: lightBlue,
+                //         child: Image.asset(
+                //           Assets.iconKyc,
+                //           scale: 3,
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         width: width * 0.03,
+                //       ),
+                //       Column(
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: [
+                //           Text(
+                //             "Complete your KYC".tr,
+                //             style: const TextStyle(fontWeight: FontWeight.w600),
+                //           ),
+                //           Text("Verify your identity".tr,
+                //               style: const TextStyle(
+                //                   fontWeight: FontWeight.w500,
+                //                   color: labelColor,
+                //                   fontSize: 13)),
+                //         ],
+                //       ),
+                //       const Spacer(),
+                //       const Icon(Icons.arrow_forward_ios_rounded,
+                //           color: tertiary, size: 16)
+                //     ],
+                //   ),
+                // ),
+                // Divider(
+                //   height: height * 0.05,
+                // ),
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(
@@ -684,10 +684,8 @@ bool?isSelectedLanguage;
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          WillPopScope(
-                            onWillPop: () async {
-                              return false;  // This disables the back button.
-                            },
+                          PopScope(
+                            canPop: true,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: secondary,
@@ -701,8 +699,10 @@ bool?isSelectedLanguage;
                               ),
                               onPressed: () {
                                 setState(() {
+
                                   UserViewModel userViewModel = UserViewModel();
                                   userViewModel.remove();
+                                  Navigator.of(context, rootNavigator: true).pop();
                                   Navigator.pushReplacementNamed(context, RoutesName.loginScreen);
                                 });
                               },

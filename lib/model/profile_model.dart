@@ -2,13 +2,17 @@ class ProfileModel {
   String? status;
   String? message;
   Data? data;
+  GameStatus? gameStatus;
 
-  ProfileModel({this.status, this.message, this.data});
+  ProfileModel({this.status, this.message, this.data, this.gameStatus});
 
   ProfileModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    gameStatus = json['game_status'] != null
+        ? GameStatus.fromJson(json['game_status'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -17,6 +21,9 @@ class ProfileModel {
     data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
+    }
+    if (gameStatus != null) {
+      data['game_status'] = gameStatus!.toJson();
     }
     return data;
   }
@@ -38,6 +45,7 @@ class Data {
   String? wallet;
   String? cashback;
   String? referralCode;
+  String? referrerId;
   String? createdAt;
   String? updatedAt;
 
@@ -57,11 +65,11 @@ class Data {
         this.wallet,
         this.cashback,
         this.referralCode,
+        this.referrerId,
         this.createdAt,
         this.updatedAt});
 
   Data.fromJson(Map<String, dynamic> json) {
-    print(json['wallet']);
     id = json['id'];
     mobileNumber = json['mobile_number'];
     username = json['username'];
@@ -77,6 +85,7 @@ class Data {
     wallet = json['wallet'];
     cashback = json['cashback'];
     referralCode = json['referral_code'];
+    referrerId = json['referrer_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -98,8 +107,31 @@ class Data {
     data['wallet'] = wallet;
     data['cashback'] = cashback;
     data['referral_code'] = referralCode;
+    data['referrer_id'] = referrerId;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
+    return data;
+  }
+}
+
+class GameStatus {
+  int? totalGames;
+  int? winGame;
+  int? lossGame;
+
+  GameStatus({this.totalGames, this.winGame, this.lossGame});
+
+  GameStatus.fromJson(Map<String, dynamic> json) {
+    totalGames = json['total_games'];
+    winGame = json['win_game'];
+    lossGame = json['loss_game'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total_games'] = totalGames;
+    data['win_game'] = winGame;
+    data['loss_game'] = lossGame;
     return data;
   }
 }

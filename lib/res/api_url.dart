@@ -19,4 +19,5 @@ class ApiUrl{
   static const String joinTournamentApi = "${baseUrl}echekjoin-tournament";
   static const String joinApi = "${baseUrl}join-tournament";
   static const String sendResultApi = "${baseUrl}getResult";
+  static const String userRank = "${baseUrl}getRankedUsers";
 }

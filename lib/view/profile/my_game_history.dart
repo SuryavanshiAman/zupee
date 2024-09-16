@@ -1,8 +1,10 @@
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 import "package:zupee/main.dart";
 import "package:zupee/res/app_colors.dart";
 import "package:zupee/res/custom_back_button.dart";
+import "package:zupee/view_model/profile_view_model.dart";
 
 import "../../generated/assets.dart";
 
@@ -16,6 +18,7 @@ class GameHistoryScreen extends StatefulWidget {
 class _GameHistoryScreenState extends State<GameHistoryScreen> {
   @override
   Widget build(BuildContext context) {
+    final profileData = Provider.of<ProfileViewModel>(context).profileResponse?.gameStatus;
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
@@ -53,18 +56,18 @@ class _GameHistoryScreenState extends State<GameHistoryScreen> {
                     ),
                   ],
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.all(16.0),
+                child:  Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.videogame_asset,
                         size: 40,
                         color: Colors.black,
                       ),
-                      SizedBox(height: 8),
-                      Text(
+                      const SizedBox(height: 8),
+                      const Text(
                         'Total Games\n Played till today',
                         // textAlign: TextAlign.center,
                         style: TextStyle(
@@ -72,10 +75,10 @@ class _GameHistoryScreenState extends State<GameHistoryScreen> {
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
-                        '4',
-                        style: TextStyle(
+                        profileData?.totalGames.toString()??"0",
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -100,18 +103,18 @@ class _GameHistoryScreenState extends State<GameHistoryScreen> {
                     ),
                   ],
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.all(16.0),
+                child:  Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.emoji_events,
                         size: 40,
                         color: Colors.black,
                       ),
-                      SizedBox(height: 8),
-                      Text(
+                      const SizedBox(height: 8),
+                      const Text(
                         'Total Games Won\n till today',
                         // textAlign: TextAlign.center,
                         style: TextStyle(
@@ -119,10 +122,10 @@ class _GameHistoryScreenState extends State<GameHistoryScreen> {
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
-                        '0',
-                        style: TextStyle(
+                        profileData?.winGame.toString()??"0",
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -136,7 +139,7 @@ class _GameHistoryScreenState extends State<GameHistoryScreen> {
           ),
           Container(
             width: width,
-            padding: EdgeInsets.only(left: 15),
+            padding: const EdgeInsets.only(left: 15),
             height: height*0.4,
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -152,12 +155,12 @@ class _GameHistoryScreenState extends State<GameHistoryScreen> {
               ],
             ),
             child:  Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 8),
-                  Text(
+                  const SizedBox(height: 8),
+                  const Text(
                     'Games You Played',
                     // textAlign: TextAlign.center,
                     style: TextStyle(
@@ -165,21 +168,21 @@ class _GameHistoryScreenState extends State<GameHistoryScreen> {
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     children: [
                       Container(
                         height: height*0.07,
                         width: width*0.15,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           image: DecorationImage(image: AssetImage(Assets.imagesDice),fit: BoxFit.fill)
                         ),
                       ),
                       SizedBox(width: width*0.03,),
-                      Column(
+                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Ludo Supreme',
                             style: TextStyle(
                               fontSize: 16,
@@ -188,16 +191,16 @@ class _GameHistoryScreenState extends State<GameHistoryScreen> {
                             ),
                           ),
                           Text(
-                            'Games Played: 4',
-                            style: TextStyle(
+                            'Games Played: ${profileData?.totalGames.toString()??"0"}',
+                            style: const TextStyle(
                                 fontSize: 12,
                                 color: labelColor,
                                 // fontWeight: FontWeight.w600
                             ),
                           ),
                           Text(
-                            'Games Won: 0',
-                            style: TextStyle(
+                            'Games Won:${profileData?.winGame.toString()??"0"}',
+                            style: const TextStyle(
                                 fontSize: 12,
                                 color: labelColor,
                                 // fontWeight: FontWeight.w600

@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:another_flushbar/flushbar_route.dart';
+import 'package:provider/provider.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/Game/ludo_provider.dart';
+import 'package:zupee/view_model/send_result_view_model.dart';
 import 'package:zupee/view_model/timer_view_model.dart';
 
 import '../res/app_colors.dart';
@@ -237,6 +239,8 @@ class Utils {
                         children: [
                           CustomContainer(
                             onTap: () {
+                              final sendResultViewModel=Provider.of<SendResultViewModel>(context);
+                              sendResultViewModel.sendResultApi(ludoProvider.tournamentId.toString(), ludoProvider.myPosition.toString(), ludoProvider.myData['score'].toString(), context);
                               Navigator.pushNamed(context, RoutesName.bottomNevBar,
                                       arguments: {"index": 0});
                               timerProvider.stopTimer();

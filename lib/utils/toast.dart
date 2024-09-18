@@ -239,20 +239,25 @@ class Utils {
                         children: [
                           CustomContainer(
                             onTap: () {
-                              final sendResultViewModel=Provider.of<SendResultViewModel>(context);
-                              sendResultViewModel.sendResultApi(ludoProvider.tournamentId.toString(), ludoProvider.myPosition.toString(), ludoProvider.myData['score'].toString(), context);
+                              WidgetsBinding.instance.addPostFrameCallback((_){
+                                final sendResultViewModel=Provider.of<SendResultViewModel>(context,listen: false);
+                                final ludoProvider=Provider.of<LudoProvider>(context,listen: false);
+                                sendResultViewModel.sendResultApi(ludoProvider.tournamentId.toString(), "4", "0", context);
+                              });
+
+                              timerProvider.stopTimer();
+                              ludoProvider.removePlayerData(context);
                               Navigator.pushNamed(context, RoutesName.bottomNevBar,
                                       arguments: {"index": 0});
-                              timerProvider.stopTimer();
-                               ludoProvider.removePlayerData(context);
+
                             },
                             alignment: Alignment.center,
                             height: height * 0.07,
                             widths: width * 0.78,
                             color: black,
                             borderRadius:BorderRadius.circular(55),
-                            boxShadow: [
-                              const BoxShadow(
+                            boxShadow: const [
+                              BoxShadow(
                                 color: white, //New
                                 blurRadius: 5.0,
                                 spreadRadius: 0.3
@@ -273,8 +278,8 @@ class Utils {
                             widths: width * 0.78,
                             color: fadeGrey,
                             borderRadius:BorderRadius.circular(55),
-                            boxShadow: [
-                              const BoxShadow(
+                            boxShadow: const [
+                              BoxShadow(
                                 color: white, //New
                                 blurRadius: 5.0,
                                 spreadRadius: 0.3

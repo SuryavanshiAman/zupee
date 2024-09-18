@@ -56,7 +56,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   }
 
   Future<bool> _onWillPop() async {
-    return await Utils.exitGame(context, timerProvider, ludoProvider) ?? false;
+    return await Utils.exitGame(context, timerProvider, ludoProvider) ;
   }
 
   @override

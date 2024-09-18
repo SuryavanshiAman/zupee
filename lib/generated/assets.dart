@@ -10,6 +10,7 @@ class Assets {
   static const String dice6 = 'assets/dice/6.webp';
   static const String diceBluePawn = 'assets/dice/blue_pawn.webp';
   static const String diceDice = 'assets/dice/dice.gif';
+  static const String diceGreenPawn = 'assets/dice/green_pawn.webp';
   static const String diceGreenpawn = 'assets/dice/greenpawn.png';
   static const String diceRedPawn = 'assets/dice/red_pawn.webp';
   static const String diceYellowPawn = 'assets/dice/yellow_pawn.webp';
@@ -53,6 +54,7 @@ class Assets {
   static const String imagesRisk = 'assets/images/risk.png';
   static const String imagesRupeesBlue = 'assets/images/rupees_blue.png';
   static const String imagesRupeesWhite = 'assets/images/rupees_white.png';
+  static const String imagesSecondRank = 'assets/images/second_rank.png';
   static const String imagesShare = 'assets/images/share.png';
   static const String imagesStressed = 'assets/images/stressed.png';
   static const String imagesStx = 'assets/images/stx.webp';

@@ -19,7 +19,7 @@ class WinnerScreen extends StatefulWidget {
 }
 
 class _WinnerScreenState extends State<WinnerScreen> {
-  String number = '7485499624';
+
   String maskNumber(number) {
     if (number.length < 2) {
       return number;
@@ -39,7 +39,6 @@ class _WinnerScreenState extends State<WinnerScreen> {
       ludoProvider.setMyPosition(profile);
       final sendResultViewModel=Provider.of<SendResultViewModel>(context,listen: false);
       sendResultViewModel.sendResultApi(ludoProvider.tournamentId.toString(), ludoProvider.myPosition.toString(), ludoProvider.myData['score'].toString(), context);
-
     });
 
   }
@@ -256,11 +255,12 @@ class _WinnerScreenState extends State<WinnerScreen> {
                               ? height * 0.03
                               : height * 0.0),
                       child: Image.asset(
-                          int.parse(profile.data!.id.toString()).toString() ==
-                                  int.parse(ludoProvider.firstPlace?.name['id'])
-                                      .toString()
-                              ? Assets.ludoCrown
-                              : Assets.imagesLoos,
+                        ludoProvider.playerQuantity!=2?
+                        (  int.parse(profile.data!.id.toString()).toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()
+                              ? Assets.ludoCrown:
+                          int.parse(profile.data!.id.toString()).toString() == int.parse(ludoProvider.secondPlace?.name['id']).toString()?Assets.imagesSecondRank
+                              : Assets.imagesLoos):int.parse(profile.data!.id.toString()).toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()
+                            ? Assets.ludoCrown: Assets.imagesLoos,
                           height: int.parse(profile.data!.id.toString())
                                       .toString() ==
                                   int.parse(ludoProvider.firstPlace?.name['id'])
@@ -278,10 +278,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
             SizedBox(
               height: height * 0.01,
             ),
-            // Text(ludoProvider.firstPlace?.name['id'] ?? ""),
-            // // Text(ludoProvider.playerDataList .toString()?? ""),
-            // Text(ludoProvider.myData['score'].toString()),
-            // Text(ludoProvider.myPosition.toString()),
+
             Container(
                 padding: const EdgeInsets.all(4),
                 height: height * 0.055,

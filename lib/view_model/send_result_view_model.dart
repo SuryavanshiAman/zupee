@@ -33,6 +33,7 @@ class SendResultViewModel with ChangeNotifier {
       "game_playing_status":position,
       "score":score
     };
+    print("😂😂😂😂$data");
     _sendResultRepo.sendResultApi(data).then((value) async {
       if (value['status'] == 200) {
         print("AAgya data");
@@ -46,7 +47,7 @@ class SendResultViewModel with ChangeNotifier {
     }).onError((error, stackTrace) {
       setLoading(false);
       if (kDebugMode) {
-        print('joinApi: $error');
+        print('sendResultApi: $error');
       }
     });
   }

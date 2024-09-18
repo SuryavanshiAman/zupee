@@ -85,7 +85,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         backgroundColor: primary,
         leadingWidth: 220,
-        leading:  Row(
+        leading: Row(
           children: [
             const CustomBackButton(),
             Text(
@@ -299,7 +299,9 @@ class EditProfileScreenState extends State<EditProfileScreen> {
               onTap: () {
                 if (_nameController.text.isNotEmpty) {
                   profileUpdate.profileUpdateApi(
-                      _nameController.text,base64Image != null ? base64Image.toString():"", context);
+                      _nameController.text,
+                      base64Image != null ? base64Image.toString() : "",
+                      context);
                 } else {
                   Utils.showErrorToast("Please Enter Valid Phone number".tr);
                 }

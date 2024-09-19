@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/check_network/network_message.dart';
 import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view/account/account.dart';
 import 'package:zupee/view/refer_earn_page/refer_earn_page.dart';
@@ -39,6 +43,7 @@ class _BottomNevBarState extends State<BottomNevBar> {
     });
   }
 
+
   Future<bool> _onWillPop() async {
     if (pageIndex > 0) {
       setState(() {
@@ -58,7 +63,7 @@ class _BottomNevBarState extends State<BottomNevBar> {
         _onWillPop();
       },
       child: Scaffold(
-        body: pages[pageIndex],
+        body:  pages[pageIndex] ,
         bottomNavigationBar: buildMyNavBar(context),
       ),
     );

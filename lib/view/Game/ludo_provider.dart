@@ -11,6 +11,8 @@ import 'package:zupee/view_model/firebase_view_model.dart';
 
 class LudoProvider with ChangeNotifier {
   bool _isMoving = false;
+  bool _status=false;
+  bool  get status=>_status;
   int _playerQuantity = 0;
   int _documentId = 1;
   int get documentId => _documentId;
@@ -24,7 +26,10 @@ class LudoProvider with ChangeNotifier {
     _documentId = newId;
     notifyListeners();
   }
-
+void setStatus(bool value){
+    _status=value;
+    notifyListeners();
+}
   String _prizePool = "0";
   String get prizePool => _prizePool;
   int _fieldKey = 1;
@@ -688,6 +693,24 @@ class LudoProvider with ChangeNotifier {
     await ludoCollection.doc(documentID).update({"isLocked": true});
 
     // Notify listeners to rebuild the UI
+    notifyListeners();
+  }
+  removePlayerName( context) async {
+    final firebaseViewModel =
+    Provider.of<FirebaseViewModel>(context, listen: false);
+    final ludoProvider = Provider.of<LudoProvider>(context, listen: false);
+    final documentID = firebaseViewModel.table.toString();
+    CollectionReference ludoCollection =
+    FirebaseFirestore.instance.collection('ludo');
+
+    // Get the field key for the current player
+    int fieldKey = ludoProvider.fieldKey + 1;
+
+    // Update Firestore to remove the current player's data
+    await ludoCollection.doc(documentID).update({
+      fieldKey.toString(): '', // Clear the player's data
+    });
+
     notifyListeners();
   }
 

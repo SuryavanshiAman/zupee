@@ -185,7 +185,7 @@ class _HowItWorkTabScreenState extends State<HowItWorkTabScreen> {
 
           const Spacer(),
           Padding(
-            padding:  const EdgeInsets.all(16.0),
+            padding:  const EdgeInsets.all(15.0),
             child: Text(
               "DISCLAIMER".tr,
               // 'DISCLAIMER\n1. On change of Referral Benefits policy or any change in referral benefit payouts, all referral payouts for new referrals will be in accordance with the new policy\n2. If your friend removes the referral code on first deposit, referral deposit benefit will not be given\n3. On reaching a maximum number of allowed referrals, the referral payout of users will be changed. This will be explicitly informed to users who breach the limit',

@@ -189,6 +189,7 @@ import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/Game/ludo_provider.dart';
+import 'package:zupee/view/home/popup.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 import 'ludo_game_home_page.dart';
 
@@ -281,72 +282,88 @@ class _TimerScreenState extends State<TimerScreen> {
     _blinkingTimer?.cancel();
     super.dispose();
   }
+  Future<Future> onWillPop() async {
 
+    return   showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const BackPopup();
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     _checkForPlayers(context);
-    return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(Assets.imagesTimerPageBg),
-            fit: BoxFit.fill,
+    final ludoProvider = Provider.of<LudoProvider>(context);
+    return PopScope(
+        canPop:ludoProvider.status==true? false:true,
+        onPopInvoked: (v) {
+      ludoProvider.status==true?
+      onWillPop():null;
+        },
+      child: Scaffold(
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(Assets.imagesTimerPageBg),
+              fit: BoxFit.fill,
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            children: [
-              Spacer(),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.45,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(Assets.imagesTimerPage),
-                    fit: BoxFit.cover,
+          child: Center(
+            child: Column(
+              children: [
+                Spacer(),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(Assets.imagesTimerPage),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                      Text(
+                        _seconds.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 60,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.15),
+                      const Text(
+                        "Start Game...",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: Column(
-                  children: [
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                    Text(
-                      _seconds.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 60,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.15),
-                    const Text(
-                      "Start Game...",
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                if (_seconds == 0)
+                  AnimatedOpacity(
+                    opacity: _isBlinking ? 1.0 : 0.0, // Toggle opacity
+                    duration: const Duration(milliseconds: 500),
+                    child: const Text(
+                      "Waiting for other participants...",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-              if (_seconds == 0)
-                AnimatedOpacity(
-                  opacity: _isBlinking ? 1.0 : 0.0, // Toggle opacity
-                  duration: const Duration(milliseconds: 500),
-                  child: const Text(
-                    "Waiting for other participants...",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                    ),
                   ),
-                ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-            ],
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+              ],
+            ),
           ),
         ),
       ),

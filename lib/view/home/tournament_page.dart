@@ -13,6 +13,7 @@ import 'package:zupee/res/time_page.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view/bottomsheet/tournament_bottomsheet.dart';
+import 'package:zupee/view/home/popup.dart';
 import 'package:zupee/view_model/confirm_payment_view_model.dart';
 import 'package:zupee/view_model/contest_category_view_model.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
@@ -58,25 +59,24 @@ class LudoSupremeState extends State<LudoSupreme> {
       }
     });
   }
-
   bool nextPage = true;
   int setTime = 0;
-  int _seconds = 10;
-  Timer? _timer;
-
-  void _startTimer(prizePool) {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_seconds == 0) {
-          _timer?.cancel();
-          Navigator.pushNamed(context, RoutesName.timerScreen,
-              arguments: prizePool);
-        } else {
-          _seconds--;
-        }
-      });
-    });
-  }
+  // int _seconds = 10;
+  // Timer? _timer;
+  //
+  // void _startTimer(prizePool) {
+  //   _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+  //     setState(() {
+  //       if (_seconds == 0) {
+  //         _timer?.cancel();
+  //         Navigator.pushNamed(context, RoutesName.timerScreen,
+  //             arguments: prizePool);
+  //       } else {
+  //         _seconds--;
+  //       }
+  //     });
+  //   });
+  // }
 
   String? futureTime;
 
@@ -84,6 +84,7 @@ class LudoSupremeState extends State<LudoSupreme> {
   String tournamentID = "0";
   String entry = "0";
   String prizePool = "0";
+
   @override
   Widget build(BuildContext context) {
     final tournament = Provider.of<TournamentViewModel>(context);
@@ -1205,12 +1206,14 @@ class LudoSupremeState extends State<LudoSupreme> {
                       setState(() {
                         nextPage = false;
                         time = true;
+                       ludoProvider.setStatus(true);
                         // Navigator.pop(context);
                       });
                       WidgetsBinding.instance.addPostFrameCallback((_){
                         showModalBottomSheet(
                           elevation: 5,
                           backgroundColor: primary,
+                          isDismissible: false,
                           shape: const RoundedRectangleBorder(
                               side: BorderSide(width: 2, color: Colors.white),
                               borderRadius: BorderRadius.only(

@@ -45,7 +45,7 @@ class _WalletScreenState extends State<WalletScreen> {
           Center(
             child: Container(
               padding: const EdgeInsets.all(18),
-              height: height * 0.65,
+              // height: height * 0.65,
               width: width * 0.9,
               decoration: const BoxDecoration(
                   color: white,

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -5,8 +8,10 @@ import 'package:shimmer/shimmer.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/check_network/network_message.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 
 class TrapeziumClipper extends CustomClipper<Path> {
@@ -36,6 +41,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _showTitle = true;
+  late StreamSubscription<ConnectivityResult> _subscription;
   @override
   void initState() {
     super.initState();
@@ -45,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
       profileViewModel.getProfileApi(context);
       _scrollController.addListener(_handleScroll);
     });
+
   }
 
   void _handleScroll() {
@@ -62,13 +69,32 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/images/instagram.png',
     'assets/images/zupee.png',
   ];
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    final ludoProvider=Provider.of<LudoProvider>(context);
+    _subscription = Connectivity().onConnectivityChanged.listen((result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          ludoProvider.setConnection(false);
+        });
+
+      } else {
+        setState(() {
+          ludoProvider.setConnection(true);
+        });
+      }
+    });
     final profileViewModel =
         Provider.of<ProfileViewModel>(context).profileResponse?.data;
     return Scaffold(
-        body: CustomScrollView(controller: _scrollController, slivers: [
+        body:ludoProvider.isConnected? CustomScrollView(controller: _scrollController, slivers: [
       SliverAppBar(
         expandedHeight: 40.0,
         floating: false,
@@ -390,6 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
           childCount: 1,
         ),
       ),
-    ]));
+    ]):const NetworkErrorScreen(),
+    );
   }
 }

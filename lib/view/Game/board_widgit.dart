@@ -96,18 +96,12 @@ class _BoardWidgetState extends State<BoardWidget> {
       final jsonData = jsonEncode(playerDataList.map((e) => e.toJson()).toList());
       ludoProvider.setPlayerDataFromJson(playerDataList.map((e) => e.toJson()).toList());
       ludoProvider.setTopFourPlayers(playerDataList);
-      // print('Player Data JSON: $jsonData');
-
-      // print('First Place: ${firstPlace?.name['name']} with score ${firstPlace?.score}');
-      // print('Second Place: ${secondPlace?.name['name']} with score ${secondPlace?.score}');
-      // print('Third Place: ${thirdPlace?.name['name']} with score ${thirdPlace?.score}');
-      // print('Fourth Place: ${fourthPlace?.name['name']} with score ${fourthPlace?.score}');
     });
     return Stack(
       alignment: Alignment.center,
       children: [
         Container(
-          width: width,
+          width: double.infinity,
           height: height * 0.5,
           decoration: const BoxDecoration(
             image: DecorationImage(

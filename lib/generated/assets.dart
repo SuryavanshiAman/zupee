@@ -48,6 +48,7 @@ class Assets {
   static const String imagesLudoSupreem = 'assets/images/ludo_supreem.png';
   static const String imagesMaukebaaz = 'assets/images/maukebaaz.png';
   static const String imagesMoneyApps = 'assets/images/money-apps.webp';
+  static const String imagesNoInternet = 'assets/images/no_internet.png';
   static const String imagesPlayToEarn = 'assets/images/play_to_earn.png';
   static const String imagesProfile = 'assets/images/profile.jpeg';
   static const String imagesResponsible = 'assets/images/responsible.png';

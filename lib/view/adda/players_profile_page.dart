@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
+import 'package:zupee/model/player_rank_model.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/custom_back_button.dart';
 import 'package:zupee/utils/routes_name.dart';
@@ -10,14 +11,15 @@ class UserProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Data? player = ModalRoute.of(context)!.settings.arguments as Data?;
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
           backgroundColor: appBarColor,
           leading: const CustomBackButton(),
-          title: const Text(
-            "Kailash gurjar's Profile",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          title:  Text(
+            "${ player?.username.toString()??""}'s Profile",
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           )),
       body: SingleChildScrollView(
         child: Column(
@@ -37,14 +39,14 @@ class UserProfileScreen extends StatelessWidget {
                       backgroundColor: tertiary,
                       child: CircleAvatar(
                         radius: 50,
-                        // backgroundImage: AssetImage(Assets.iconAccount,),
-                        child: Image(image: AssetImage(Assets.iconAccount,),height: height*0.1,),// Replace with actual image path
+                        backgroundImage: NetworkImage( player?.profilePicture.toString()??"",),
+                        // child: Image(image:  NetworkImage( player?.profilePicture.toString()??"",),height: height*0.1,),// Replace with actual image path
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Kailash gurjar',
-                      style: TextStyle(
+                     Text(
+                       player?.username.toString()??"",
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -122,9 +124,9 @@ class UserProfileScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Kailash gurjar is Trending!',
-                      style: TextStyle(
+                     Text(
+                      '${player?.username.toString()??""} is Trending!',
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -143,14 +145,14 @@ class UserProfileScreen extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.fromLTRB(
                               width * 0.24, height * 0.23, 0, 0),
-                          child: const CircleAvatar(
+                          child:  CircleAvatar(
                             radius: 30,
                             backgroundColor: white,
                             child: CircleAvatar(
                               radius: 28,
                               backgroundColor: tertiary,
-                              child: Text("#1",
-                                  style: TextStyle(
+                              child: Text("#${player?.userRank.toString()??""}",
+                                  style: const TextStyle(
                                       color: secondary,
                                       fontWeight: FontWeight.bold)),
                             ),
@@ -159,20 +161,20 @@ class UserProfileScreen extends StatelessWidget {
                       ]),
                     ), // Replace with actual image path
                     const SizedBox(height: 16),
-                    const Center(
+                     Center(
                       child: Text(
-                        'Kailash gurjar',
-                        style: TextStyle(
+                        player?.username.toString()??"",
+                        style: const TextStyle(
                           fontSize: 18,
                           color: tertiary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    const Center(
+                     Center(
                       child: Text(
-                        'RANK #1',
-                        style: TextStyle(
+                        'RANK #${player?.userRank.toString()??""}',
+                        style: const TextStyle(
                           fontSize: 16,
                           color: tertiary,
                           fontWeight: FontWeight.bold,

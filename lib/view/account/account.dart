@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -5,7 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_switch/sliding_switch.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/check_network/network_message.dart';
 import 'package:zupee/utils/routes_name.dart';
+import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 import 'package:zupee/view_model/user_view_model.dart';
 
@@ -37,13 +42,25 @@ bool?isSelectedLanguage;
   }
 
   bool viewItem = false;
+  late StreamSubscription<ConnectivityResult> _subscription;
   @override
   Widget build(BuildContext context) {
     final profileViewModel =
         Provider.of<ProfileViewModel>(context).profileResponse?.data;
     final language=Provider.of<UpdateLanguageViewModel>(context);
+    final ludoProvider=Provider.of<LudoProvider>(context);
+    _subscription = Connectivity().onConnectivityChanged.listen((result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          ludoProvider.setConnection(false);
+        });
 
-    print("languagebuttonState:${ language.buttonState}");
+      } else {
+        setState(() {
+          ludoProvider.setConnection(true);
+        });
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primary,
@@ -67,7 +84,7 @@ bool?isSelectedLanguage;
           ],
         ),
       ),
-      body:isSelectedLanguage==null|| profileViewModel==null?const Center(
+      body:ludoProvider.isConnected?(isSelectedLanguage==null|| profileViewModel==null?const Center(
           child: CircularProgressIndicator()): ListView(
         shrinkWrap: true,
         children: [
@@ -303,46 +320,6 @@ bool?isSelectedLanguage;
                 Divider(
                   height: height * 0.05,
                 ),
-                // InkWell(
-                //   onTap: () {
-                //     Navigator.pushNamed(context, RoutesName.kycCScreen);
-                //   },
-                //   child: Row(
-                //     children: [
-                //       CircleAvatar(
-                //         radius: 25,
-                //         backgroundColor: lightBlue,
-                //         child: Image.asset(
-                //           Assets.iconKyc,
-                //           scale: 3,
-                //         ),
-                //       ),
-                //       SizedBox(
-                //         width: width * 0.03,
-                //       ),
-                //       Column(
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: [
-                //           Text(
-                //             "Complete your KYC".tr,
-                //             style: const TextStyle(fontWeight: FontWeight.w600),
-                //           ),
-                //           Text("Verify your identity".tr,
-                //               style: const TextStyle(
-                //                   fontWeight: FontWeight.w500,
-                //                   color: labelColor,
-                //                   fontSize: 13)),
-                //         ],
-                //       ),
-                //       const Spacer(),
-                //       const Icon(Icons.arrow_forward_ios_rounded,
-                //           color: tertiary, size: 16)
-                //     ],
-                //   ),
-                // ),
-                // Divider(
-                //   height: height * 0.05,
-                // ),
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(
@@ -448,70 +425,7 @@ bool?isSelectedLanguage;
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // const Divider(),
-                            Text("Game Alerts".tr,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600)),
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                            SlidingSwitch(
-                              // value: _isSecondPage,
-                              width: width * 0.4,
-                              // onChanged: _toggleSwitch,
-                              height: 45,
-                              animationDuration:
-                                  const Duration(milliseconds: 400),
-                              onTap: () {},
-                              onDoubleTap: () {},
-                              onSwipe: () {},
-                              textOff: "OFF",
-                              textOn: "ON",
-                              colorOn: white,
-                              colorOff: white,
-                              background: lightBlue,
-                              buttonColor: tertiary,
-                              inactiveColor: black, value: false,
-                              onChanged: (bool value) {},
-                            ),
-                            Divider(
-                              height: height * 0.05,
-                            ),
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: lightBlue,
-                                  child: Image.asset(
-                                    Assets.iconWallet,
-                                    scale: 3,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: width * 0.03,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Game Management".tr,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Text("Game updates and more".tr,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: labelColor)),
-                                  ],
-                                ),
-                                const Spacer(),
-                                const Icon(Icons.arrow_forward_ios_rounded,
-                                    color: tertiary, size: 16)
-                              ],
-                            ),
-                            Divider(
-                              height: height * 0.05,
-                            ),
+
                             InkWell(
                               onTap: () {
                                 Navigator.pushNamed(context, RoutesName.about);
@@ -590,7 +504,7 @@ bool?isSelectedLanguage;
             ),
           ),
         ],
-      ),
+      )): const NetworkErrorScreen(),
     );
   }
 
@@ -716,27 +630,6 @@ bool?isSelectedLanguage;
                               ),
                             ),
                           ),
-                          // ElevatedButton(
-                          //     style: ElevatedButton.styleFrom(
-                          //         backgroundColor: secondary,
-                          //         shape: RoundedRectangleBorder(
-                          //             borderRadius: BorderRadius.circular(55)),
-                          //         padding: EdgeInsets.symmetric(
-                          //             horizontal: width * 0.34,
-                          //             vertical: height * 0.02)),
-                          //     onPressed: () {
-                          //       setState((){
-                          //         UserViewModel userViewModel = UserViewModel();
-                          //         userViewModel.remove();
-                          //         Navigator.pushReplacementNamed(context,  RoutesName.loginScreen);
-                          //       });
-                          //
-                          //     },
-                          //     child: const Text("Yes,Logout",
-                          //         style: TextStyle(
-                          //             color: tertiary,
-                          //             fontSize: 16,
-                          //             fontWeight: FontWeight.bold))),
                           SizedBox(height: height * 0.03),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(

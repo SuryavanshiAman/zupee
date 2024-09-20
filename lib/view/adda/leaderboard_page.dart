@@ -18,50 +18,7 @@ class LeaderboardScreen extends StatefulWidget {
 }
 
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
-  final List<Map<String, String>> otherPlayers = [
-    {
-      'rank': '4',
-      'name': 'is it fair Game',
-      'amount': '₹14.4L',
-      'image': 'URL_TO_IMAGE',
-    },
-    {
-      'rank': '5',
-      'name': 'rakesh Kumar kumawat',
-      'amount': '₹12.2L',
-      'image': 'URL_TO_IMAGE',
-    },
-    {
-      'rank': '6',
-      'name': 'Tirtha Mondal You...',
-      'amount': '₹11.5L',
-      'image': 'URL_TO_IMAGE',
-    },
-    {
-      'rank': '7',
-      'name': 'jitna hain',
-      'amount': '₹8.12L',
-      'image': 'URL_TO_IMAGE',
-    },
-    {
-      'rank': '8',
-      'name': 'Akshaya Valvaiker',
-      'amount': '₹6.82L',
-      'image': 'URL_TO_IMAGE',
-    },
-    {
-      'rank': '9',
-      'name': 'Jai shri ram',
-      'amount': '₹6.49L',
-      'image': 'URL_TO_IMAGE',
-    },
-    {
-      'rank': '10',
-      'name': 'BholeNath baba',
-      'amount': '₹5.49L',
-      'image': 'URL_TO_IMAGE',
-    },
-  ];
+
   PlayerRankViewModel playerRankViewModel = PlayerRankViewModel();
   @override
   void initState() {
@@ -82,7 +39,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           insetPadding: const EdgeInsets.all(10),
           child: PlayerDetailsCarousel(
             initialIndex: index,
-            players: otherPlayers,
           ),
         );
       },
@@ -371,7 +327,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                           final actualIndex = index + 3;
                           return InkWell(
                             onTap: () {
-                              _showPlayerDetails(index);
+                              _showPlayerDetails(actualIndex);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -455,18 +411,18 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
 class PlayerDetailsCarousel extends StatelessWidget {
   final int initialIndex;
-  final List<Map<String, String>> players;
 
   const PlayerDetailsCarousel({
-    Key? key,
+    super.key,
     required this.initialIndex,
-    required this.players,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
+    final playerRankViewModel = Provider.of<PlayerRankViewModel>(context);
+    final playerRank = playerRankViewModel.playerRankList.data!.data;
     return CarouselSlider.builder(
-      itemCount: players.length,
+      itemCount: playerRank!.length,
       options: CarouselOptions(
         initialPage: initialIndex,
         enlargeCenterPage: false,
@@ -476,7 +432,7 @@ class PlayerDetailsCarousel extends StatelessWidget {
         height: height * 0.5,
       ),
       itemBuilder: (context, index, realIdx) {
-        final player = players[index];
+        final player = playerRank[index];
         return Card(
           color: white,
           elevation: 8,
@@ -492,12 +448,12 @@ class PlayerDetailsCarousel extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: NetworkImage(player['image'] ?? ''),
+                    backgroundImage: NetworkImage(player.profilePicture ?? ''),
                     backgroundColor: Colors.grey[200],
                   ),
                   SizedBox(height: height * 0.03),
                   Text(
-                    player['name']!,
+                    player.username!,
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),
                   ),
@@ -507,7 +463,7 @@ class PlayerDetailsCarousel extends StatelessWidget {
                     width: width,
                     color: lightBlue,
                     child: Text(
-                      'Rank: #${player['rank']}',
+                      'Rank: #${player.userRank}',
                       style: const TextStyle(fontSize: 16, color: black),
                     ),
                   ),
@@ -521,12 +477,12 @@ class PlayerDetailsCarousel extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                '${player['followers']} Followers',
+                                '${player.userid} Followers',
                                 style: const TextStyle(
                                     fontSize: 14, color: Colors.grey),
                               ),
                               Text(
-                                '${player['gamesPlayed']} Games Played',
+                                '${player.userid} Games Played',
                                 style: const TextStyle(
                                     fontSize: 14, color: Colors.grey),
                               ),
@@ -543,12 +499,12 @@ class PlayerDetailsCarousel extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${player['gamesWon']} Following',
+                                '${player.userid} Following',
                                 style: const TextStyle(
                                     fontSize: 14, color: Colors.grey),
                               ),
                               Text(
-                                '${player['gamesWon']} Games Won',
+                                '${player.userid} Games Won',
                                 style: const TextStyle(
                                     fontSize: 14, color: Colors.grey),
                               ),
@@ -566,7 +522,6 @@ class PlayerDetailsCarousel extends StatelessWidget {
                     width: width * 0.4,
                     decoration: BoxDecoration(
                       color: secondary,
-                      // border: Border.all(color: lightGray),
                       borderRadius: BorderRadius.circular(35),
                     ),
                     child: const Text(
@@ -581,7 +536,7 @@ class PlayerDetailsCarousel extends StatelessWidget {
                   InkWell(
                     onTap: () {
                       Navigator.pushNamed(
-                          context, RoutesName.userProfileScreen);
+                          context, RoutesName.userProfileScreen,arguments: playerRank[index] );
                     },
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -1,10 +1,15 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/helper/response/status.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/check_network/network_message.dart';
 import 'package:zupee/res/custom_rich_text.dart';
+import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view_model/adda_player_list_view_model.dart';
 
 import '../../res/custom_back_button.dart';
@@ -27,9 +32,22 @@ class _AddaScreenState extends State<AddaScreen> {
           .tournamentApi(context);
     });
   }
-
+  late StreamSubscription<ConnectivityResult> _subscription;
   @override
   Widget build(BuildContext context) {
+    final ludoProvider=Provider.of<LudoProvider>(context);
+    _subscription = Connectivity().onConnectivityChanged.listen((result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          ludoProvider.setConnection(false);
+        });
+
+      } else {
+        setState(() {
+          ludoProvider.setConnection(true);
+        });
+      }
+    });
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
@@ -56,7 +74,7 @@ class _AddaScreenState extends State<AddaScreen> {
           ],
         ),
       ),
-      body: Padding(
+      body:ludoProvider.isConnected? Padding(
         padding: const EdgeInsets.all(18.0),
         child: ListView(
           shrinkWrap: false,
@@ -208,7 +226,7 @@ class _AddaScreenState extends State<AddaScreen> {
             ),
           ],
         ),
-      ),
+      ):const NetworkErrorScreen(),
     );
   }
 
@@ -240,7 +258,7 @@ class _AddaScreenState extends State<AddaScreen> {
                           InkWell(
                             onTap: () {
                               Navigator.pushNamed(
-                                  context, RoutesName.userProfileScreen);
+                                  context, RoutesName.userProfileScreen,arguments: playerRank[index]);
                             },
                             child: CircleAvatar(
                               radius: 30,

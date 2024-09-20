@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:zupee/repo/profile_update_repo.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 import 'package:zupee/view_model/user_view_model.dart';
@@ -33,8 +34,9 @@ class ProfileUpdateViewModel with ChangeNotifier {
     _profileUpdateRepo.profileUpdateApi(data).then((value) {
       if (value['status'] == "200") {
         setLoading(false);
-        Utils.flushBarSuccessMessage(value['message'], context, white);
+        Navigator.pushNamed(context, RoutesName.bottomNevBar ,arguments: {"index": 0});
         profileViewModel.getProfileApi(context);
+        Utils.flushBarSuccessMessage(value['message'], context, white);
       } else {
         setLoading(false);
         Utils.showErrorToast(value['message']);

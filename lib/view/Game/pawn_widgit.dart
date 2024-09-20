@@ -75,24 +75,6 @@ class _PawnWidgetState extends State<PawnWidget> {
     }
   }
 
-  // Function to send pawn movement data to Firestore
-  // Future<void> _sendPawnMovement(int nextStep) async {
-  //   try {
-  //        await gameDoc.update({
-  //         '${widget.type.toString().split('.').last}PawnPosition${widget.index}': nextStep,
-  //       });
-  //
-  //     print("Pawn position updated successfully.");
-  //   } catch (e) {
-  //     print("Error updating pawn position: $e");
-  //   }
-  //   // print("jaraha hau data ");
-  //   // await gameDoc.update({
-  //   //   '${widget.type.toString().split('.').last}AmanPawnPosition${widget.index}': nextStep,
-  //   // });
-  // }
-
-  // Listen for pawn position changes
   void _listenForPawnChanges() {
     _pawnSubscription = gameDoc.snapshots().listen((snapshot) {
       if (snapshot.exists) {
@@ -109,14 +91,9 @@ class _PawnWidgetState extends State<PawnWidget> {
   @override
   Widget build(BuildContext context) {
     final ludoProvider = Provider.of<LudoProvider>(context);
-
-    // Only show pawns for blue and green players if playerQuantity is 2
     if (ludoProvider.playerQuantity == 2 && (widget.type != LudoPlayerType.blue && widget.type != LudoPlayerType.green)) {
-      // Return an empty container for red and yellow pawns when only 2 players are active
       return const SizedBox.shrink();
     }
-    // Color color;
-
     switch (widget.type) {
       case LudoPlayerType.blue:
         LudoColor.blue;
@@ -155,26 +132,16 @@ class _PawnWidgetState extends State<PawnWidget> {
           Consumer<LudoProvider>(
             builder: (context, provider, child) => GestureDetector(
               onTap: () async {
-
                 if (provider.diceResult > 0) {
-                  print("hello");
-                  // int nextStep = widget.step == -1 ? 1 : widget.step + provider.diceResult;
                   int nextStep = widget.step == -1 ? 1 : widget.step + provider.diceResult;
-
-                  // Send move to provider
-                  print("qqqqqq${widget.index}");
                   provider.move(context,widget.type, widget.index, nextStep);
-                  // await _sendPawnMovement(nextStep);
-                  // Send the pawn movement to Firestore
-
                 }
-                print("terFigurew");
               },
               child: Stack(
                 children: [
-                  SizedBox(height: height * 0.01),
+                  // SizedBox(height: height * 0.012),
                   Padding(
-                    padding: const EdgeInsets.only(left: 5.0),
+                    padding:  EdgeInsets.only(left: width*0.01),
                     child: Transform.scale(
                       scale: 2.5,
                       child: Image.asset(pawnAsset),

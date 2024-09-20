@@ -22,6 +22,8 @@ class LudoProvider with ChangeNotifier {
   int get playerQuantity => _playerQuantity;
   String _tournamentId = "0";
   String get tournamentId => _tournamentId;
+  bool _isConnected = true;
+  bool get isConnected=>_isConnected;
   void updateDocumentId(int newId) {
     _documentId = newId;
     notifyListeners();
@@ -29,6 +31,10 @@ class LudoProvider with ChangeNotifier {
 void setStatus(bool value){
     _status=value;
     notifyListeners();
+}
+void setConnection(bool value){
+  _isConnected=value;
+  notifyListeners();
 }
   String _prizePool = "0";
   String get prizePool => _prizePool;

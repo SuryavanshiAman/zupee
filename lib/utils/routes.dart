@@ -13,6 +13,7 @@ import 'package:zupee/view/auth/register_page.dart';
 import 'package:zupee/view/auth/splash_page.dart';
 import 'package:zupee/view/bottom_nav_bar.dart';
 import 'package:zupee/view/home/tournament_page.dart';
+import 'package:zupee/view/profile/avtar_screen.dart';
 import 'package:zupee/view/profile/edit_profile_page.dart';
 import 'package:zupee/view/refer_earn_page/my_referrals_tab_page.dart';
 import 'package:zupee/view/refer_earn_page/refer_earn_page.dart';
@@ -99,6 +100,8 @@ class Routers {
         return (context) =>   const BankDetailsScreen();
       case RoutesName.winnerScreen:
         return (context) =>   const WinnerScreen();
+      case RoutesName.avatarSelectionScreen:
+        return (context) =>   const AvatarSelectionScreen();
       default:
         return (context) => Scaffold(
               body: Center(

@@ -31,4 +31,5 @@ class RoutesName{
   static const String htmlViewerScreen = '/htmlViewerScreen';
   static const String bankDetailsScreen = '/bankDetailsScreen';
   static const String winnerScreen = '/winnerScreen';
+  static const String avatarSelectionScreen = '/avatarSelectionScreen';
 }

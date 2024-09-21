@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,13 +7,15 @@ import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/circular_button.dart';
 import 'package:zupee/res/custom_back_button.dart';
 import 'package:zupee/res/custom_text_field.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/utils/toast.dart';
+import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view/bottomsheet/edit_profile_bottomsheet.dart';
+import 'package:zupee/view/profile/avtar_screen.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
-
 import '../../view_model/profile_update_view_model.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -44,20 +45,6 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         profileViewModel?.mobileNumber.toString())!;
   }
 
-  File? _image;
-  final picker = ImagePicker();
-  String? base64Image;
-  Future<void> _getImage(ImageSource source) async {
-    final pickedFile = await picker.pickImage(source: source);
-
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-      base64Image = base64Encode(_image!.readAsBytesSync());
-    }
-  }
-
   void _showBottomSheet(BuildContext context) async {
     final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
@@ -81,6 +68,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     final profileUpdate = Provider.of<ProfileUpdateViewModel>(context);
     final profileViewModel =
         Provider.of<ProfileViewModel>(context).profileResponse?.data;
+    final ludoProvider= Provider.of<LudoProvider>(context);
     return Scaffold(
       backgroundColor: appBarColor,
       appBar: AppBar(
@@ -116,22 +104,31 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                     height: height * 0.03,
                   ),
                   Center(
-                      child: profileViewModel!.profilePicture != null &&
-                              _image == null
+                      child: ludoProvider.selectedAvatarImage != null
+                          ? CircleAvatar(
+                        radius: 50,
+                        backgroundColor: lightBlue,
+                        backgroundImage: AssetImage(ludoProvider.selectedAvatarImage!),
+                      )
+                          : profileViewModel!.profilePicture != null &&
+                          ludoProvider.image == null
                           ? CircleAvatar(
                               radius: 50,
+                        backgroundColor: lightBlue,
                               backgroundImage: NetworkImage(
                                   profileViewModel.profilePicture.toString()),
                             )
-                          : _image == null
+                          : ludoProvider.image == null
                               ? const CircleAvatar(
                                   radius: 50,
+                        backgroundColor: lightBlue,
                                   backgroundImage:
                                       AssetImage(Assets.iconAccount),
                                 )
                               : CircleAvatar(
                                   radius: 50,
-                                  backgroundImage: FileImage(_image!),
+                        backgroundColor: lightBlue,
+                                  backgroundImage: FileImage(ludoProvider.image!),
                                 )),
                   SizedBox(
                     height: height * 0.03,
@@ -143,13 +140,14 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           CircleAvatar(
                             radius: 26,
+                            backgroundColor: lightBlue,
                             child: IconButton(
                               icon: const Icon(
                                 Icons.camera_alt_outlined,
                                 color: tertiary,
                               ),
                               onPressed: () {
-                                _getImage(ImageSource.camera);
+                                ludoProvider.getImage(ImageSource.camera);
                               },
                             ),
                           ),
@@ -163,11 +161,12 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           CircleAvatar(
                             radius: 26,
+                            backgroundColor: lightBlue,
                             child: IconButton(
                               icon: const Icon(Icons.photo_camera_back_outlined,
                                   color: tertiary),
                               onPressed: () {
-                                _getImage(ImageSource.gallery);
+                                ludoProvider.getImage(ImageSource.gallery);
                               },
                             ),
                           ),
@@ -181,10 +180,13 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           CircleAvatar(
                             radius: 26,
+                            backgroundColor: lightBlue,
                             child: IconButton(
                               icon: const Icon(Icons.person_outline,
                                   color: tertiary),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushNamed(context, RoutesName.avatarSelectionScreen);
+                              },
                             ),
                           ),
                           const Text(
@@ -296,12 +298,12 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                   ],
                 )),
             const SizedBox(height: 16.0),
-            InkWell(
+            profileUpdate.loading==false? InkWell(
               onTap: () {
                 if (_nameController.text.isNotEmpty) {
                   profileUpdate.profileUpdateApi(
                       _nameController.text,
-                      base64Image != null ? base64Image.toString() : "",
+                      ludoProvider.base64Image != null ?  ludoProvider.base64Image.toString() : "",
                       context);
                 } else {
                   Utils.showErrorToast("Please Enter Valid Phone number".tr);
@@ -320,7 +322,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                       fontWeight: FontWeight.w600, color: labelColor),
                 ),
               ),
-            ),
+            ):CircularButton(),
           ],
         ),
       ),

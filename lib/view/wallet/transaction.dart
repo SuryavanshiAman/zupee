@@ -34,43 +34,17 @@ class _TransactionScreenState extends State<TransactionScreen> {
     FirstList("Misc"),
     FirstList("Withdrawal Fee"),
   ];
-  List<FirstList> originalList = [];
-  TransactionHistoryViewModel transactionHistoryViewModel =
-      TransactionHistoryViewModel();
+
   int selectedIndex = 0;
   @override
   void initState() {
     super.initState();
-    transactionHistoryViewModel.transactionHistoryApi(context, selectedIndex);
-    originalList = List.from(list); // Save the original list for resetting
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final transactionHistoryViewModel =
+          Provider.of<TransactionHistoryViewModel>(context, listen: false);
+      transactionHistoryViewModel.transactionHistoryApi(context, selectedIndex);
+    });
   }
-
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     if (selectedIndices.contains(index)) {
-  //       selectedIndices.remove(index);
-  //     } else {
-  //       if (index != 0) {
-  //         selectedIndices.add(index);
-  //         selectedIndices.remove(0);
-  //       } else {
-  //         selectedIndices.clear();
-  //         selectedIndices.add(0);
-  //       }
-  //     }
-  //
-  //     if (index == 0) {
-  //       // Reset the list to its original state
-  //       list = List.from(originalList);
-  //     } else {
-  //       // Remove the item from its current position
-  //       FirstList tappedItem = list.removeAt(index);
-  //       // Insert the item at the second position
-  //       list.insert(1, tappedItem);
-  //     }
-  //   });
-  // }
-  //
 
   @override
   Widget build(BuildContext context) {
@@ -108,11 +82,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       onTap: () {
                         setState(() {
                           selectedIndex = index;
+                          transaction.transactionHistoryApi(
+                              context, selectedIndex);
                         });
-                        transaction.transactionHistoryApi(
-                            context, selectedIndex);
-                        // _onItemTapped(index);
-                        // print("selectedIndices$selectedIndices");
                       },
                       child: Row(
                         children: [
@@ -120,7 +92,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             padding: const EdgeInsets.all(10.0),
                             child: Container(
                                 height: height * 0.04,
-                                // margin: EdgeInsets.all(3),
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                     color: selectedIndex == index
@@ -144,10 +115,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
               child: Consumer<TransactionHistoryViewModel>(
                 builder: (context, resultValue, _) {
                   switch (resultValue.transactionHistoryList.status) {
-                    // case Status.LOADING:
-                    //   return const Center(
-                    //     child: CircularProgressIndicator(),
-                    //   );
+                    case Status.LOADING:
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     case Status.ERROR:
                       return Container();
                     case Status.COMPLETED:
@@ -202,17 +173,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                                   // color: red,
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 8)),
-                                          // Container(
-                                          //   alignment: Alignment.center,
-                                          //   height: height*0.022,
-                                          //   width: width * 0.16,
-                                          //   decoration: const BoxDecoration(
-                                          //     borderRadius:
-                                          //     BorderRadius.all(Radius.circular(5)),
-                                          //     color: green,
-                                          //   ),
-                                          //   child: const Text("ACTIVE",style: TextStyle(fontSize: 10,color: white),),
-                                          // )
                                         ],
                                       ),
                                       const Spacer(),
@@ -223,7 +183,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Text(
-                                              "+₹${transaction[index].amount.toString()}",
+                                              "${(transaction[index].type.toString() == "Winning" || transaction[index].type.toString() == "Deposit" || transaction[index].type.toString() == "Bonus") ? "+" : "-"}₹${transaction[index].amount.toString()}",
                                               style: const TextStyle(
                                                   color: black,
                                                   fontWeight: FontWeight.w600)),
@@ -234,7 +194,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                                     .datetime
                                                     .toString(),
                                               )),
-                                              // "16 JUL,17:53",
                                               style: const TextStyle(
                                                   color: labelColor,
                                                   fontWeight: FontWeight.w500)),

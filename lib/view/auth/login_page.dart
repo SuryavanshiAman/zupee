@@ -8,6 +8,7 @@ import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
 import 'package:zupee/res/app_constant.dart';
+import 'package:zupee/res/circular_button.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/custom_text_field.dart';
 import 'package:zupee/utils/routes_name.dart';
@@ -58,8 +59,6 @@ login()async{
           children: [
             GestureDetector(
               onTap: () {
-                // Navigator.pushNamed(context, RoutesName.bottomNevBar,
-                //     arguments: {"index": 0});
                Navigator.pushNamed(context, RoutesName.registerScreen);
               },
               child: const Icon(
@@ -136,7 +135,7 @@ login()async{
             SizedBox(
               height: height * 0.04,
             ),
-            CustomContainer(
+            authApi.loading==false?    CustomContainer(
               onTap: () {
                 if (_controller.text.isEmpty || _controller.text.length <10) {
                   Utils.flushBarErrorMessage(
@@ -155,7 +154,7 @@ login()async{
                 style: const TextStyle(
                     color: labelColor, fontWeight: FontWeight.w500),
               ),
-            ),
+            ):CircularButton(),
             SizedBox(
               height: height * 0.01,
             ),

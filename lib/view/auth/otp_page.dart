@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/circular_button.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/custom_pin_field.dart';
 import 'package:zupee/res/custom_rich_text.dart';
@@ -140,12 +141,6 @@ class _VerifyPageState extends State<VerifyPage> {
                   ),
                 ),
               ),
-
-              // Center(
-              //     child: OtpFieldWidget(
-              //   pinLength: 6,
-              //   controllers: otpCon,
-              // )),
             ),
             const SizedBox(
               height: 20,
@@ -201,9 +196,8 @@ class _VerifyPageState extends State<VerifyPage> {
                   ),
                 ],
               ),
-              child: CustomContainer(
+              child:verifyOtpApi.loading==false? CustomContainer(
                 onTap: () {
-                  print("wwww${otpCon.text}");
                   otpCon.text.isEmpty
                       ? Utils.flushBarErrorMessage(
                           "Please Enter OTP", context, white)
@@ -219,7 +213,7 @@ class _VerifyPageState extends State<VerifyPage> {
                   style:
                       TextStyle(color: labelColor, fontWeight: FontWeight.w500),
                 ),
-              ),
+              ):CircularButton(),
             )
           ],
         ),

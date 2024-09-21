@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/circular_button.dart';
 import 'package:zupee/res/custom_back_button.dart';
 import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/res/custom_rich_text.dart';
@@ -140,7 +141,6 @@ class _DepositScreenState extends State<DepositScreen> {
 
             ],
           ),
-          // const Spacer(),
           Container(
             alignment: Alignment.center,
             height: height*0.1,
@@ -161,7 +161,7 @@ class _DepositScreenState extends State<DepositScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomContainer(
+                depositViewModel.loading==false? CustomContainer(
                   onTap: (){
                     if (amountCon.text.isEmpty) {
                       Utils.flushBarErrorMessage(
@@ -180,7 +180,7 @@ class _DepositScreenState extends State<DepositScreen> {
                   color: _containerColor,
                   borderRadius: const BorderRadius.all(Radius.circular(35)),
                   child:  Text("Add Money".tr,style: const TextStyle(color: labelColor,fontWeight: FontWeight.w500),),
-                ),
+                ):CircularButton(),
                  Text("100% Secure Payments".tr,style: const TextStyle(color: labelColor),)
               ],
             ),
@@ -195,7 +195,6 @@ class _DepositScreenState extends State<DepositScreen> {
       child: Container(
         width: width*0.23,
         height: height*0.055,
-        // margin: EdgeInsets.all(5),
         decoration: BoxDecoration(
           border: Border.all(color: black),
           borderRadius: const BorderRadius.all(Radius.circular(10))

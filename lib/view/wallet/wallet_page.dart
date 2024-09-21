@@ -45,7 +45,6 @@ class _WalletScreenState extends State<WalletScreen> {
           Center(
             child: Container(
               padding: const EdgeInsets.all(18),
-              // height: height * 0.65,
               width: width * 0.9,
               decoration: const BoxDecoration(
                   color: white,
@@ -56,7 +55,6 @@ class _WalletScreenState extends State<WalletScreen> {
                     height: height * 0.01,
                   ),
                   RichText(
-                    // textAlign: TextAlign.center,
                     text: TextSpan(
                       text: "Total Balance".tr,
                       style: const TextStyle(fontSize: 16, color: black),
@@ -76,7 +74,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     ),
                   ),
                   Text(
-                    profileViewModel?.wallet.toString() ?? "",
+                    profileViewModel.wallet.toString() ?? "",
                     style: const TextStyle(
                         fontSize: 36, fontWeight: FontWeight.w700),
                   ),
@@ -95,7 +93,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                 color: labelColor),
                           ),
                           Text(
-                            "₹${profileViewModel?.depositWallet.toString() ?? ""}",
+                            "₹${profileViewModel.depositWallet.toString()}",
                             style: const TextStyle(
                                 fontSize: 28, fontWeight: FontWeight.w600),
                           ),
@@ -149,7 +147,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                 color: labelColor),
                           ),
                           Text(
-                            "₹${profileViewModel?.winningAmountWallet.toString() ?? ""}",
+                            "₹${profileViewModel.winningAmountWallet.toString()}",
                             style: const TextStyle(
                                 fontSize: 28, fontWeight: FontWeight.w600),
                           ),
@@ -198,12 +196,11 @@ class _WalletScreenState extends State<WalletScreen> {
                             color: labelColor),
                       ),
                        Text(
-                        "₹${profileViewModel?.cashback.toString()??""}",
+                        "₹${profileViewModel.cashback.toString()}",
                         style: const TextStyle(
                             fontSize: 28, fontWeight: FontWeight.w600),
                       ),
                       Row(
-                        // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           InkWell(
                             onTap: () {
@@ -213,7 +210,6 @@ class _WalletScreenState extends State<WalletScreen> {
                             child: Text(
                               "CASHBACK DETAILS".tr,
                               style: const TextStyle(
-                                  // color: tertiary,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500),
                             ),
@@ -243,12 +239,11 @@ class _WalletScreenState extends State<WalletScreen> {
                             color: labelColor),
                       ),
                        Text(
-                        profileViewModel!.bonus.toString(),
+                        profileViewModel.bonus.toString(),
                         style: const TextStyle(
                             fontSize: 28, fontWeight: FontWeight.w600),
                       ),
                       Row(
-                        // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           InkWell(
                             onTap: () {
@@ -312,7 +307,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 )),
           )
         ],
-      ):Center(child: CircularProgressIndicator()),
+      ):const Center(child: CircularProgressIndicator()),
     );
   }
 

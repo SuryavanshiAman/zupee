@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/circular_button.dart';
 import 'package:zupee/res/custom_back_button.dart';
 import 'package:zupee/res/custom_container.dart';
 
@@ -37,13 +38,6 @@ class WithdrawScreen extends StatefulWidget {
 
 class _WithdrawScreenState extends State<WithdrawScreen> {
   final TextEditingController _controller = TextEditingController();
-  // int _currentAmount = 0;
-  // void _updateAmount(int amount) {
-  //   setState(() {
-  //     _currentAmount += amount;
-  //     _controller.text = _currentAmount.toString();
-  //   });
-  // }
 
   Color _containerColor = lightGray;
   @override
@@ -84,9 +78,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
       ),
       body: Stack(
         alignment: Alignment.bottomCenter,
-        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Column(
             children: [
               SizedBox(
@@ -107,11 +99,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // SizedBox(
-                            //   height: height * 0.01,
-                            // ),
-
-                            // const Text("Enter Amount",style: TextStyle(fontSize: 16),),
                             SizedBox(
                               height: height * 0.05,
                             ),
@@ -123,7 +110,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                               height: 70,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 20),
-                              // borderRadius: ,
                               filled: true,
                               borderSide: const BorderSide(color: blue),
                               borderSideFocus: const BorderSide(color: blue),
@@ -152,10 +138,11 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           height: height * 0.03,
                           margin: const EdgeInsets.all(5),
                           color: tertiary.withOpacity(0.2),
-                          child: const Center(
+                          child:  Center(
                             child: Text(
-                              'Available for withdrawal ₹0 ',
-                              style: TextStyle(color: Colors.black, fontSize: 12),
+                              'Available for withdrawal ₹${profileViewModel?.winningAmountWallet??""} ',
+                              overflow:  TextOverflow.ellipsis,
+                              style: const TextStyle(color: Colors.black, fontSize: 12),
                             ),
                           ),
                         ),
@@ -177,7 +164,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   children: [
                     CircleAvatar(
                       backgroundColor: labelColor,
-                      // child: Icon(Icons.),
                     ),
                     Text(
                       "Withdraw",
@@ -211,7 +197,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   color: Colors.black.withOpacity(0.2),
                   spreadRadius: 1,
                   blurRadius: 2,
-                  offset: const Offset(0, -1), // changes position of shadow to the top
+                  offset: const Offset(0, -1),
                 ),
               ],
             ),
@@ -219,7 +205,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomContainer(
+                withdrawViewModel.loading==false?      CustomContainer(
                   onTap: (){
                     if (_controller.text.isEmpty) {
                       Utils.flushBarErrorMessage(
@@ -238,7 +224,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   color: _containerColor,
                   borderRadius: const BorderRadius.all(Radius.circular(35)),
                   child:  Text("Withdraw Money".tr,style: const TextStyle(color: labelColor,fontWeight: FontWeight.w500),),
-                ),
+                ):CircularButton(),
                 Text("100% Secure Payments".tr,style: const TextStyle(color: green),)
               ],
             ),

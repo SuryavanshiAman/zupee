@@ -20,11 +20,11 @@ class TransactionHistoryViewModel with ChangeNotifier {
     setTransactionHistoryList(ApiResponse.loading());
     UserViewModel userViewModel = UserViewModel();
     String? userId = await userViewModel.getUser();
-    print("userId:$userId");
     _transactionHistoryRepo.transactionHistoryApi(userId,indexData).then((value) {
       if (value.status== "200") {
         setTransactionHistoryList(ApiResponse.completed(value));
       } else {
+        setTransactionHistoryList(ApiResponse.completed(value));
         if (kDebugMode) {
           print('value: ${value.message}');
         }

@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/view/Game/board_widgit.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
@@ -11,8 +15,8 @@ import 'package:zupee/view_model/firebase_view_model.dart';
 
 class LudoProvider with ChangeNotifier {
   bool _isMoving = false;
-  bool _status=false;
-  bool  get status=>_status;
+  bool _status = false;
+  bool get status => _status;
   int _playerQuantity = 0;
   int _documentId = 1;
   int get documentId => _documentId;
@@ -23,19 +27,59 @@ class LudoProvider with ChangeNotifier {
   String _tournamentId = "0";
   String get tournamentId => _tournamentId;
   bool _isConnected = true;
-  bool get isConnected=>_isConnected;
+  bool get isConnected => _isConnected;
+  int _selectedAvatarIndex = 0;
+  String? _selectedAvatarImage;
+
+  int get selectedAvatarIndex => _selectedAvatarIndex;
+  String? get selectedAvatarImage => _selectedAvatarImage;
+  String? _base64Image;
+  void setAvatar(int index, String imagePath) async {
+    _selectedAvatarIndex = index;
+    _selectedAvatarImage = imagePath;
+    ByteData byteData = await rootBundle.load(_selectedAvatarImage!);
+    final bytes = byteData.buffer.asUint8List();
+    _base64Image = base64Encode(bytes);
+    notifyListeners();
+  }
+
+  File? _image;
+  final picker = ImagePicker();
+
+  File? get image => _image;
+  String? get base64Image => _base64Image;
+  void setImage(File value) {
+    _image = value;
+    notifyListeners();
+  }
+
+  // Function to pick an image and encode it to base64
+  Future<void> getImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+      _base64Image = base64Encode(_image!.readAsBytesSync());
+      _selectedAvatarImage = null;
+      notifyListeners();
+    }
+  }
+
   void updateDocumentId(int newId) {
     _documentId = newId;
     notifyListeners();
   }
-void setStatus(bool value){
-    _status=value;
+
+  void setStatus(bool value) {
+    _status = value;
     notifyListeners();
-}
-void setConnection(bool value){
-  _isConnected=value;
-  notifyListeners();
-}
+  }
+
+  void setConnection(bool value) {
+    _isConnected = value;
+    notifyListeners();
+  }
+
   String _prizePool = "0";
   String get prizePool => _prizePool;
   int _fieldKey = 1;
@@ -392,7 +436,6 @@ void setConnection(bool value){
 
     notifyListeners();
   }
-
   // void addMember(context) async {
   //   final join = Provider.of<JoinViewModel>(context, listen: false);
   //   final profile =
@@ -418,7 +461,8 @@ void setConnection(bool value){
   //               "1":
   //                   '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}',
   //               "3": '',
-  //               "isLocked": false
+  //               "isLocked": false,
+  //               "playerQuantity": 2 // Store the player quantity in the document
   //             }
   //           : {
   //               "1":
@@ -426,7 +470,8 @@ void setConnection(bool value){
   //               "2": '',
   //               "3": '',
   //               "4": '',
-  //               "isLocked": false
+  //               "isLocked": false,
+  //               "playerQuantity": 4 // Store the player quantity in the document
   //             };
   //
   //       await ludoCollection.doc(documentId.toString()).set(jsonData);
@@ -437,6 +482,15 @@ void setConnection(bool value){
   //       print("Document $documentId exists, checking for available spaces");
   //       Map<String, dynamic>? existingData =
   //           documentSnapshot.data() as Map<String, dynamic>?;
+  //
+  //       // Check if the table is meant for 2 players or 4 players
+  //       if (existingData != null &&
+  //           existingData["playerQuantity"] != playerQuantity) {
+  //         print(
+  //             "Table is meant for ${existingData['playerQuantity']} players, moving to a new table...");
+  //         updateDocumentId(documentId + 1); // Move to the next table
+  //         continue;
+  //       }
   //
   //       // If table is locked, move to a new table
   //       if (existingData != null && existingData["isLocked"] == true) {
@@ -540,8 +594,10 @@ void setConnection(bool value){
   // }
   void addMember(context) async {
     final join = Provider.of<JoinViewModel>(context, listen: false);
-    final profile = Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
-    final firebaseViewModel = Provider.of<FirebaseViewModel>(context, listen: false);
+    final profile =
+        Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
+    final firebaseViewModel =
+    Provider.of<FirebaseViewModel>(context, listen: false);
     FirebaseFirestore fireStore = FirebaseFirestore.instance;
     CollectionReference ludoCollection = fireStore.collection('ludo');
     bool isAdded = false;
@@ -549,7 +605,8 @@ void setConnection(bool value){
     final twoPlayer = (playerQuantity == 2);
 
     while (!isAdded) {
-      DocumentSnapshot documentSnapshot = await ludoCollection.doc(documentId.toString()).get();
+      DocumentSnapshot documentSnapshot =
+      await ludoCollection.doc(documentId.toString()).get();
 
       if (!documentSnapshot.exists) {
         // Create a new document if it doesn't exist
@@ -557,18 +614,22 @@ void setConnection(bool value){
 
         Map<String, dynamic> jsonData = twoPlayer
             ? {
-          "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}',
+          "1":
+          '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}',
           "3": '',
           "isLocked": false,
-          "playerQuantity": 2  // Store the player quantity in the document
+          "playerQuantity": 2, // Store the player quantity in the document
+          "prizePool": prizePool // Store the prize pool
         }
             : {
-          "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}',
+          "1":
+          '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}',
           "2": '',
           "3": '',
           "4": '',
           "isLocked": false,
-          "playerQuantity": 4  // Store the player quantity in the document
+          "playerQuantity": 4, // Store the player quantity in the document
+          "prizePool": prizePool // Store the prize pool
         };
 
         await ludoCollection.doc(documentId.toString()).set(jsonData);
@@ -577,11 +638,22 @@ void setConnection(bool value){
       } else {
         // Document exists, check if the table is locked
         print("Document $documentId exists, checking for available spaces");
-        Map<String, dynamic>? existingData = documentSnapshot.data() as Map<String, dynamic>?;
+        Map<String, dynamic>? existingData =
+        documentSnapshot.data() as Map<String, dynamic>?;
 
-        // Check if the table is meant for 2 players or 4 players
-        if (existingData != null && existingData["playerQuantity"] != playerQuantity) {
-          print("Table is meant for ${existingData['playerQuantity']} players, moving to a new table...");
+        // Check if the table is meant for the same prize pool
+        if (existingData != null && existingData["prizePool"] != prizePool) {
+          print(
+              "Table has a different prize pool (${existingData['prizePool']}), moving to a new table...");
+          updateDocumentId(documentId + 1); // Move to the next table
+          continue;
+        }
+
+        // Check if the table is meant for the same player quantity
+        if (existingData != null &&
+            existingData["playerQuantity"] != playerQuantity) {
+          print(
+              "Table is meant for ${existingData['playerQuantity']} players, moving to a new table...");
           updateDocumentId(documentId + 1); // Move to the next table
           continue;
         }
@@ -595,8 +667,12 @@ void setConnection(bool value){
 
         // For 2-player game
         if (twoPlayer) {
-          bool slot1Filled = existingData != null && existingData["1"] != '' && existingData["1"] != null;
-          bool slot3Filled = existingData != null && existingData["3"] != '' && existingData["3"] != null;
+          bool slot1Filled = existingData != null &&
+              existingData["1"] != '' &&
+              existingData["1"] != null;
+          bool slot3Filled = existingData != null &&
+              existingData["3"] != '' &&
+              existingData["3"] != null;
 
           if (slot1Filled && slot3Filled) {
             print("Both positions in 2-player table are filled, locking table...");
@@ -609,23 +685,33 @@ void setConnection(bool value){
 
           if (!slot1Filled) {
             await ludoCollection.doc(documentId.toString()).update({
-              "1": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}'
+              "1":
+              '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[0].type}"}'
             });
             setFieldKey(1);
             isAdded = true;
           } else if (!slot3Filled) {
             await ludoCollection.doc(documentId.toString()).update({
-              "3": '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[2].type}"}'
+              "3":
+              '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[2].type}"}'
             });
             setFieldKey(3);
             isAdded = true;
           }
         } else {
           // Logic for 4-player game
-          bool slot1Filled = existingData != null && existingData["1"] != '' && existingData["1"] != null;
-          bool slot2Filled = existingData != null && existingData["2"] != '' && existingData["2"] != null;
-          bool slot3Filled = existingData != null && existingData["3"] != '' && existingData["3"] != null;
-          bool slot4Filled = existingData != null && existingData["4"] != '' && existingData["4"] != null;
+          bool slot1Filled = existingData != null &&
+              existingData["1"] != '' &&
+              existingData["1"] != null;
+          bool slot2Filled = existingData != null &&
+              existingData["2"] != '' &&
+              existingData["2"] != null;
+          bool slot3Filled = existingData != null &&
+              existingData["3"] != '' &&
+              existingData["3"] != null;
+          bool slot4Filled = existingData != null &&
+              existingData["4"] != '' &&
+              existingData["4"] != null;
 
           // Lock the table if all spots are filled
           if (slot1Filled && slot2Filled && slot3Filled && slot4Filled) {
@@ -640,9 +726,12 @@ void setConnection(bool value){
           // Find an empty slot and add the player
           for (int i = 1; i <= 4; i++) {
             String fieldKey = i.toString();
-            if (existingData != null && (existingData[fieldKey] == '' || existingData[fieldKey] == null)) {
+            if (existingData != null &&
+                (existingData[fieldKey] == '' ||
+                    existingData[fieldKey] == null)) {
               await ludoCollection.doc(documentId.toString()).update({
-                fieldKey: '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i - 1].type}"}'
+                fieldKey:
+                '{"name":"${profile!.data!.username}","id":"${profile.data!.id}","image":"${profile.data!.profilePicture}","number":"${profile.data!.mobileNumber}","color":"${playerColors[i - 1].type}"}'
               });
               setFieldKey(i);
               isAdded = true;
@@ -660,7 +749,8 @@ void setConnection(bool value){
     if (isAdded) {
       firebaseViewModel.setTable(documentId);
       join
-          .joinApi(tournamentId.toString(), documentId.toString(), prizePool, context)
+          .joinApi(tournamentId.toString(), documentId.toString(), prizePool,
+          context)
           .then((_) {
         resetPawns(context, documentId);
       });
@@ -668,13 +758,13 @@ void setConnection(bool value){
   }
 
 
-  removePlayerData( context) async {
+  removePlayerData(context) async {
     final firebaseViewModel =
-    Provider.of<FirebaseViewModel>(context, listen: false);
+        Provider.of<FirebaseViewModel>(context, listen: false);
     final ludoProvider = Provider.of<LudoProvider>(context, listen: false);
     final documentID = firebaseViewModel.table.toString();
     CollectionReference ludoCollection =
-    FirebaseFirestore.instance.collection('ludo');
+        FirebaseFirestore.instance.collection('ludo');
 
     // Get the field key for the current player
     int fieldKey = ludoProvider.fieldKey + 1;
@@ -685,7 +775,8 @@ void setConnection(bool value){
     });
 
     // Reset the pawns for the current player
-    var currentPlayer = ludoProvider.players[fieldKey - 1]; // Assuming players is a list
+    var currentPlayer =
+        ludoProvider.players[fieldKey - 1]; // Assuming players is a list
     for (var i = 0; i < currentPlayer.pawns.length; i++) {
       print("😢😢😢😢😢");
       currentPlayer.pawns[i].step = 0; // Reset to initial position
@@ -701,13 +792,14 @@ void setConnection(bool value){
     // Notify listeners to rebuild the UI
     notifyListeners();
   }
-  removePlayerName( context) async {
+
+  removePlayerName(context) async {
     final firebaseViewModel =
-    Provider.of<FirebaseViewModel>(context, listen: false);
+        Provider.of<FirebaseViewModel>(context, listen: false);
     final ludoProvider = Provider.of<LudoProvider>(context, listen: false);
     final documentID = firebaseViewModel.table.toString();
     CollectionReference ludoCollection =
-    FirebaseFirestore.instance.collection('ludo');
+        FirebaseFirestore.instance.collection('ludo');
 
     // Get the field key for the current player
     int fieldKey = ludoProvider.fieldKey + 1;
@@ -724,5 +816,4 @@ void setConnection(bool value){
   void dispose() {
     super.dispose();
   }
-
 }

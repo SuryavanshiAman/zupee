@@ -64,7 +64,7 @@ class _PawnWidgetState extends State<PawnWidget> {
               pawnAsset = data?['redPawn'] ?? Assets.diceRedPawn;
               break;
             case LudoPlayerType.green:
-              pawnAsset = data?['greenPawn'] ?? Assets.diceGreenpawn;
+              pawnAsset = data?['greenPawn'] ?? Assets.diceGreenPawn;
               break;
             case LudoPlayerType.yellow:
               pawnAsset = data?['yellowPawn'] ?? Assets.diceYellowPawn;
@@ -105,7 +105,7 @@ class _PawnWidgetState extends State<PawnWidget> {
         break;
       case LudoPlayerType.green:
          LudoColor.green;
-        pawnAsset =Assets.diceGreenpawn;
+        pawnAsset =Assets.diceGreenPawn;
         break;
       case LudoPlayerType.yellow:
        LudoColor.yellow;
@@ -140,12 +140,9 @@ class _PawnWidgetState extends State<PawnWidget> {
               child: Stack(
                 children: [
                   // SizedBox(height: height * 0.012),
-                  Padding(
-                    padding:  EdgeInsets.only(left: width*0.01),
-                    child: Transform.scale(
-                      scale: 2.5,
-                      child: Image.asset(pawnAsset),
-                    ),
+                  Transform.scale(
+                    scale: 2.5,
+                    child: Image.asset(pawnAsset),
                   ),
                 ],
               ),

@@ -7,6 +7,7 @@ import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/image_tost.dart';
 import 'package:zupee/utils/toast.dart';
+import 'package:zupee/view/Game/bot/bot_player.dart';
 import 'package:zupee/view/Game/dice_widgit.dart';
 import 'package:zupee/view/Game/ludo_constant.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
@@ -86,6 +87,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
             }
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
+
             return Stack(
                 children: [_buildDynamicContent(context, data),
                   if (!showContainer)
@@ -266,11 +268,13 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+
                 userDiceDesign(playerData),
                 const Spacer(),
                 ludoProvider.playerQuantity != 2
                     ? opponentsOneTurn(playerData)
                     : Container(),
+
               ],
             ),
           ),
@@ -280,6 +284,8 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+
+
                 ludoProvider.playerQuantity != 2
                     ? opponentsTwoTurn(playerData)
                     : Container(),

@@ -42,7 +42,7 @@ class LudoSupremeState extends State<LudoSupreme> {
       contestCategoryViewModel.contestCategoryApi(context);
       final tournamentViewModel =
           Provider.of<TournamentViewModel>(context, listen: false);
-      tournamentViewModel.tournamentApi(context, selectedIndices.toString());
+      tournamentViewModel.tournamentApi(context, "1");
     });
     time = false;
   }
@@ -63,7 +63,7 @@ class LudoSupremeState extends State<LudoSupreme> {
 
   String? futureTime;
 
-  int selectedIndices = 0;
+  int selectedIndices = 1;
   String tournamentID = "0";
   String entry = "0";
   String prizePool = "0";
@@ -128,7 +128,8 @@ class LudoSupremeState extends State<LudoSupreme> {
                                         return InkWell(
                                           onTap: () {
                                             setState(() {
-                                              selectedIndices = index;
+                                              print("${category[index].id.toString()}");
+                                              selectedIndices = int.parse(category[index].id.toString());
                                               tournament.tournamentApi(context,
                                                   selectedIndices.toString());
                                             });
@@ -145,7 +146,7 @@ class LudoSupremeState extends State<LudoSupreme> {
                                                     decoration: BoxDecoration(
                                                         color:
                                                             selectedIndices ==
-                                                                    index
+                                                                int.parse(category[index].id.toString())
                                                                 ? secondary
                                                                 : white,
                                                         borderRadius:
@@ -983,8 +984,7 @@ class LudoSupremeState extends State<LudoSupreme> {
                                                             alignment: Alignment
                                                                 .center,
                                                             children: [
-                                                              Shimmer
-                                                                  .fromColors(
+                                                              Shimmer.fromColors(
                                                                 baseColor:
                                                                     secondary,
                                                                 highlightColor:

@@ -1,19 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/root/internacionalization.dart';
 import 'package:provider/provider.dart';
 import 'package:zupee/language/hindi.dart';
 import 'package:zupee/res/app_constant.dart';
 import 'package:zupee/res/check_network/network_checker.dart';
-import 'package:zupee/res/check_network/network_message.dart';
-import 'package:zupee/test.dart';
 import 'package:zupee/utils/routes.dart';
 import 'package:zupee/utils/routes_name.dart';
-import 'package:zupee/view/Game/ludo_game_home_page.dart';
-import 'package:zupee/view/Game/winner_screen.dart';
 import 'package:zupee/view_model/about_view_model.dart';
 import 'package:zupee/view_model/adda_player_list_view_model.dart';
+import 'package:zupee/view_model/banner_view_model.dart';
 import 'package:zupee/view_model/confirm_payment_view_model.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 import 'package:zupee/view_model/join_view_model.dart';
@@ -22,8 +21,6 @@ import 'package:zupee/view_model/send_result_view_model.dart';
 import 'package:zupee/view_model/timer_view_model.dart';
 import 'package:zupee/view_model/tournament_view_moedl.dart';
 import 'package:zupee/view_model/transaction_history_view_model.dart';
-
-import 'frzi.dart';
 import 'language/english.dart';
 import 'view/Game/ludo_provider.dart';
 import 'view_model/add_bank_details_view_model.dart';
@@ -39,7 +36,24 @@ import 'view_model/withdraw_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if(kIsWeb) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: "AIzaSyBX3NAr87DrxvDsbFBjBnbMP1QBkHamT_w",
+            authDomain: "ludozupee-d8599.firebaseapp.com",
+            databaseURL: "https://hopgamming-532b5-default-rtdb.firebaseio.com",
+            projectId: "ludozupee-d8599",
+            storageBucket: "ludozupee-d8599.appspot.com",
+            messagingSenderId: "127939317909",
+            appId: "1:127939317909:web:040220605e7a8a057f4b9c",
+            measurementId: "G-Y63KYVV5RF"
+        )
+    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    // YoutubeLink();
+  }
+  else{
+    await Firebase.initializeApp();}
   runApp(const MyApp());
 }
 
@@ -69,7 +83,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     height=MediaQuery.of(context).size.height;
-    width=MediaQuery.of(context).size.width;
+    width=kIsWeb?400:MediaQuery.of(context).size.width;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserViewModel()),
@@ -94,44 +108,52 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => SendResultViewModel()),
         ChangeNotifierProvider(create: (_) => SendResultViewModel()),
         ChangeNotifierProvider(create: (_) => PlayerRankViewModel()),
+        ChangeNotifierProvider(create: (_) => BannerViewModel()),
       ],
-      child: GetMaterialApp(
-        title: AppConstants.appName,
-        translations: LocaleTranslations(),
-        locale: const Locale('en', 'US'), // Set the default locale
-        fallbackLocale: const Locale('en''US'),
-        debugShowCheckedModeBanner: false,
-        initialRoute: RoutesName.splashScreen,
-        onGenerateRoute: (settings) {
-          if (settings.name != null) {
-            return MaterialPageRoute(
-              builder: Routers.generateRoute(settings.name!),
-              settings: settings,
-            );
-          }
-          return null;
-        },
-        builder: (context, child) {
-          return Stack(
+      child: Center(
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: width
+          ),
+          child: GetMaterialApp(
+            title: AppConstants.appName,
+            translations: LocaleTranslations(),
+            locale: const Locale('en', 'US'), // Set the default locale
+            fallbackLocale: const Locale('en''US'),
+            debugShowCheckedModeBanner: false,
+            initialRoute: RoutesName.splashScreen,
+            onGenerateRoute: (settings) {
+              if (settings.name != null) {
+                return MaterialPageRoute(
+                  builder: Routers.generateRoute(settings.name!),
+                  settings: settings,
+                );
+              }
+              return null;
+            },
+            builder: (context, child)  {
+              return Stack(
 
-            children: [
-              child!, // The current screen widget
-              StreamBuilder<NetworkStatus>(
-                stream: _networkChecker.networkStatusStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final status = snapshot.data;
-                    if (status == NetworkStatus.noInternet || status == NetworkStatus.slowInternet) {
-                      return _buildNetworkStatusOverlay(status!);
-                    }
-                  }
-                  return const SizedBox.shrink(); // No overlay if no issue
-                },
-              ),
-            ],
-          );
-        },
-        // home:AppointmentsScreen(),
+                children: [
+                  child!, // The current screen widget
+                  StreamBuilder<NetworkStatus>(
+                    stream: _networkChecker.networkStatusStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final status = snapshot.data;
+                        if (status == NetworkStatus.noInternet || status == NetworkStatus.slowInternet) {
+                          return _buildNetworkStatusOverlay(status!);
+                        }
+                      }
+                      return const SizedBox.shrink(); // No overlay if no issue
+                    },
+                  ),
+                ],
+              );
+            },
+            // home:AppointmentsScreen(),
+          ),
+        ),
       ),
     );
   }
@@ -158,8 +180,9 @@ class _MyAppState extends State<MyApp> {
       Material(
       color: Colors.transparent,
       child: Container(
+        height: height*0.05,
+        alignment: Alignment.bottomCenter,
         color: backgroundColor,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -167,7 +190,7 @@ class _MyAppState extends State<MyApp> {
             const SizedBox(width: 10),
             Text(
               message,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
+              style: const TextStyle(color: Colors.white, fontSize: 18,fontWeight: FontWeight.w600),
             ),
           ],
         ),

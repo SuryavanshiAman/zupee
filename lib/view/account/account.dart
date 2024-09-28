@@ -51,14 +51,14 @@ bool?isSelectedLanguage;
     final ludoProvider=Provider.of<LudoProvider>(context);
     _subscription = Connectivity().onConnectivityChanged.listen((result) {
       if (result == ConnectivityResult.none) {
-        setState(() {
+        // setState(() {
           ludoProvider.setConnection(false);
-        });
+        // });
 
       } else {
-        setState(() {
+        // setState(() {
           ludoProvider.setConnection(true);
-        });
+        // });
       }
     });
     return Scaffold(

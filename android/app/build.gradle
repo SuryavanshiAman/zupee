@@ -34,11 +34,19 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+//        sourceCompatibility = JavaVersion.VERSION_1_8
+//        targetCompatibility = JavaVersion.VERSION_1_8
     }
-
+    tasks.withType(JavaCompile) {
+        options.compilerArgs.removeAll(['-Werror'])
+    }
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:-options" << "-Werror"
+    }
     defaultConfig {
+        multiDexEnabled true
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.zupee.zupigame.zupee"
         // You can update the following values to match your application needs.
@@ -59,6 +67,11 @@ android {
     }
     buildTypes {
         release {
+            minifyEnabled true
+            shrinkResources true
+
+            // Use ProGuard or R8 configuration file
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now,
             // so `flutter run --release` works.

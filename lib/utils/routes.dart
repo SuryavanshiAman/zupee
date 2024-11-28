@@ -4,6 +4,7 @@ import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/Game/ludo_game_home_page.dart';
 import 'package:zupee/view/account/about/html_viewer_page.dart';
 import 'package:zupee/view/account/bank_Details_page.dart';
+import 'package:zupee/view/account/help_suppoort/chat_screen.dart';
 import 'package:zupee/view/account/kyc/kyc.dart';
 import 'package:zupee/view/account/kyc/pan_card_page.dart';
 import 'package:zupee/view/account/responsible_gaming/responsible_gaming.dart';
@@ -12,6 +13,7 @@ import 'package:zupee/view/auth/otp_page.dart';
 import 'package:zupee/view/auth/register_page.dart';
 import 'package:zupee/view/auth/splash_page.dart';
 import 'package:zupee/view/bottom_nav_bar.dart';
+import 'package:zupee/view/home/notification_page.dart';
 import 'package:zupee/view/home/tournament_page.dart';
 import 'package:zupee/view/profile/avtar_screen.dart';
 import 'package:zupee/view/profile/edit_profile_page.dart';
@@ -102,6 +104,10 @@ class Routers {
         return (context) =>   const WinnerScreen();
       case RoutesName.avatarSelectionScreen:
         return (context) =>   const AvatarSelectionScreen();
+      case RoutesName.chatPage:
+        return (context) =>   const ChatPage();
+      case RoutesName.notificationScreen:
+        return (context) =>   const NotificationScreen();
       default:
         return (context) => Scaffold(
               body: Center(

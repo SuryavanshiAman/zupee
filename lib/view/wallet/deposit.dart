@@ -161,7 +161,8 @@ class _DepositScreenState extends State<DepositScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                depositViewModel.loading==false? CustomContainer(
+                depositViewModel.loading==false?
+                CustomContainer(
                   onTap: (){
                     if (amountCon.text.isEmpty) {
                       Utils.flushBarErrorMessage(

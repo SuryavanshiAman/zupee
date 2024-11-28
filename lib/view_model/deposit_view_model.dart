@@ -30,24 +30,7 @@ class DepositViewModel with ChangeNotifier {
       "userid":userId,
       "amount":amount.toString()
     };
-    // final body=jsonDecode(data.toString());
-    // print(data);
-    // _depositRepo.depositApi(data).then((value) {
-    //   if (value != null && value['status'] == 'SUCCESS' && value.containsKey('payment_link')) {
-    //     setLoading(false);
-    //     final url = value['payment_link'].toString();
-    //     Launcher.launchURL(url);
-    //   } else {
-    //     setLoading(false);
-    //     Utils.showErrorToast(value['message'] ?? 'Unknown error');
-    //   }
-    // }).onError((error, stackTrace) {
-    //   setLoading(false);
-    //   Utils.showErrorToast('Failed to process the deposit');
-    //   if (kDebugMode) {
-    //     print('error: $error');
-    //   }
-    // });
+
     _depositRepo.depositApi(data).then((value) {
       if (value['status'] == 'SUCCESS') {
         setLoading(false);

@@ -18,7 +18,7 @@ dependencies:
   shimmer: ^3.0.0
   get:
   sliding_switch: ^1.1.0
-  fluttertoast: ^8.2.8
+  fluttertoast: ^8.2.1
   another_flushbar: ^1.12.30
   share_plus:
   image_picker: ^1.1.2

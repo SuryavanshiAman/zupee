@@ -32,4 +32,6 @@ class RoutesName{
   static const String bankDetailsScreen = '/bankDetailsScreen';
   static const String winnerScreen = '/winnerScreen';
   static const String avatarSelectionScreen = '/avatarSelectionScreen';
+  static const String chatPage = '/chatPage';
+  static const String notificationScreen = '/notificationScreen';
 }

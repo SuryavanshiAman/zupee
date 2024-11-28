@@ -21,4 +21,7 @@ class ApiUrl{
   static const String sendResultApi = "${baseUrl}getResult";
   static const String userRank = "${baseUrl}getRankedUsers";
   static const String bannerApi = "${baseUrl}banner";
+  static const String sentChatApi = "${baseUrl}help_messege";
+  static const String getChatApi = "${baseUrl}getmessage/";
+  static const String notificationApi = "${baseUrl}notifications/";
 }

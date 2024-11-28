@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:zupee/helper/response/status.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view_model/help_view_model.dart';
 
 import '../../../res/custom_back_button.dart';
@@ -101,6 +102,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                                               return Column(
                                                 children: [
                                                   ListTile(
+                                                    onTap: (){
+                                                      Navigator.pushNamed(context, RoutesName.chatPage);
+                                                    },
                                                     title: Text(
                                                       supportItem.description ??
                                                           '',
@@ -134,7 +138,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                           } else {
                             return const Center(
                               child: Text(
-                                "No Deposit History Found!",
+                                "No Help Topic Found!",
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 16),
                               ),

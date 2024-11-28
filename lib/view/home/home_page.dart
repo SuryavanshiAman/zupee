@@ -13,6 +13,7 @@ import 'package:zupee/res/custom_container.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view_model/banner_view_model.dart';
+import 'package:zupee/view_model/notification_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 
 class TrapeziumClipper extends CustomClipper<Path> {
@@ -52,6 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
       profileViewModel.getProfileApi(context);
       _scrollController.addListener(_handleScroll);
    Provider.of<BannerViewModel>(context,listen: false).bannerApi(context);
+      Provider.of<NotificationViewModel>(context, listen: false)
+          .notificationApi(context,"0");
     });
   }
 
@@ -93,6 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final profileViewModel =
         Provider.of<ProfileViewModel>(context).profileResponse?.data;
     final banner=Provider.of<BannerViewModel>(context).bannerResponse;
+    final notification=Provider.of<NotificationViewModel>(context).notificationList.data?.msgStatus;
     return Scaffold(
       body: ludoProvider.isConnected
           ? CustomScrollView(controller: _scrollController, slivers: [
@@ -103,22 +107,43 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: _showTitle ? blue : Colors.white,
                 shadowColor: Colors.white,
                 foregroundColor: Colors.red,
-                leadingWidth: 250,
-                leading: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "LUDO ZUPEE",
-                    style: TextStyle(
-                        color: Colors.deepPurpleAccent,
-                        fontSize: 26,
-                        fontWeight: FontWeight.w900),
-                  ),
-                ),
+                // leadingWidth: 250,
+                // leading: const Padding(
+                //   padding: EdgeInsets.all(8.0),
+                //   child: Text(
+                //     "LUDO ZUPEE",
+                //     style: TextStyle(
+                //         color: Colors.deepPurpleAccent,
+                //         fontSize: 26,
+                //         fontWeight: FontWeight.w900),
+                //   ),
+                // ),
                 actions: [
-                  Icon(
-                    Icons.notifications_none,
-                    color: _showTitle ? Colors.white : tertiary,
-                    size: 35,
+                  Stack(
+                    children: [
+                      Padding(
+                        padding:  EdgeInsets.only(top: notification!="0"? 8.0:1.0),
+                        child: InkWell(
+                          onTap: (){
+                            Navigator.pushNamed(context, RoutesName.notificationScreen);
+                            },
+                          child: Icon(
+                            Icons.notifications_none,
+                            color: _showTitle ? Colors.white : tertiary,
+                            size: 35,
+                          ),
+                        ),
+                      ),
+                      notification!="0"?  Container()
+                          :  Positioned(
+                          left: width*0.06,
+                          top: height*0.027,
+                          child: CircleAvatar(
+                            radius: 6,
+                            backgroundColor: green,
+
+                          )),
+                    ],
                   ),
                   InkWell(
                     onTap: () {

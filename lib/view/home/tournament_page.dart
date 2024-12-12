@@ -801,6 +801,10 @@ class LudoSupremeState extends State<LudoSupreme> {
                                                 entry = tournament[index]
                                                     .amount
                                                     .toString();
+                                                ludoProvider.setEntryAmount(tournament[
+                                                index]
+                                                    .amount
+                                                    .toString());
                                                 prizePool = tournament[index]
                                                     .winPrize
                                                     .toString();
@@ -1049,6 +1053,10 @@ class LudoSupremeState extends State<LudoSupreme> {
                                                                           index]
                                                                       .amount
                                                                       .toString();
+                                                                  ludoProvider.setEntryAmount(tournament[
+                                                                  index]
+                                                                      .amount
+                                                                      .toString());
                                                                   prizePool = tournament[
                                                                           index]
                                                                       .winPrize

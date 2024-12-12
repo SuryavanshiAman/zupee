@@ -395,7 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Container(
                                 // alignment: Alignment.center,
-                                height: height * 0.2,
+                                height: height * 0.22,
                                 width: width * 0.55,
                                 decoration: const BoxDecoration(
                                     color: Colors.green,

@@ -16,6 +16,7 @@ import 'package:zupee/view_model/banner_view_model.dart';
 import 'package:zupee/view_model/confirm_payment_view_model.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 import 'package:zupee/view_model/join_view_model.dart';
+import 'package:zupee/view_model/kyc_view_model.dart';
 import 'package:zupee/view_model/notification_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 import 'package:zupee/view_model/send_result_view_model.dart';
@@ -31,10 +32,12 @@ import 'view_model/get_chat_view_model.dart';
 import 'view_model/help_view_model.dart';
 import 'view_model/contest_category_view_model.dart';
 import 'view_model/profile_update_view_model.dart';
+import 'view_model/refund_view_model.dart';
 import 'view_model/send_chat_view_model.dart';
 import 'view_model/update_language_view_model.dart';
 import 'view_model/user_view_model.dart';
 import 'view_model/view_bank_details_view_model.dart';
+import 'view_model/view_kyc_details_view_model.dart';
 import 'view_model/withdraw_view_model.dart';
 
 void main() async {
@@ -115,6 +118,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => SendChatViewModel()),
         ChangeNotifierProvider(create: (_) => GetChatViewModel()),
         ChangeNotifierProvider(create: (_) => NotificationViewModel()),
+        ChangeNotifierProvider(create: (_) => AddKycViewModel()),
+        ChangeNotifierProvider(create: (_) => ViewKycDetailViewModel()),
+        ChangeNotifierProvider(create: (_) => RefundViewModel()),
       ],
       child: Center(
         child: Container(

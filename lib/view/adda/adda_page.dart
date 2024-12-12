@@ -158,7 +158,7 @@ class _AddaScreenState extends State<AddaScreen> {
                           child: Row(children: [
                             SizedBox(
                               // width: width,
-                              height: height * 0.14,
+                              height: height * 0.15,
                               child: addaList(),
                             )
                           ]),

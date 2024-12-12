@@ -31,8 +31,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<LudoProvider>(context, listen: false)
-        .listenToGameUpdates(context);
+    Provider.of<LudoProvider>(context, listen: false).listenToGameUpdates(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       imageToast();
       String argument = ModalRoute.of(context)!.settings.arguments.toString();

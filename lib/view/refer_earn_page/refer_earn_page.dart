@@ -85,9 +85,9 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> with TickerProv
       ),
       body:ludoProvider.isConnected? TabBarView(
         controller: tabContrller,
-        children: [
-          const HowItWorkTabScreen(),
-          const MyReferralsTabScreen()
+        children: const [
+          HowItWorkTabScreen(),
+          MyReferralsTabScreen()
         ],
       ):const NetworkErrorScreen(),
     );

@@ -19,7 +19,7 @@ class _HowItWorkTabScreenState extends State<HowItWorkTabScreen> {
   Widget build(BuildContext context) {
     return Padding(
       padding:  const EdgeInsets.all(10.0),
-      child: Column(
+      child: ListView(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -66,7 +66,7 @@ class _HowItWorkTabScreenState extends State<HowItWorkTabScreen> {
             ),
           ),
           Container(
-            height: height*0.35,
+            // height: height*0.35,
 
             decoration: BoxDecoration(
               color: white,
@@ -183,7 +183,6 @@ class _HowItWorkTabScreenState extends State<HowItWorkTabScreen> {
             ),
           ),
 
-          const Spacer(),
           Padding(
             padding:  const EdgeInsets.all(15.0),
             child: Text(

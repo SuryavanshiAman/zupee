@@ -33,7 +33,7 @@ class AadharCard extends StatelessWidget {
           children: [
             const SizedBox(height: 16),
             Container(
-              padding: const EdgeInsets.only(left: 16, right: 16),
+              padding: const EdgeInsets.only(left: 16, right: 10),
               decoration: BoxDecoration(
                 color: white,
                 borderRadius: BorderRadius.circular(12),
@@ -138,7 +138,7 @@ class AadharCard extends StatelessWidget {
               },
               child: Container(
                 padding: const EdgeInsets.all(18),
-                height: height * 0.15,
+                // height: height * 0.15,
                 // width: width*0.9,
                 decoration: BoxDecoration(
                   color: white,

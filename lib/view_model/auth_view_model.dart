@@ -20,10 +20,14 @@ class AuthViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> authApi(dynamic phone, context) async {
+  Future<void> authApi(dynamic phone,dynamic email ,dynamic state,dynamic refCode, context) async {
     setLoading(true);
     Map data={
-      "mobile_number":phone
+      "mobile_number":phone,
+      "email":email,
+      "state":state,
+      "referral_code":refCode
+
     };
     _authRepo.authApi(data).then((value) {
       if (value['status'] == "201") {
@@ -47,6 +51,7 @@ class AuthViewModel with ChangeNotifier {
       }
       else {
       setLoading(false);
+      Navigator.pushReplacementNamed(context, RoutesName.registerScreen);
       Utils.showErrorToast(value['message']);
       }
     }).onError((error, stackTrace) {

@@ -48,6 +48,7 @@ class Data {
   String? referrerId;
   String? createdAt;
   String? updatedAt;
+  int? kycStatus;
 
   Data(
       {this.id,
@@ -67,7 +68,9 @@ class Data {
         this.referralCode,
         this.referrerId,
         this.createdAt,
-        this.updatedAt});
+        this.updatedAt,
+        this.kycStatus
+      });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -88,6 +91,7 @@ class Data {
     referrerId = json['referrer_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    kycStatus = json['kyc_status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -110,6 +114,7 @@ class Data {
     data['referrer_id'] = referrerId;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
+    data['kyc_status'] = kycStatus;
     return data;
   }
 }

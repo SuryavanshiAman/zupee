@@ -1,7 +1,8 @@
 
 
 class ApiUrl{
-  static const String baseUrl = 'https://ludozupee.fctechteam.org/api/';
+  // static const String baseUrl = 'https://ludozupee.fctechteam.org/api/';
+  static const String baseUrl = 'https://zdjohn.in/api/';
   static const String sendOtp="https://otp.fctechteam.org/send_otp.php?";
   static const String verifyOtp="https://otp.fctechteam.org/verifyotp.php?";
   static const String authApi = '${baseUrl}login';
@@ -24,4 +25,7 @@ class ApiUrl{
   static const String sentChatApi = "${baseUrl}help_messege";
   static const String getChatApi = "${baseUrl}getmessage/";
   static const String notificationApi = "${baseUrl}notifications/";
+  static const String kycApi = "${baseUrl}kyc/save";
+  static const String viewKyc = "${baseUrl}viewkyc";
+  static const String refund = "${baseUrl}refund";
 }

@@ -21,6 +21,8 @@ class LudoProvider with ChangeNotifier {
   int _playerQuantity = 0;
   int _documentId = 1;
   int get documentId => _documentId;
+  String _entryAmount = "0";
+  String get entryAmount => _entryAmount;
   bool _stopDice = false;
   bool get isMoving => _isMoving;
   bool get stopDice => _stopDice;
@@ -31,7 +33,54 @@ class LudoProvider with ChangeNotifier {
   bool get isConnected => _isConnected;
   int _selectedAvatarIndex = 0;
   String? _selectedAvatarImage;
+  File? _aadhaarImage;
+  File? get aadhaarImage =>_aadhaarImage;
+  File? _aadhaarBackImage;
+  File? get aadhaarBackImage =>_aadhaarBackImage;
+  File? _panImage;
+  File? get panImage =>_panImage;
+  void setAadhaarImage(File?value){
+    _aadhaarImage = value;
+    notifyListeners();
+  }
+  void setAadhaarBackImage(File?value){
+    _aadhaarBackImage = value;
+    notifyListeners();
+  }
+  void setPanImage(File?value){
+    _panImage = value;
+    notifyListeners();
+  }
+  String? aadhaarBase64Image;
+  String? aadhaarBackBase64Image;
+  String? panBase64Image;
+  Future<void> getAadhaarImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
 
+    if (pickedFile != null) {
+      _aadhaarImage = File(pickedFile.path);
+      aadhaarBase64Image = base64Encode(_aadhaarImage!.readAsBytesSync());
+      notifyListeners();
+    }
+  }
+  Future<void> getAadhaarBackImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      _aadhaarBackImage = File(pickedFile.path);
+      aadhaarBackBase64Image = base64Encode(_aadhaarBackImage!.readAsBytesSync());
+      notifyListeners();
+    }
+  }
+  Future<void> getPanImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      _panImage = File(pickedFile.path);
+      panBase64Image = base64Encode(_panImage!.readAsBytesSync());
+      notifyListeners();
+    }
+  }
   int get selectedAvatarIndex => _selectedAvatarIndex;
   String? get selectedAvatarImage => _selectedAvatarImage;
   String? _base64Image;
@@ -75,7 +124,10 @@ class LudoProvider with ChangeNotifier {
     _status = value;
     notifyListeners();
   }
-
+  void setEntryAmount(String value) {
+    _entryAmount = value;
+    notifyListeners();
+  }
   void setConnection(bool value) {
     _isConnected = value;
     notifyListeners();

@@ -314,7 +314,7 @@ bool?isSelectedLanguage;
                                 color:profileViewModel.kycStatus==1? orange:green,
                                 borderRadius: BorderRadius.circular(20)
                             ),
-                            child: const Text("Pending"),
+                            child:  Text(profileViewModel.kycStatus==1?"Pending":"Success",style: TextStyle(color: white),),
                           ):Container(),
                         ],
                       ),

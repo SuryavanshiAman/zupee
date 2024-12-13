@@ -107,17 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: _showTitle ? blue : Colors.white,
                 shadowColor: Colors.white,
                 foregroundColor: Colors.red,
-                // leadingWidth: 250,
-                // leading: const Padding(
-                //   padding: EdgeInsets.all(8.0),
-                //   child: Text(
-                //     "LUDO ZUPEE",
-                //     style: TextStyle(
-                //         color: Colors.deepPurpleAccent,
-                //         fontSize: 26,
-                //         fontWeight: FontWeight.w900),
-                //   ),
-                // ),
+                automaticallyImplyLeading: false,
                 actions: [
                   Stack(
                     children: [

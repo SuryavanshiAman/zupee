@@ -28,4 +28,5 @@ class ApiUrl{
   static const String kycApi = "${baseUrl}kyc/save";
   static const String viewKyc = "${baseUrl}viewkyc";
   static const String refund = "${baseUrl}refund";
+  static const String notificationsDelete = "${baseUrl}notificationsdelete";
 }

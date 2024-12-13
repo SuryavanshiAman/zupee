@@ -14,6 +14,7 @@ import 'package:zupee/view_model/about_view_model.dart';
 import 'package:zupee/view_model/adda_player_list_view_model.dart';
 import 'package:zupee/view_model/banner_view_model.dart';
 import 'package:zupee/view_model/confirm_payment_view_model.dart';
+import 'package:zupee/view_model/delete_notification_view_model.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 import 'package:zupee/view_model/join_view_model.dart';
 import 'package:zupee/view_model/kyc_view_model.dart';
@@ -121,6 +122,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => AddKycViewModel()),
         ChangeNotifierProvider(create: (_) => ViewKycDetailViewModel()),
         ChangeNotifierProvider(create: (_) => RefundViewModel()),
+        ChangeNotifierProvider(create: (_) => DeleteNotificationViewModel()),
       ],
       child: Center(
         child: Container(

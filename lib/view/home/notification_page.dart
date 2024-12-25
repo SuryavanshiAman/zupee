@@ -51,7 +51,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ),
       body: Consumer<NotificationViewModel>(
         builder: (context, notification, _) {
-          switch (notification.notificationList.s tatus) {
+          switch (notification.notificationList.status) {
             case Status.LOADING:
               return const Center(
                 child: CircularProgressIndicator(),

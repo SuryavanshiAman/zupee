@@ -49,8 +49,11 @@ class TimerProvider with ChangeNotifier {
           notifyListeners();
           // Optionally navigate to another screen
           // Navigator.pushReplacementNamed(context, RoutesName.winnerScreen);
-          Navigator.pushReplacementNamed(context, RoutesName.winnerScreen,
-              arguments: amount);
+          // Future.delayed(Duration(seconds: 5),(){
+          //   Navigator.pushReplacementNamed(context, RoutesName.winnerScreen,
+          //       arguments: amount);
+          // });
+
         }
       } else {
         _timer?.cancel();

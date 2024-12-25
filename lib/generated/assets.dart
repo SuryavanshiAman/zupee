@@ -14,6 +14,7 @@ class Assets {
   static const String diceGreenpawn = 'assets/dice/greenpawn.png';
   static const String diceRedPawn = 'assets/dice/red_pawn.webp';
   static const String diceYellowPawn = 'assets/dice/yellow_pawn.webp';
+  static const String gifCongratulation = 'assets/gif/Congratulation.gif';
   static const String gifIcons8Hourglass = 'assets/gif/icons8-hourglass.gif';
   static const String iconAccount = 'assets/icon/account.png';
   static const String iconAccountTwo = 'assets/icon/account_two.png';
@@ -68,6 +69,9 @@ class Assets {
   static const String imagesWhatsapp = 'assets/images/whatsapp.png';
   static const String imagesWinner = 'assets/images/winner.png';
   static const String imagesZupee = 'assets/images/zupee.png';
+  static const String lottieConfety = 'assets/lottie/confety.json';
+  static const String lottieRocket = 'assets/lottie/rocket.json';
+  static const String lottieWinner = 'assets/lottie/winner.json';
   static const String ludoBoardTwo = 'assets/ludo/board_two.webp';
   static const String ludoCrown = 'assets/ludo/crown.png';
   static const String ludoDice = 'assets/ludo/dice.webp';

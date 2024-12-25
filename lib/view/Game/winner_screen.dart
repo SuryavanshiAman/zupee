@@ -76,7 +76,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
                   children: [
                     Container(
                       margin: EdgeInsets.only(top: height * 0.1),
-                      height: height * 0.37,
+                      height: height * 0.4,
                       width: width * 0.9,
                       decoration: BoxDecoration(
                           color: lightBlueTwo,

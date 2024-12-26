@@ -11,6 +11,7 @@ import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view/Game/bot/bot_player.dart';
 import 'package:zupee/view/Game/dice_widgit.dart';
 import 'package:zupee/view/Game/ludo_constant.dart';
+import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 import 'package:zupee/view_model/timer_view_model.dart';
@@ -29,11 +30,12 @@ class LudoHomeScreen extends StatefulWidget {
 class _LudoHomeScreenState extends State<LudoHomeScreen> {
   TimerProvider timerProvider = TimerProvider();
   LudoProvider ludoProvider = LudoProvider();
-  bool showContainer=false;
+  bool showContainer = false;
   @override
   void initState() {
     super.initState();
-    Provider.of<LudoProvider>(context, listen: false).listenToGameUpdates(context);
+    Provider.of<LudoProvider>(context, listen: false)
+        .listenToGameUpdates(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       imageToast();
       String argument = ModalRoute.of(context)!.settings.arguments.toString();
@@ -58,7 +60,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   }
 
   Future<bool> _onWillPop() async {
-    return await Utils.exitGame(context, timerProvider, ludoProvider) ;
+    return await Utils.exitGame(context, timerProvider, ludoProvider);
   }
 
   @override
@@ -89,15 +91,15 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
 
-            return Stack(
-                children: [_buildDynamicContent(context, data),
-                  if (!showContainer)
-                    Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.black.withOpacity(0.5),  // Use proper opacity
-                    ),
-                ]);
+            return Stack(children: [
+              _buildDynamicContent(context, data),
+              if (!showContainer)
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.black.withOpacity(0.5), // Use proper opacity
+                ),
+            ]);
           },
         )),
       ),
@@ -105,7 +107,8 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   }
 
   Widget _buildDynamicContent(BuildContext context, Map<String, dynamic> data) {
-    final profile = Provider.of<ProfileViewModel>(context,listen: false).profileResponse;
+    final profile =
+        Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
     final ludoProvider = Provider.of<LudoProvider>(context);
     Map<String, dynamic> player1Data =
         (data['1'] != null && data['1'].isNotEmpty)
@@ -133,14 +136,13 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
 
     return Stack(
       children: [
-
-
         Container(
           height: height,
           width: width,
           decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage(Assets.imagesLudoHomeBg), fit: BoxFit.fill)),
+                  image: AssetImage(Assets.imagesLudoHomeBg),
+                  fit: BoxFit.fill)),
           child: Column(
             children: [
               Row(
@@ -182,7 +184,8 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                   ),
                   SizedBox(
                       height: height * 0.04,
-                      child: const Image(image: AssetImage(Assets.ludoSetting))),
+                      child:
+                          const Image(image: AssetImage(Assets.ludoSetting))),
                   SizedBox(
                     width: width * 0.03,
                   )
@@ -228,7 +231,10 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                           image: DecorationImage(
                               image: AssetImage(Assets.ludoLabelSection),
                               fit: BoxFit.fill)),
-                      child: Text( profile?.data?.id.toString()==player3Data['id'] ? player1Data['name']: player3Data['name']??"",
+                      child: Text(
+                          profile?.data?.id.toString() == player3Data['id']
+                              ? player1Data['name']
+                              : player3Data['name'] ?? "",
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -274,13 +280,11 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-
-                    userDiceDesign(playerData,data),
+                    userDiceDesign(playerData, data),
                     const Spacer(),
                     ludoProvider.playerQuantity != 2
                         ? opponentsOneTurn(playerData)
                         : Container(),
-
                   ],
                 ),
               ),
@@ -290,13 +294,11 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-
-
                     ludoProvider.playerQuantity != 2
                         ? opponentsTwoTurn(playerData)
                         : Container(),
                     const Spacer(),
-                    opponentsThreeTurn(playerData,data),
+                    opponentsThreeTurn(playerData, data),
                   ],
                 ),
               ),
@@ -346,7 +348,16 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                               image: AssetImage(Assets.ludoLabelSectionTwo),
                               fit: BoxFit.fill)),
                       child: Text(
-                          profile?.data?.id.toString()==player3Data['id'] ? player3Data['name']:profile?.data?.id.toString()==player1Data['id'] ? player1Data['name']:profile?.data?.id.toString()==player2Data['id'] ? player2Data['name']:player4Data['name']??profile?.data?.id.toString(),
+                          profile?.data?.id.toString() == player3Data['id']
+                              ? player3Data['name']
+                              : profile?.data?.id.toString() ==
+                                      player1Data['id']
+                                  ? player1Data['name']
+                                  : profile?.data?.id.toString() ==
+                                          player2Data['id']
+                                      ? player2Data['name']
+                                      : player4Data['name'] ??
+                                          profile?.data?.id.toString(),
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -356,40 +367,39 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
             ],
           ),
         ),
-        // timerProvider.remainingSeconds.toString()=="0"? Container(height: height,width: width,color: Colors.black.withOpacity(0.2,)):Container(),
+        timerProvider.remainingSeconds.toString()=="0"? Container(height: height,width: width,color: Colors.black.withOpacity(0.2,)):Container(),
 
-        // timerProvider.remainingSeconds.toString()=="0"?(int.parse(profile?.data?.id.toString()??"").toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()?Image.asset(Assets.gifCongratulation):Container()):Container(),
-        // timerProvider.remainingSeconds.toString()=="0"?(int.parse(profile?.data?.id.toString()??"").toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()?Center(child: Lottie.asset(Assets.lottieWinner,)):Container()):Container(),
-
+        timerProvider.remainingSeconds.toString()=="0"?(int.parse(profile?.data?.id.toString()??"").toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()?Image.asset(Assets.gifCongratulation):Container()):Container(),
+        timerProvider.remainingSeconds.toString()=="0"?(int.parse(profile?.data?.id.toString()??"").toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()?Center(child: Lottie.asset(Assets.lottieWinner,)):Container()):Container(),
       ],
     );
   }
 
-  Widget userDiceDesign(List<Map<String, dynamic>> playerData,data) {
-    final profile = Provider.of<ProfileViewModel>(context,listen: false).profileResponse;
+  Widget userDiceDesign(List<Map<String, dynamic>> playerData, data) {
+    final profile =
+        Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
     Map<String, dynamic> player1Data =
-    (data['1'] != null && data['1'].isNotEmpty)
-        ? json.decode(data['1'])
-        : {};
+        (data['1'] != null && data['1'].isNotEmpty)
+            ? json.decode(data['1'])
+            : {};
     Map<String, dynamic> player2Data =
-    (data['2'] != null && data['2'].isNotEmpty)
-        ? json.decode(data['2'])
-        : {};
+        (data['2'] != null && data['2'].isNotEmpty)
+            ? json.decode(data['2'])
+            : {};
     Map<String, dynamic> player3Data =
-    (data['3'] != null && data['3'].isNotEmpty)
-        ? json.decode(data['3'])
-        : {};
+        (data['3'] != null && data['3'].isNotEmpty)
+            ? json.decode(data['3'])
+            : {};
     Map<String, dynamic> player4Data =
-    (data['4'] != null && data['4'].isNotEmpty)
-        ? json.decode(data['4'])
-        : {};
+        (data['4'] != null && data['4'].isNotEmpty)
+            ? json.decode(data['4'])
+            : {};
 
     return Consumer<LudoProvider>(
       builder: (context, value, child) => Padding(
         padding: const EdgeInsets.only(bottom: 0, left: 0),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-
           Container(
               height: height * 0.07,
               width: width * 0.15,
@@ -404,14 +414,15 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                 width: width * 0.23,
                 fit: BoxFit.fill,
               )),
-              // value.currentPlayer.type.toString() == player1Data['color'].toString()||
-              //     value.currentPlayer.type.toString() == player2Data['color'].toString()||
-              //     value.currentPlayer.type.toString() == player3Data['color'].toString()||
-              //     value.currentPlayer.type.toString() == player4Data['color'].toString()
-              profile?.data?.id.toString()==player3Data['id']
-              ?
-              DiceWidget(playerData: playerData)
-              :Container(
+          // value.currentPlayer.type.toString() == player1Data['color'].toString()||
+          //     value.currentPlayer.type.toString() == player2Data['color'].toString()||
+          //     value.currentPlayer.type.toString() == player3Data['color'].toString()||
+          //     value.currentPlayer.type.toString() == player4Data['color'].toString()
+          // profile?.data?.id.toString()==player3Data['id']
+       // ludoProvider.playerQuantity==2?  (
+           value.currentPlayer.type == LudoPlayerType.blue && profile?.data?.id.toString() == player1Data['id'] ||
+                  value.currentPlayer.type == LudoPlayerType.green && profile?.data?.id.toString() == player3Data['id']
+              ? Container(
                   alignment: Alignment.center,
                   height: height * 0.08,
                   width: width * 0.19,
@@ -428,7 +439,30 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                       height: height * 0.06,
                       width: width * 0.17,
                     ),
-                  )),
+                  ))
+              : DiceWidget(playerData: playerData)
+       // )
+       //     :
+       //     ludoProvider.currentPlayer.type == LudoPlayerType.blue?
+       //     DiceWidget(playerData: playerData): Container(
+       //         alignment: Alignment.center,
+       //         height: height * 0.08,
+       //         width: width * 0.19,
+       //         decoration: const BoxDecoration(
+       //             image: DecorationImage(
+       //                 image: AssetImage(Assets.ludoDiceSectionOne),
+       //                 fit: BoxFit.fill)),
+       //         child: Padding(
+       //           padding: const EdgeInsets.only(left: 8.0),
+       //           child: Image(
+       //             image: const AssetImage(
+       //               Assets.ludoDice,
+       //             ),
+       //             height: height * 0.06,
+       //             width: width * 0.17,
+       //           ),
+       //         ))
+
         ]),
       ),
     );
@@ -481,6 +515,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
   }
 
   Widget opponentsTwoTurn(List<Map<String, dynamic>> playerData) {
+
     return Consumer<LudoProvider>(
       builder: (context, value, child) {
         return Row(
@@ -526,53 +561,82 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
     );
   }
 
-  Widget opponentsThreeTurn(List<Map<String, dynamic>> playerData,data) {
+  Widget opponentsThreeTurn(List<Map<String, dynamic>> playerData, data) {
+    final profile =
+        Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
     Map<String, dynamic> player1Data =
-    (data['1'] != null && data['1'].isNotEmpty)
-        ? json.decode(data['1'])
-        : {};
+        (data['1'] != null && data['1'].isNotEmpty)
+            ? json.decode(data['1'])
+            : {};
     Map<String, dynamic> player2Data =
-    (data['2'] != null && data['2'].isNotEmpty)
-        ? json.decode(data['2'])
-        : {};
+        (data['2'] != null && data['2'].isNotEmpty)
+            ? json.decode(data['2'])
+            : {};
     Map<String, dynamic> player3Data =
-    (data['3'] != null && data['3'].isNotEmpty)
-        ? json.decode(data['3'])
-        : {};
+        (data['3'] != null && data['3'].isNotEmpty)
+            ? json.decode(data['3'])
+            : {};
     Map<String, dynamic> player4Data =
-    (data['4'] != null && data['4'].isNotEmpty)
-        ? json.decode(data['4'])
-        : {};
+        (data['4'] != null && data['4'].isNotEmpty)
+            ? json.decode(data['4'])
+            : {};
 
     return Consumer<LudoProvider>(
       builder: (context, value, child) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // value.currentPlayer.type == LudoPlayerType.green
-            value.currentPlayer.type.toString() == player1Data['color'].toString()||
-                value.currentPlayer.type.toString() == player2Data['color'].toString()||
-                value.currentPlayer.type.toString() == player3Data['color'].toString()||
-                value.currentPlayer.type.toString() == player4Data['color'].toString()
-                ? DiceWidget(playerData: playerData)
-                : Container(
-                    alignment: Alignment.center,
-                    height: height * 0.08,
-                    width: width * 0.19,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(Assets.ludoDiceSectionOne),
-                            fit: BoxFit.fill)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Image(
-                        image: const AssetImage(
-                          Assets.ludoDice,
-                        ),
-                        height: height * 0.06,
-                        width: width * 0.17,
-                      ),
-                    )),
+            // Text(
+            //   value.currentPlayer.type.toString(),
+            //   style: TextStyle(color: Colors.white),
+            // ),
+            // value.playerQuantity == 2
+            //     ?
+            // (
+                value.currentPlayer.type == LudoPlayerType.blue && profile?.data?.id.toString() == player1Data['id'] ||
+                        value.currentPlayer.type == LudoPlayerType.green && profile?.data?.id.toString() == player3Data['id']
+
+                    // value.currentPlayer.type.toString() == player4Data['color'].toString()
+                    ? DiceWidget(playerData: playerData)
+                    : Container(
+                        alignment: Alignment.center,
+                        height: height * 0.08,
+                        width: width * 0.19,
+                        decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(Assets.ludoDiceSectionOne),
+                                fit: BoxFit.fill)),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Image(
+                            image: const AssetImage(
+                              Assets.ludoDice,
+                            ),
+                            height: height * 0.06,
+                            width: width * 0.17,
+                          ),
+                        )),
+            // )
+                // : value.currentPlayer.type == LudoPlayerType.green
+                //     ? DiceWidget(playerData: playerData)
+                //     : Container(
+                //         alignment: Alignment.center,
+                //         height: height * 0.08,
+                //         width: width * 0.19,
+                //         decoration: const BoxDecoration(
+                //             image: DecorationImage(
+                //                 image: AssetImage(Assets.ludoDiceSectionOne),
+                //                 fit: BoxFit.fill)),
+                //         child: Padding(
+                //           padding: const EdgeInsets.only(left: 8.0),
+                //           child: Image(
+                //             image: const AssetImage(
+                //               Assets.ludoDice,
+                //             ),
+                //             height: height * 0.06,
+                //             width: width * 0.17,
+                //           ),
+                //         )),
             Container(
                 height: height * 0.07,
                 width: width * 0.15,

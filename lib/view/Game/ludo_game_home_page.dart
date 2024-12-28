@@ -232,9 +232,26 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                               image: AssetImage(Assets.ludoLabelSection),
                               fit: BoxFit.fill)),
                       child: Text(
-                          profile?.data?.id.toString() == player3Data['id']
-                              ? player1Data['name']
-                              : player3Data['name'] ?? "",
+                          ludoProvider.playerQuantity != 2
+                              ? "${
+                                  profile?.data?.id.toString() ==
+                                          player1Data['id']
+                                      ? player4Data['name']
+                                      : profile?.data?.id.toString() ==
+                                              player2Data['id']
+                                          ? player1Data['name']
+                                          : profile?.data?.id.toString() ==
+                                                  player3Data['id']
+                                              ? player1Data['name']
+                                              : profile?.data?.id.toString() ==
+                                                      player4Data['id']
+                                                  ? player1Data['name']
+                                                  : "No name"
+                                }"
+                              : profile?.data?.id.toString() ==
+                                      player3Data['id']
+                                  ? player1Data['name']
+                                  : player3Data['name'] ?? "",
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -267,7 +284,20 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                               image: DecorationImage(
                                   image: AssetImage(Assets.ludoLabelSectionTwo),
                                   fit: BoxFit.fill)),
-                          child: Text(player2Data['name'] ?? 'No Name',
+                          child: Text(
+                              profile?.data?.id.toString() == player1Data['id']
+                                  ? player2Data['name']
+                                  : profile?.data?.id.toString() ==
+                                          player2Data['id']
+                                      ? player4Data['name']
+                                      : profile?.data?.id.toString() ==
+                                              player3Data['id']
+                                          ? player2Data['name']
+                                          : profile?.data?.id.toString() ==
+                                                  player4Data['id']
+                                              ? player2Data['name']
+                                              : "No name",
+                              // player2Data['name'] ?? 'No Name',
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -283,7 +313,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                     userDiceDesign(playerData, data),
                     const Spacer(),
                     ludoProvider.playerQuantity != 2
-                        ? opponentsOneTurn(playerData)
+                        ? opponentsOneTurn(playerData, data)
                         : Container(),
                   ],
                 ),
@@ -295,7 +325,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ludoProvider.playerQuantity != 2
-                        ? opponentsTwoTurn(playerData)
+                        ? opponentsTwoTurn(playerData, data)
                         : Container(),
                     const Spacer(),
                     opponentsThreeTurn(playerData, data),
@@ -314,7 +344,19 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                               image: DecorationImage(
                                   image: AssetImage(Assets.ludoLabelSection),
                                   fit: BoxFit.fill)),
-                          child: Text(player4Data['name'] ?? 'No Name',
+                          child: Text(
+                              profile?.data?.id.toString() == player1Data['id']
+                                  ? player1Data['name']
+                                  : profile?.data?.id.toString() ==
+                                          player2Data['id']
+                                      ? player2Data['name']
+                                      : profile?.data?.id.toString() ==
+                                              player3Data['id']
+                                          ? player3Data['name']
+                                          : profile?.data?.id.toString() ==
+                                                  player4Data['id']
+                                              ? player4Data['name']
+                                              : "No name",
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -348,16 +390,19 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                               image: AssetImage(Assets.ludoLabelSectionTwo),
                               fit: BoxFit.fill)),
                       child: Text(
-                          profile?.data?.id.toString() == player3Data['id']
-                              ? player3Data['name']
+                          ludoProvider.playerQuantity != 2
+                              ? "${profile?.data?.id.toString() == player1Data['id'] ? player3Data['name'] : profile?.data?.id.toString() == player2Data['id'] ? player3Data['name'] : profile?.data?.id.toString() == player3Data['id'] ? player4Data['name'] : profile?.data?.id.toString() == player4Data['id'] ? player3Data['name'] : "No name"}"
                               : profile?.data?.id.toString() ==
-                                      player1Data['id']
-                                  ? player1Data['name']
+                                      player3Data['id']
+                                  ? player3Data['name']
                                   : profile?.data?.id.toString() ==
-                                          player2Data['id']
-                                      ? player2Data['name']
-                                      : player4Data['name'] ??
-                                          profile?.data?.id.toString(),
+                                          player1Data['id']
+                                      ? player1Data['name']
+                                      : profile?.data?.id.toString() ==
+                                              player2Data['id']
+                                          ? player2Data['name']
+                                          : player4Data['name'] ??
+                                              profile?.data?.id.toString(),
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -367,10 +412,10 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
             ],
           ),
         ),
-        timerProvider.remainingSeconds.toString()=="0"? Container(height: height,width: width,color: Colors.black.withOpacity(0.2,)):Container(),
-
-        timerProvider.remainingSeconds.toString()=="0"?(int.parse(profile?.data?.id.toString()??"").toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()?Image.asset(Assets.gifCongratulation):Container()):Container(),
-        timerProvider.remainingSeconds.toString()=="0"?(int.parse(profile?.data?.id.toString()??"").toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()?Center(child: Lottie.asset(Assets.lottieWinner,)):Container()):Container(),
+        // timerProvider.remainingSeconds.toString()=="0"? Container(height: height,width: width,color: Colors.black.withOpacity(0.2,)):Container(),
+        //
+        // timerProvider.remainingSeconds.toString()=="0"?(int.parse(profile?.data?.id.toString()??"").toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()?Image.asset(Assets.gifCongratulation):Container()):Container(),
+        // timerProvider.remainingSeconds.toString()=="0"?(int.parse(profile?.data?.id.toString()??"").toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()?Center(child: Lottie.asset(Assets.lottieWinner,)):Container()):Container(),
       ],
     );
   }
@@ -419,81 +464,226 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
           //     value.currentPlayer.type.toString() == player3Data['color'].toString()||
           //     value.currentPlayer.type.toString() == player4Data['color'].toString()
           // profile?.data?.id.toString()==player3Data['id']
-       // ludoProvider.playerQuantity==2?  (
-           value.currentPlayer.type == LudoPlayerType.blue && profile?.data?.id.toString() == player1Data['id'] ||
-                  value.currentPlayer.type == LudoPlayerType.green && profile?.data?.id.toString() == player3Data['id']
-              ? Container(
-                  alignment: Alignment.center,
-                  height: height * 0.08,
-                  width: width * 0.19,
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(Assets.ludoDiceSectionOne),
-                          fit: BoxFit.fill)),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Image(
-                      image: const AssetImage(
-                        Assets.ludoDice,
-                      ),
-                      height: height * 0.06,
-                      width: width * 0.17,
-                    ),
-                  ))
-              : DiceWidget(playerData: playerData)
-       // )
-       //     :
-       //     ludoProvider.currentPlayer.type == LudoPlayerType.blue?
-       //     DiceWidget(playerData: playerData): Container(
-       //         alignment: Alignment.center,
-       //         height: height * 0.08,
-       //         width: width * 0.19,
-       //         decoration: const BoxDecoration(
-       //             image: DecorationImage(
-       //                 image: AssetImage(Assets.ludoDiceSectionOne),
-       //                 fit: BoxFit.fill)),
-       //         child: Padding(
-       //           padding: const EdgeInsets.only(left: 8.0),
-       //           child: Image(
-       //             image: const AssetImage(
-       //               Assets.ludoDice,
-       //             ),
-       //             height: height * 0.06,
-       //             width: width * 0.17,
-       //           ),
-       //         ))
-
+          // ludoProvider.playerQuantity==2?  (
+          //     value.currentPlayer.type == LudoPlayerType.blue && profile?.data?.id.toString() == player1Data['id'] ||
+          //            value.currentPlayer.type == LudoPlayerType.green && profile?.data?.id.toString() == player3Data['id']
+          ///
+          //          value.currentPlayer.type == LudoPlayerType.blue
+          //       ? DiceWidget(playerData: playerData)
+          //              :    Container(
+          // alignment: Alignment.center,
+          // height: height * 0.08,
+          // width: width * 0.19,
+          // decoration: const BoxDecoration(
+          //     image: DecorationImage(
+          //         image: AssetImage(Assets.ludoDiceSectionOne),
+          //         fit: BoxFit.fill)),
+          // child: Padding(
+          //   padding: const EdgeInsets.only(left: 8.0),
+          //   child: Image(
+          //     image: const AssetImage(
+          //       Assets.ludoDice,
+          //     ),
+          //     height: height * 0.06,
+          //     width: width * 0.17,
+          //   ),
+          // ))
+          ///
+          value.playerQuantity != 2
+              ? (value.currentPlayer.type == LudoPlayerType.blue &&
+                      profile?.data?.id.toString() == player1Data['id']
+                  ? Container(
+                      alignment: Alignment.center,
+                      height: height * 0.08,
+                      width: width * 0.19,
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(Assets.ludoDiceSectionOne),
+                              fit: BoxFit.fill)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Image(
+                          image: const AssetImage(
+                            Assets.ludoDice,
+                          ),
+                          height: height * 0.06,
+                          width: width * 0.17,
+                        ),
+                      ))
+                  : value.currentPlayer.type == LudoPlayerType.blue &&
+                          profile?.data?.id.toString() == player2Data['id']
+                      ? DiceWidget(playerData: playerData)
+                      : value.currentPlayer.type == LudoPlayerType.blue &&
+                              profile?.data?.id.toString() == player3Data['id']
+                          ? DiceWidget(playerData: playerData)
+                          : value.currentPlayer.type == LudoPlayerType.blue &&
+                                  profile?.data?.id.toString() ==
+                                      player4Data['id']
+                              ? DiceWidget(playerData: playerData)
+                              : Container(
+                                  alignment: Alignment.center,
+                                  height: height * 0.08,
+                                  width: width * 0.19,
+                                  decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              Assets.ludoDiceSectionOne),
+                                          fit: BoxFit.fill)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Image(
+                                      image: const AssetImage(
+                                        Assets.ludoDice,
+                                      ),
+                                      height: height * 0.06,
+                                      width: width * 0.17,
+                                    ),
+                                  )))
+              : value.currentPlayer.type == LudoPlayerType.blue &&
+                          profile?.data?.id.toString() == player1Data['id'] ||
+                      value.currentPlayer.type == LudoPlayerType.green &&
+                          profile?.data?.id.toString() == player3Data['id']
+                  ? Container(
+                      alignment: Alignment.center,
+                      height: height * 0.08,
+                      width: width * 0.19,
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(Assets.ludoDiceSectionOne),
+                              fit: BoxFit.fill)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Image(
+                          image: const AssetImage(
+                            Assets.ludoDice,
+                          ),
+                          height: height * 0.06,
+                          width: width * 0.17,
+                        ),
+                      ))
+                  : DiceWidget(playerData: playerData),
+          // )
+          //     :
+          //     ludoProvider.currentPlayer.type == LudoPlayerType.blue?
+          //     DiceWidget(playerData: playerData): Container(
+          //         alignment: Alignment.center,
+          //         height: height * 0.08,
+          //         width: width * 0.19,
+          //         decoration: const BoxDecoration(
+          //             image: DecorationImage(
+          //                 image: AssetImage(Assets.ludoDiceSectionOne),
+          //                 fit: BoxFit.fill)),
+          //         child: Padding(
+          //           padding: const EdgeInsets.only(left: 8.0),
+          //           child: Image(
+          //             image: const AssetImage(
+          //               Assets.ludoDice,
+          //             ),
+          //             height: height * 0.06,
+          //             width: width * 0.17,
+          //           ),
+          //         ))
         ]),
       ),
     );
   }
 
-  Widget opponentsOneTurn(List<Map<String, dynamic>> playerData) {
+  Widget opponentsOneTurn(List<Map<String, dynamic>> playerData, data) {
+    final profile =
+        Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
+    Map<String, dynamic> player1Data =
+        (data['1'] != null && data['1'].isNotEmpty)
+            ? json.decode(data['1'])
+            : {};
+    Map<String, dynamic> player2Data =
+        (data['2'] != null && data['2'].isNotEmpty)
+            ? json.decode(data['2'])
+            : {};
+    Map<String, dynamic> player3Data =
+        (data['3'] != null && data['3'].isNotEmpty)
+            ? json.decode(data['3'])
+            : {};
+    Map<String, dynamic> player4Data =
+        (data['4'] != null && data['4'].isNotEmpty)
+            ? json.decode(data['4'])
+            : {};
+
     return Consumer<LudoProvider>(
       builder: (context, value, child) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            value.currentPlayer.type == LudoPlayerType.red
+            ///
+            // value.currentPlayer.type == LudoPlayerType.red
+            //     ? DiceWidget(playerData: playerData)
+            //     : Container(
+            //         alignment: Alignment.center,
+            //         height: height * 0.08,
+            //         width: width * 0.19,
+            //         decoration: const BoxDecoration(
+            //             image: DecorationImage(
+            //                 image: AssetImage(Assets.ludoDiceSectionOne),
+            //                 fit: BoxFit.fill)),
+            //         child: Padding(
+            //           padding: const EdgeInsets.only(left: 8.0),
+            //           child: Image(
+            //             image: const AssetImage(
+            //               Assets.ludoDice,
+            //             ),
+            //             height: height * 0.06,
+            //             width: width * 0.17,
+            //           ),
+            //         )),
+            ///
+            value.currentPlayer.type == LudoPlayerType.red &&
+                    profile?.data?.id.toString() == player1Data['id']
                 ? DiceWidget(playerData: playerData)
-                : Container(
-                    alignment: Alignment.center,
-                    height: height * 0.08,
-                    width: width * 0.19,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(Assets.ludoDiceSectionOne),
-                            fit: BoxFit.fill)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Image(
-                        image: const AssetImage(
-                          Assets.ludoDice,
-                        ),
-                        height: height * 0.06,
-                        width: width * 0.17,
-                      ),
-                    )),
+                : value.currentPlayer.type == LudoPlayerType.red &&
+                        profile?.data?.id.toString() == player2Data['id']
+                    ? Container(
+                        alignment: Alignment.center,
+                        height: height * 0.08,
+                        width: width * 0.19,
+                        decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(Assets.ludoDiceSectionOne),
+                                fit: BoxFit.fill)),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Image(
+                            image: const AssetImage(
+                              Assets.ludoDice,
+                            ),
+                            height: height * 0.06,
+                            width: width * 0.17,
+                          ),
+                        ))
+                    : value.currentPlayer.type == LudoPlayerType.red &&
+                            profile?.data?.id.toString() == player3Data['id']
+                        ? DiceWidget(playerData: playerData)
+                        : value.currentPlayer.type == LudoPlayerType.red &&
+                                profile?.data?.id.toString() ==
+                                    player4Data['id']
+                            ? DiceWidget(playerData: playerData)
+                            : Container(
+                                alignment: Alignment.center,
+                                height: height * 0.08,
+                                width: width * 0.19,
+                                decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            Assets.ludoDiceSectionOne),
+                                        fit: BoxFit.fill)),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Image(
+                                    image: const AssetImage(
+                                      Assets.ludoDice,
+                                    ),
+                                    height: height * 0.06,
+                                    width: width * 0.17,
+                                  ),
+                                )),
             Container(
                 height: height * 0.07,
                 width: width * 0.15,
@@ -514,7 +704,25 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
     );
   }
 
-  Widget opponentsTwoTurn(List<Map<String, dynamic>> playerData) {
+  Widget opponentsTwoTurn(List<Map<String, dynamic>> playerData, data) {
+    final profile =
+        Provider.of<ProfileViewModel>(context, listen: false).profileResponse;
+    Map<String, dynamic> player1Data =
+        (data['1'] != null && data['1'].isNotEmpty)
+            ? json.decode(data['1'])
+            : {};
+    Map<String, dynamic> player2Data =
+        (data['2'] != null && data['2'].isNotEmpty)
+            ? json.decode(data['2'])
+            : {};
+    Map<String, dynamic> player3Data =
+        (data['3'] != null && data['3'].isNotEmpty)
+            ? json.decode(data['3'])
+            : {};
+    Map<String, dynamic> player4Data =
+        (data['4'] != null && data['4'].isNotEmpty)
+            ? json.decode(data['4'])
+            : {};
 
     return Consumer<LudoProvider>(
       builder: (context, value, child) {
@@ -535,26 +743,61 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                   width: width * 0.23,
                   fit: BoxFit.fill,
                 )),
-            value.currentPlayer.type == LudoPlayerType.yellow
+
+            ///
+            // value.currentPlayer.type == LudoPlayerType.yellow
+            //     ? DiceWidget(playerData: playerData)
+            //     : Container(
+            //         alignment: Alignment.center,
+            //         height: height * 0.08,
+            //         width: width * 0.19,
+            //         decoration: const BoxDecoration(
+            //             image: DecorationImage(
+            //                 image: AssetImage(Assets.ludoDiceSectionOne),
+            //                 fit: BoxFit.fill)),
+            //         child: Padding(
+            //           padding: const EdgeInsets.only(left: 25.0),
+            //           child: Image(
+            //             image: const AssetImage(
+            //               Assets.ludoDice,
+            //             ),
+            //             height: height * 0.06,
+            //             width: width * 0.17,
+            //           ),
+            //         )),
+            ///
+            value.currentPlayer.type == LudoPlayerType.blue &&
+                    profile?.data?.id.toString() == player1Data['id']
                 ? DiceWidget(playerData: playerData)
-                : Container(
-                    alignment: Alignment.center,
-                    height: height * 0.08,
-                    width: width * 0.19,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(Assets.ludoDiceSectionOne),
-                            fit: BoxFit.fill)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 25.0),
-                      child: Image(
-                        image: const AssetImage(
-                          Assets.ludoDice,
-                        ),
-                        height: height * 0.06,
-                        width: width * 0.17,
-                      ),
-                    )),
+                : value.currentPlayer.type == LudoPlayerType.red &&
+                        profile?.data?.id.toString() == player2Data['id']
+                    ? DiceWidget(playerData: playerData)
+                    : value.currentPlayer.type == LudoPlayerType.green &&
+                            profile?.data?.id.toString() == player3Data['id']
+                        ? DiceWidget(playerData: playerData)
+                        : value.currentPlayer.type == LudoPlayerType.yellow &&
+                                profile?.data?.id.toString() ==
+                                    player4Data['id']
+                            ? DiceWidget(playerData: playerData)
+                            : Container(
+                                alignment: Alignment.center,
+                                height: height * 0.08,
+                                width: width * 0.19,
+                                decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            Assets.ludoDiceSectionOne),
+                                        fit: BoxFit.fill)),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Image(
+                                    image: const AssetImage(
+                                      Assets.ludoDice,
+                                    ),
+                                    height: height * 0.06,
+                                    width: width * 0.17,
+                                  ),
+                                )),
           ],
         );
       },
@@ -593,8 +836,87 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
             // value.playerQuantity == 2
             //     ?
             // (
-                value.currentPlayer.type == LudoPlayerType.blue && profile?.data?.id.toString() == player1Data['id'] ||
-                        value.currentPlayer.type == LudoPlayerType.green && profile?.data?.id.toString() == player3Data['id']
+            //     value.currentPlayer.type == LudoPlayerType.blue && profile?.data?.id.toString() == player1Data['id'] ||
+            //             value.currentPlayer.type == LudoPlayerType.green && profile?.data?.id.toString() == player3Data['id']
+            ///
+//                     value.currentPlayer.type == LudoPlayerType.green
+//                     ? DiceWidget(playerData: playerData)
+//                     : Container(
+//                         alignment: Alignment.center,
+//                         height: height * 0.08,
+//                         width: width * 0.19,
+//                         decoration: const BoxDecoration(
+//                             image: DecorationImage(
+//                                 image: AssetImage(Assets.ludoDiceSectionOne),
+//                                 fit: BoxFit.fill)),
+//                         child: Padding(
+//                           padding: const EdgeInsets.only(left: 8.0),
+//                           child: Image(
+//                             image: const AssetImage(
+//                               Assets.ludoDice,
+//                             ),
+//                             height: height * 0.06,
+//                             width: width * 0.17,
+//                           ),
+//                         )),
+            ///
+            value.playerQuantity != 2
+                ? (value.currentPlayer.type == LudoPlayerType.green &&
+                        profile?.data?.id.toString() == player1Data['id']
+                    ? DiceWidget(playerData: playerData)
+                    : value.currentPlayer.type == LudoPlayerType.green &&
+                            profile?.data?.id.toString() == player2Data['id']
+                        ? DiceWidget(playerData: playerData)
+                        : value.currentPlayer.type == LudoPlayerType.green &&
+                                profile?.data?.id.toString() ==
+                                    player3Data['id']
+                            ? Container(
+                                alignment: Alignment.center,
+                                height: height * 0.08,
+                                width: width * 0.19,
+                                decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            Assets.ludoDiceSectionOne),
+                                        fit: BoxFit.fill)),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Image(
+                                    image: const AssetImage(
+                                      Assets.ludoDice,
+                                    ),
+                                    height: height * 0.06,
+                                    width: width * 0.17,
+                                  ),
+                                ))
+                            : value.currentPlayer.type ==
+                                        LudoPlayerType.green &&
+                                    profile?.data?.id.toString() ==
+                                        player4Data['id']
+                                ? DiceWidget(playerData: playerData)
+                                : Container(
+                                    alignment: Alignment.center,
+                                    height: height * 0.08,
+                                    width: width * 0.19,
+                                    decoration: const BoxDecoration(
+                                        image: DecorationImage(
+                                            image: AssetImage(
+                                                Assets.ludoDiceSectionOne),
+                                            fit: BoxFit.fill)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Image(
+                                        image: const AssetImage(
+                                          Assets.ludoDice,
+                                        ),
+                                        height: height * 0.06,
+                                        width: width * 0.17,
+                                      ),
+                                    )))
+                : value.currentPlayer.type == LudoPlayerType.blue &&
+                            profile?.data?.id.toString() == player1Data['id'] ||
+                        value.currentPlayer.type == LudoPlayerType.green &&
+                            profile?.data?.id.toString() == player3Data['id']
 
                     // value.currentPlayer.type.toString() == player4Data['color'].toString()
                     ? DiceWidget(playerData: playerData)
@@ -617,26 +939,26 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                           ),
                         )),
             // )
-                // : value.currentPlayer.type == LudoPlayerType.green
-                //     ? DiceWidget(playerData: playerData)
-                //     : Container(
-                //         alignment: Alignment.center,
-                //         height: height * 0.08,
-                //         width: width * 0.19,
-                //         decoration: const BoxDecoration(
-                //             image: DecorationImage(
-                //                 image: AssetImage(Assets.ludoDiceSectionOne),
-                //                 fit: BoxFit.fill)),
-                //         child: Padding(
-                //           padding: const EdgeInsets.only(left: 8.0),
-                //           child: Image(
-                //             image: const AssetImage(
-                //               Assets.ludoDice,
-                //             ),
-                //             height: height * 0.06,
-                //             width: width * 0.17,
-                //           ),
-                //         )),
+            // : value.currentPlayer.type == LudoPlayerType.green
+            //     ? DiceWidget(playerData: playerData)
+            //     : Container(
+            //         alignment: Alignment.center,
+            //         height: height * 0.08,
+            //         width: width * 0.19,
+            //         decoration: const BoxDecoration(
+            //             image: DecorationImage(
+            //                 image: AssetImage(Assets.ludoDiceSectionOne),
+            //                 fit: BoxFit.fill)),
+            //         child: Padding(
+            //           padding: const EdgeInsets.only(left: 8.0),
+            //           child: Image(
+            //             image: const AssetImage(
+            //               Assets.ludoDice,
+            //             ),
+            //             height: height * 0.06,
+            //             width: width * 0.17,
+            //           ),
+            //         )),
             Container(
                 height: height * 0.07,
                 width: width * 0.15,

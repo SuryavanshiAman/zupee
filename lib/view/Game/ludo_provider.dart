@@ -265,6 +265,63 @@ class LudoProvider with ChangeNotifier {
   LudoGameState get gameState => _gameState;
   LudoPlayer player(LudoPlayerType type) =>
       players.firstWhere((element) => element.type == type);
+  void automaticTurnChange(context)async {
+    _diceStarted = false;
+    _stopDice = false;
+    notifyListeners();
+    final firebaseViewModel =
+    Provider.of<FirebaseViewModel>(context, listen: false).table.toString();
+    if (gameDoc == null) {
+      gameDoc =
+          FirebaseFirestore.instance.collection('ludo').doc(firebaseViewModel);
+    } else {
+      if (kDebugMode) {
+        print("skdkdkd");
+      }
+    }
+    // _diceResult = Random().nextInt(6) + 1;
+    gameDoc!.update({
+      'diceResult': 1,
+      'currentTurn': _currentTurn.index,
+      'gameState': LudoGameState.pickPawn.index,
+    });
+    listenToGameUpdates(context);
+
+    // Future.delayed(const Duration(milliseconds: 500), () {
+    //   _diceStarted = false;
+    //   notifyListeners();
+    // });
+    nextTurn();
+    // if (_diceResult != 6) {
+    //   if (currentPlayer.pawnInsideCount == 4) {
+    //     await Future.delayed(const Duration(seconds: 1));
+    //     nextTurn();
+    //   } else {
+    //     currentPlayer.highlightOutside();
+    //     _gameState = LudoGameState.pickPawn;
+    //     notifyListeners();
+    //   }
+    // } else {
+    //   // When 6 is rolled, the player gets another chance
+    //   currentPlayer.highlightOutside();
+    //   _gameState = LudoGameState.pickPawn;
+    //   notifyListeners();
+    // }
+    // for (var i = 0; i < currentPlayer.pawns.length; i++) {
+    //   var pawn = currentPlayer.pawns[i];
+    //   if ((pawn.step + diceResult) > currentPlayer.path.length - 1) {
+    //     currentPlayer.highlightPawn(i, false);
+    //   }
+    // }
+    // if (currentPlayer.pawns.every((element) => !element.highlight)) {
+    //   if (diceResult == 6) {
+    //     _gameState = LudoGameState.throwDice;
+    //   } else {
+    //     nextTurn();
+    //     return;
+    //   }
+    // }
+  }
   void throwDice(context) async {
     _diceStarted = true;
     _stopDice = true;

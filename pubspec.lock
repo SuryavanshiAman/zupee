@@ -957,6 +957,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.4"
+  square_percent_indicater:
+    dependency: "direct main"
+    description:
+      name: square_percent_indicater
+      sha256: "203bf46f100d21ea04b36ccf3f6438424e95b6ee5f65461c81b6061fbcb41968"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   stack_trace:
     dependency: transitive
     description:

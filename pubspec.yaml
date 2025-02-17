@@ -35,6 +35,7 @@ dependencies:
   intl:
   connectivity_plus: ^3.0.3
   lottie:
+  square_percent_indicater: ^0.1.0
 
 dev_dependencies:
   flutter_test:

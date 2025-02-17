@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:zupee/language/hindi.dart';
 import 'package:zupee/res/app_constant.dart';
 import 'package:zupee/res/check_network/network_checker.dart';
+import 'package:zupee/test.dart';
 import 'package:zupee/utils/routes.dart';
 import 'package:zupee/utils/routes_name.dart';
 import 'package:zupee/view_model/about_view_model.dart';
@@ -165,7 +166,7 @@ class _MyAppState extends State<MyApp> {
                 ],
               );
             },
-            // home:AppointmentsScreen(),
+            // home:SquareProgressIndicator( secondsRemaining: 30,),
           ),
         ),
       ),

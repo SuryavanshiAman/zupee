@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:zupee/generated/assets.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view/Game/ludo_provider.dart';
 import 'package:zupee/view_model/firebase_view_model.dart';
 import 'package:zupee/view_model/timer_view_model.dart';
@@ -61,8 +62,9 @@ class _BoardWidgetState extends State<BoardWidget> {
 
   ///Count box size
   double boxStepSize(BuildContext context) {
-    return ludoBoard(context) / 15;
+    return ludoBoard(context) / 18;
   }
+
   TimerProvider timerProvider=TimerProvider();
 @override
   void initState() {
@@ -217,12 +219,13 @@ class _BoardWidgetState extends State<BoardWidget> {
               for (int i = 0; i < pawnsRaw.keys.length; i++) {
                 String key = pawnsRaw.keys.elementAt(i);
                 List<PawnWidget> pawnsValue = pawnsRaw[key]!;
-
                 if (key == "home") {
+
                   playersPawn.addAll(
                     pawnsValue.map((e) {
                       var player = value.players
                           .firstWhere((element) => element.type == e.type);
+                      print("Amann:${e.index}");
                       return AnimatedPositioned(
                         key: ValueKey("${e.type.name}_${e.index}"),
                         left: LudoPath.stepBox(
@@ -245,15 +248,16 @@ class _BoardWidgetState extends State<BoardWidget> {
                       .toList();
 
                   if (pawnsValue.length == 1) {
+print("Aman:${pawnsValue.length}");
                     var e = pawnsValue.first;
                     playersPawn.add(AnimatedPositioned(
                       key: ValueKey("${e.type.name}_${e.index}"),
-                      duration: const Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 300),
                       left:
                       LudoPath.stepBox(ludoBoard(context), coordinates[0]),
                       top: LudoPath.stepBox(ludoBoard(context), coordinates[1]),
                       width: boxStepSize(context),
-                      height: boxStepSize(context),
+                      height: boxStepSize(context)-2,
                       child: pawnsValue.first,
                     ));
                   } else {
@@ -277,10 +281,10 @@ class _BoardWidgetState extends State<BoardWidget> {
                         },
                       ),
                     );
+
                   }
                 }
               }
-
               return Center(
                 child: Stack(
                   fit: StackFit.expand,

@@ -5,7 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:zupee/generated/assets.dart';
+import 'package:zupee/main.dart';
+import 'package:zupee/res/app_colors.dart';
+import 'package:zupee/res/image_tost.dart';
+import 'package:zupee/utils/toast.dart';
 import 'package:zupee/view/Game/board_widgit.dart';
 import 'package:zupee/view_model/profile_view_model.dart';
 import '../../view_model/join_view_model.dart';
@@ -240,7 +246,14 @@ class LudoProvider with ChangeNotifier {
       }
     });
   }
+bool _home=false;
 
+  bool get home => _home;
+
+  setHome(bool value) {
+    _home = value;
+    notifyListeners();
+  }
   dynamic _myData;
   dynamic get myData => _myData;
   int _myPosition = 0;
@@ -385,11 +398,29 @@ class LudoProvider with ChangeNotifier {
     _isMoving = true;
     _stopDice = false;
     _gameState = LudoGameState.moving;
+
     LudoPlayer currentPlayer = player(type);
     currentPlayer.highlightAllPawns(false);
+    int currentStep = currentPlayer.pawns[index].step;
+    print("Shweta${currentStep}");
+     currentStep==56?print("abcdefghAman"):null;
     for (int i = currentPlayer.pawns[index].step; i <= step; i++) {
       currentPlayer.movePawn(index, i);
+      if(
+      i==56
+      ){
+        setHome(true);
+        ImageToast.show(
+            imagePath: Assets.imagesTextArea,
+            height: height * 0.08,
+            width: width * 0.6,
+            context: context,
+            text: "Home");
+        Future.delayed(const Duration(seconds: 2),(){
+          setHome(false);
+        });
 
+      }else{};
       gameDoc?.update({
         '${type.toString().split('.').last}PawnPosition$index': i,
       });
@@ -481,7 +512,7 @@ class LudoProvider with ChangeNotifier {
   void resetPawns(context, firebaseViewModel) async {
     for (var player in players) {
       for (var i = 0; i < player.pawns.length; i++) {
-        player.pawns[i].step = 0; // Reset to the initial position
+        player.pawns[i].step = 0;
         _currentTurn = LudoPlayerType.blue;
         // Update Firestore with the reset position
         await FirebaseFirestore.instance

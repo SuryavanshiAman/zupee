@@ -44,7 +44,6 @@ class _PawnWidgetState extends State<PawnWidget> {
 
   @override
   void dispose() {
-    // Cancel the Firestore listener when the widget is disposed
     _pawnSubscription.cancel();
     super.dispose();
   }

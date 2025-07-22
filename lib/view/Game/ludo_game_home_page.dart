@@ -42,7 +42,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
       timerProvider.setAmount(argument);
     });
     Future.delayed(const Duration(seconds: 5), () {
-      timerProvider.startTimer(context);
+      // timerProvider.startTimer(context);
       setState(() {
         showContainer = true;
       });
@@ -233,21 +233,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                               fit: BoxFit.fill)),
                       child: Text(
                           ludoProvider.playerQuantity != 2
-                              ? "${
-                                  profile?.data?.id.toString() ==
-                                          player1Data['id']
-                                      ? player4Data['name']
-                                      : profile?.data?.id.toString() ==
-                                              player2Data['id']
-                                          ? player1Data['name']
-                                          : profile?.data?.id.toString() ==
-                                                  player3Data['id']
-                                              ? player1Data['name']
-                                              : profile?.data?.id.toString() ==
-                                                      player4Data['id']
-                                                  ? player1Data['name']
-                                                  : "No name"
-                                }"
+                              ? "${profile?.data?.id.toString() == player1Data['id'] ? player4Data['name'] : profile?.data?.id.toString() == player2Data['id'] ? player1Data['name'] : profile?.data?.id.toString() == player3Data['id'] ? player1Data['name'] : profile?.data?.id.toString() == player4Data['id'] ? player1Data['name'] : "No name"}"
                               : profile?.data?.id.toString() ==
                                       player3Data['id']
                                   ? player1Data['name']
@@ -412,9 +398,35 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
             ],
           ),
         ),
-        // timerProvider.remainingSeconds.toString()=="0"? Container(height: height,width: width,color: Colors.black.withOpacity(0.2,)):Container(),
-        // timerProvider.remainingSeconds.toString()=="0"?(int.parse(profile?.data?.id.toString()??"").toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()?Image.asset(Assets.gifCongratulation):Container()):Container(),
-        // timerProvider.remainingSeconds.toString()=="0"?(int.parse(profile?.data?.id.toString()??"").toString() == int.parse(ludoProvider.firstPlace?.name['id']).toString()?Center(child: Lottie.asset(Assets.lottieWinner,)):Container()):Container(),
+        ludoProvider.home == true
+            ? Container(
+                height: height,
+                width: width,
+                child: Lottie.asset(Assets.lottieConfety))
+            : Container(),
+        timerProvider.remainingSeconds.toString() == "0"
+            ? Container(
+                height: height,
+                width: width,
+                color: Colors.black.withOpacity(
+                  0.2,
+                ))
+            : Container(),
+        timerProvider.remainingSeconds.toString() == "0"
+            ? (int.parse(profile?.data?.id.toString() ?? "").toString() ==
+                    int.parse(ludoProvider.firstPlace?.name['id']).toString()
+                ? Image.asset(Assets.gifCongratulation)
+                : Container())
+            : Container(),
+        timerProvider.remainingSeconds.toString() == "0"
+            ? (int.parse(profile?.data?.id.toString() ?? "").toString() ==
+                    int.parse(ludoProvider.firstPlace?.name['id']).toString()
+                ? Center(
+                    child: Lottie.asset(
+                    Assets.lottieWinner,
+                  ))
+                : Container())
+            : Container(),
       ],
     );
   }
@@ -458,6 +470,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                 width: width * 0.23,
                 fit: BoxFit.fill,
               )),
+
           ///
           // value.currentPlayer.type.toString() == player1Data['color'].toString()||
           //     value.currentPlayer.type.toString() == player2Data['color'].toString()||
@@ -509,8 +522,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                           height: height * 0.06,
                           width: width * 0.17,
                         ),
-                      )
-          )
+                      ))
                   : value.currentPlayer.type == LudoPlayerType.blue &&
                           profile?.data?.id.toString() == player2Data['id']
                       ? DiceWidget(playerData: playerData)
@@ -561,8 +573,7 @@ class _LudoHomeScreenState extends State<LudoHomeScreen> {
                           height: height * 0.06,
                           width: width * 0.17,
                         ),
-                      )
-          )
+                      ))
                   : DiceWidget(playerData: playerData),
           // )
           //     :

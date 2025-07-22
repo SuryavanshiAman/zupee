@@ -23,16 +23,14 @@ class TransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<TransactionScreen> {
   List<FirstList> list = [
-    FirstList("All"),
-    FirstList("Deposit"),
-    FirstList("Withdrawals"),
-    FirstList("Winnings"),
-    FirstList("Tournament Fee"),
-    FirstList("Refund"),
-    FirstList("TDS"),
-    FirstList("Rewards"),
-    FirstList("Misc"),
-    FirstList("Withdrawal Fee"),
+    FirstList("GIRF"),
+    FirstList("Within 5km"),
+    FirstList("Rating 4+"),
+    FirstList("Pure Veg"),
+    FirstList("Serves Alcohol"),
+    FirstList("Open now"),
+    FirstList("Open till late"),
+    FirstList("Cuisines"),
   ];
 
   int selectedIndex = 0;

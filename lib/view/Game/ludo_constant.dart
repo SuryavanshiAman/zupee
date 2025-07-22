@@ -23,7 +23,7 @@ class LudoColor {
 class LudoPath {
   ///Calculate the path for player to move the pawn with specific step
   static double stepBox(double boardSize, double step) {
-    double boxRaw = (boardSize / 15);
+    double boxRaw = (boardSize / 14.5);
     double stepSize = boxRaw * step;
     return stepSize;
   }

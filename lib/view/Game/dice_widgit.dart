@@ -3,13 +3,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import 'package:square_percent_indicater/square_percent_indicater.dart';
 import 'package:zupee/main.dart';
 import 'package:zupee/res/image_tost.dart';
 import '../../generated/assets.dart';
 import 'ludo_provider.dart';
-import 'ludo_constant.dart';
 
 class DiceWidget extends StatefulWidget {
   final List<Map<String, dynamic>> playerData;
@@ -60,8 +58,7 @@ class _DiceWidgetState extends State<DiceWidget> {
       onTap: () {
         print("AmanJoin${ludoProvider.fieldKey}");
         print("AmanludoProvider${ludoProvider.currentDiceIndex}");
-        if (ludoProvider.fieldKey == ludoProvider.currentDiceIndex) { /// original
-        // if (join != ludoProvider.currentDiceIndex) {
+        if (ludoProvider.fieldKey == ludoProvider.currentDiceIndex) {
           print("Aman");
           print(!ludoProvider.diceStarted);
           print(!ludoProvider.stopDice);
